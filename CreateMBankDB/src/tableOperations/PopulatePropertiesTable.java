@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import createTables.data.PropertiesTableData;
+import data.PropertiesTableData;
 
 public class PopulatePropertiesTable {
 	

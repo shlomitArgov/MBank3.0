@@ -9,13 +9,13 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import tableInfo.AccountsTableInfo;
+import tableInfo.ActivitiesTableInfo;
+import tableInfo.ClientsTableInfo;
+import tableInfo.DepositsTableInfo;
+import tableInfo.PropertiesTableInfo;
 import tableOperations.CreateTables;
 import tableOperations.dbStructure.TableInfo;
-import createTables.tableInfo.AccountsTableInfo;
-import createTables.tableInfo.ActivitiesTableInfo;
-import createTables.tableInfo.ClientsTableInfo;
-import createTables.tableInfo.DepositsTableInfo;
-import createTables.tableInfo.PropertiesTableInfo;
 
 public class CreateMBankTablesTest{
 

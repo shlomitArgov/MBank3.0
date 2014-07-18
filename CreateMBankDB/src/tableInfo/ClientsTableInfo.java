@@ -1,4 +1,4 @@
-package createTables.tableInfo;
+package tableInfo;
 
 import tableOperations.dbStructure.DBVarTypes;
 import tableOperations.dbStructure.TableInfo;

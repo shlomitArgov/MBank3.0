@@ -1,4 +1,4 @@
-package createTables.data;
+package data;
 
 import tableOperations.dbStructure.DBVarTypes;
 import tableOperations.dbStructure.TableRow;
