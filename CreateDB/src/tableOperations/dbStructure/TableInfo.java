@@ -1,9 +1,9 @@
 /**
  * 
  */
-package createTables.tableInfo;
+package tableOperations.dbStructure;
 
-import tableOperations.DBVarTypes;
+
 
 /**
  * @author Shlomit

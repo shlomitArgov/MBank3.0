@@ -1,6 +1,7 @@
 package createTables.tableInfo;
 
-import tableOperations.DBVarTypes;
+import tableOperations.dbStructure.DBVarTypes;
+import tableOperations.dbStructure.TableInfo;
 
 public class ClientsTableInfo extends TableInfo {
 	private static final String tableName = "clients";

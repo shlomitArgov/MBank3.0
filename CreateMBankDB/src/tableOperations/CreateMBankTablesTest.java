@@ -10,12 +10,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import tableOperations.CreateTables;
+import tableOperations.dbStructure.TableInfo;
 import createTables.tableInfo.AccountsTableInfo;
 import createTables.tableInfo.ActivitiesTableInfo;
 import createTables.tableInfo.ClientsTableInfo;
 import createTables.tableInfo.DepositsTableInfo;
 import createTables.tableInfo.PropertiesTableInfo;
-import createTables.tableInfo.TableInfo;
 
 public class CreateMBankTablesTest{
 
