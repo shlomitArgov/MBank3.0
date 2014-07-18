@@ -10,10 +10,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import createTables.columns.AccountsTableColumns;
+import createTables.columns.ActivitiesTableColumns;
+import createTables.columns.DepositsTableColumns;
 import createTables.columns.clientsTableColumns;
+import createTables.columns.propertiesTableColumns;
 import createTables.columns.tableColumns;
 
-public class CreateTablesTest{
+public class CreateMBankTablesTest{
 
 	private static Connection con;
 	private static final String dbName = "MBankDB";
@@ -60,54 +63,40 @@ public class CreateTablesTest{
 			Assert.fail("Failed to create " + accountsTableColumns.getTableName() + " table \n"
 					+ e.getLocalizedMessage());
 		}
-//
-//		// Create Deposits table
-//		tableName = "Deposits";
-//		System.out.println("Creating table " + tableName + "...");
-//		try {
-//			CreateTables.createTable(con, tableName, new tableColumns("deposit_id",
-//					DBVarTypes.BIGINT.getName()), new tableColumns("client_id",
-//					DBVarTypes.BIGINT.getName()), new tableColumns("balance",
-//					DBVarTypes.DOUBLE.getName()), new tableColumns("type",
-//					DBVarTypes.VARCHAR.getName()), new tableColumns(
-//					"estimated_balance", DBVarTypes.BIGINT.getName()),
-//					new tableColumns("opening_date", DBVarTypes.DATE.getName()),
-//					new tableColumns("closing_date", DBVarTypes.DATE.getName()));
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			Assert.fail("Failed to create " + tableName + " table \n"
-//					+ e.getLocalizedMessage());
-//		}
-//
-//		// Create Activity table
-//		tableName = "Activity";
-//		System.out.println("Creating table " + tableName + "...");
-//		try {
-//			CreateTables.createTable(con, "Activity", new tableColumns("id",
-//					DBVarTypes.BIGINT.getName()), new tableColumns("client_id",
-//					DBVarTypes.BIGINT.getName()), new tableColumns("amount",
-//					DBVarTypes.DOUBLE.getName()), new tableColumns("activity_date",
-//					DBVarTypes.DATE.getName()), new tableColumns("commission",
-//					DBVarTypes.DOUBLE.getName()), new tableColumns("ACTIVITY_TYPE",
-//					DBVarTypes.VARCHAR.getName()), new tableColumns("description",
-//					DBVarTypes.LONGVARCHAR.getName()));
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			Assert.fail("Failed to create " + tableName + " table \n"
-//					+ e.getLocalizedMessage());
-//		}
-//
-//		// Create Properties table
-//		tableName = "Properties";
-//		System.out.println("Creating table " + tableName + "...");
-//		try {
-//			CreateTables.createTable(con, tableName, new tableColumns("prop_key",
-//					DBVarTypes.VARCHAR.getName()), new tableColumns("prop_value",
-//					DBVarTypes.VARCHAR.getName()));
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			Assert.fail("Failed to create " + tableName + " table \n"
-//					+ e.getLocalizedMessage());
-//		}
+
+		// Create the Deposits table
+		tableColumns depositsTableColumns = new DepositsTableColumns();
+		System.out.println("Creating table " + depositsTableColumns.getTableName() + "...");
+		try {
+			CreateTables.createTable(con, depositsTableColumns.getTableName(), depositsTableColumns.getPrimaryKeyName(), depositsTableColumns.getColumnNames(), depositsTableColumns.getColumnDataTypes());
+			System.out.println("***Table " + depositsTableColumns.getTableName() + " created successfuly***");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail("Failed to create " + depositsTableColumns.getTableName() + " table \n"
+					+ e.getLocalizedMessage());
+		}
+
+		// Create the Activity table
+		tableColumns activitiesTableColumns = new ActivitiesTableColumns();
+		System.out.println("Creating table " + activitiesTableColumns.getTableName() + "...");
+		try {
+			CreateTables.createTable(con, activitiesTableColumns.getTableName(),  activitiesTableColumns.getPrimaryKeyName(), activitiesTableColumns.getColumnNames(), activitiesTableColumns.getColumnDataTypes());
+			System.out.println("***Table " + activitiesTableColumns.getTableName() + " created successfuly***");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail("Failed to create " + activitiesTableColumns.getTableName() + " table \n" + e.getLocalizedMessage());
+		}
+
+		// Create the Properties table
+		tableColumns propertiesTableColumns = new propertiesTableColumns();
+		System.out.println("Creating table " + propertiesTableColumns.getTableName() + "...");
+		try {
+			CreateTables.createTable(con, propertiesTableColumns.getTableName(), propertiesTableColumns.getPrimaryKeyName(), propertiesTableColumns.getColumnNames(), propertiesTableColumns.getColumnDataTypes());
+			System.out.println("***Table " + propertiesTableColumns.getTableName() + " created successfuly***");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail("Failed to create " + propertiesTableColumns.getTableName() + " table \n"
+					+ e.getLocalizedMessage());
+		}
 	}
 }
