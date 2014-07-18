@@ -9,8 +9,8 @@ import createTables.DBVarTypes;
  * @author Shlomit
  *
  */
-public abstract class tableColumns {
-	public tableColumns(String tableName,int numColumns, String primaryKeyName, String[] columnNames, DBVarTypes[] columndatatypes) {
+public abstract class TableInfo {
+	public TableInfo(String tableName,int numColumns, String primaryKeyName, String[] columnNames, DBVarTypes[] columndatatypes) {
 		this.tableName = tableName;
 		this.numColumns = numColumns;
 		this.primaryKeyName = primaryKeyName;

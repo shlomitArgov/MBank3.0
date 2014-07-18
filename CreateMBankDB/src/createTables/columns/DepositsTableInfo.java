@@ -9,7 +9,7 @@ import createTables.DBVarTypes;
  * @author Shlomit Argov
  *
  */
-public class DepositsTableColumns extends tableColumns {
+public class DepositsTableInfo extends TableInfo {
 	private static final String tableName = "Deposits";
 	private static final String[] columnNames = new String[]{"client_id","balance", "deposit_type", "estimated_balance", "opening_date", "closing_date"};
 	private static final int numColumns = columnNames.length; // number of columns without the primary key
@@ -24,7 +24,7 @@ public class DepositsTableColumns extends tableColumns {
 		,DBVarTypes.DATE // closing_date
 	};	
 	
-	public DepositsTableColumns() {
+	public DepositsTableInfo() {
 		super(tableName ,numColumns, primaryKeyName, columnNames, columnDataTypes);
 	}
 }

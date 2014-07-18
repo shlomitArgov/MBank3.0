@@ -9,7 +9,7 @@ import createTables.DBVarTypes;
  * @author Shlomit Argov
  *
  */
-public class propertiesTableColumns extends tableColumns {
+public class PropertiesTableInfo extends TableInfo {
 
 	private static final String tableName = "Properties";
 	private static final String[] columnNames = new String[]{"prop_key","prop_value"};
@@ -21,7 +21,7 @@ public class propertiesTableColumns extends tableColumns {
 		,DBVarTypes.VARCHAR // prop_value
 	};	
 	
-	public propertiesTableColumns() {
+	public PropertiesTableInfo() {
 		super(tableName ,numColumns, primaryKeyName, columnNames, columnDataTypes);
 	}
 }

@@ -7,7 +7,7 @@ import createTables.DBVarTypes;
  * @author Shlomit Argov
  *
  */
-public class ActivitiesTableColumns extends tableColumns {
+public class ActivitiesTableInfo extends TableInfo {
 
 	private static final String tableName = "Activity";
 	private static final String[] columnNames = new String[]{"client_id","amount", "activity_date", "commission", "ACTIVITY_TYPE", "description"};
@@ -23,7 +23,7 @@ public class ActivitiesTableColumns extends tableColumns {
 		,DBVarTypes.LONGVARCHAR // description
 	};	
 	
-	public ActivitiesTableColumns() {
+	public ActivitiesTableInfo() {
 		super(tableName ,numColumns, primaryKeyName, columnNames, columnDataTypes);
 	}
 }

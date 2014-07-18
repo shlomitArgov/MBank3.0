@@ -2,7 +2,7 @@ package createTables.columns;
 
 import createTables.DBVarTypes;
 
-public class clientsTableColumns extends tableColumns {
+public class ClientsTableInfo extends TableInfo {
 	private static final String tableName = "clients";
 	private static final String[] columnNames = new String[]{"client_name","password", "client_type", "address","email", "phone", "comment"};
 	private static final int numColumns = columnNames.length; //number of columns without the primary key
@@ -18,7 +18,7 @@ public class clientsTableColumns extends tableColumns {
 		,DBVarTypes.LONGVARCHAR //comment
 	};	
 	
-	public clientsTableColumns() {
+	public ClientsTableInfo() {
 		super(tableName, numColumns, primaryKeyName, columnNames, columnDataTypes);
 	}
 }

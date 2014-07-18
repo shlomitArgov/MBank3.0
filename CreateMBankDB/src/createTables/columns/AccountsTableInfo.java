@@ -9,7 +9,7 @@ import createTables.DBVarTypes;
  * @author Shlomit Argov
  *
  */
-public class AccountsTableColumns extends tableColumns {
+public class AccountsTableInfo extends TableInfo {
 
 	private static final String tableName = "Accounts";
 	private static final String[] columnNames = new String[]{"client_id","balance", "credit_limit", "comment"};
@@ -23,7 +23,7 @@ public class AccountsTableColumns extends tableColumns {
 		,DBVarTypes.LONGVARCHAR // comment
 	};	
 	
-	public AccountsTableColumns() {
+	public AccountsTableInfo() {
 		super(tableName ,numColumns, primaryKeyName, columnNames, columnDataTypes);
 	}
 }
