@@ -46,11 +46,18 @@ public class PopulateTable {
 			}
 			sql += ") VALUES (";
 			// Add a '?' for each column
-			for(int i = 0; i < row.getColumnTypes().length - 1; i++)
+			if(row.getColumnTypes().length > 1)
 			{
-				sql +="?, ";
+				for(int i = 0; i < row.getColumnTypes().length - 1; i++)
+				{
+					sql +="?, ";
+				}
+				sql+="?)";	
 			}
-			sql+="?)";
+			else
+			{
+				sql+="?)";
+			}
 			pstatement = con.prepareStatement(sql, PreparedStatement.NO_GENERATED_KEYS);
 			for(int j = 0; j < row.getColumnTypes().length; j++)
 			{

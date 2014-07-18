@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import data.PropertiesTableData;
 
-public class PopulatePropertiesTable {
+public class PopulatePropertiesTableTest {
 	
 	private static final String tableName = "PROPERTIES";
 	private static Connection con;
