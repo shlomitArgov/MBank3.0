@@ -1,6 +1,6 @@
-package createTables.columns;
+package createTables.tableInfo;
 
-import createTables.DBVarTypes;
+import tableOperations.DBVarTypes;
 
 /**
  * 

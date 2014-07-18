@@ -1,4 +1,4 @@
-package createTables;
+package tableOperations;
 
 
 import java.sql.Connection;
@@ -9,17 +9,18 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import createTables.columns.AccountsTableInfo;
-import createTables.columns.ActivitiesTableInfo;
-import createTables.columns.DepositsTableInfo;
-import createTables.columns.ClientsTableInfo;
-import createTables.columns.PropertiesTableInfo;
-import createTables.columns.TableInfo;
+import tableOperations.CreateTables;
+import createTables.tableInfo.AccountsTableInfo;
+import createTables.tableInfo.ActivitiesTableInfo;
+import createTables.tableInfo.ClientsTableInfo;
+import createTables.tableInfo.DepositsTableInfo;
+import createTables.tableInfo.PropertiesTableInfo;
+import createTables.tableInfo.TableInfo;
 
 public class CreateMBankTablesTest{
 
 	private static Connection con;
-	private static final String dbName = "MBankDB";
+	public static final String dbName = "MBankDB";
 
 	public static String getDbname() {
 		return dbName;
@@ -49,7 +50,7 @@ public class CreateMBankTablesTest{
 			System.out.println("Creating table " + tableInfo.getTableName() + "...");
 			try {
 				CreateTables.createTable(con, tableInfo.getTableName(), tableInfo.getPrimaryKeyName(), tableInfo.getColumnNames(), tableInfo.getColumnDataTypes());
-				System.out.println("***Table " + tableInfo.getTableName() + " created successfuly***");
+				System.out.println("***Table '" + tableInfo.getTableName() + "' created successfuly***");
 			} catch (SQLException e) {
 				e.printStackTrace();
 				Assert.fail("Failed to create " + tableInfo.getTableName() + " table \n"

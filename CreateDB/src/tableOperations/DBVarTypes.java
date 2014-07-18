@@ -1,4 +1,4 @@
-package createTables;
+package tableOperations;
 public enum DBVarTypes {
 	VARCHAR("VARCHAR(255)"), BIGINT("BIGINT"), DOUBLE("DOUBLE"), LONGVARCHAR(
 			"VARCHAR(1024)"), DATE("DATE");
