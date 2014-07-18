@@ -10,9 +10,10 @@ import createTables.DBVarTypes;
  *
  */
 public abstract class tableColumns {
-	public tableColumns(int numColumns, String primaryKeyName, String[] columnNames, DBVarTypes[] columndatatypes) {
-		this.primaryKeyName = primaryKeyName;
+	public tableColumns(String tableName,int numColumns, String primaryKeyName, String[] columnNames, DBVarTypes[] columndatatypes) {
+		this.tableName = tableName;
 		this.numColumns = numColumns;
+		this.primaryKeyName = primaryKeyName;
 		this.columnNames = columnNames;
 		this.columnDataTypes = columndatatypes;
 	}
@@ -30,6 +31,11 @@ public abstract class tableColumns {
 		return primaryKeyName;
 	}
 
+	public String getTableName() {
+		return tableName;
+	}
+
+	private String tableName;
 	private int numColumns;
 	private String[] columnNames;
 	private DBVarTypes[] columnDataTypes;

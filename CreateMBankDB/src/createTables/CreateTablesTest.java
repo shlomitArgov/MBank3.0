@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import createTables.columns.AccountsTableColumns;
 import createTables.columns.clientsTableColumns;
 import createTables.columns.tableColumns;
 
@@ -37,33 +38,28 @@ public class CreateTablesTest{
 	@Test
 	public void testCreateTables() {
 		/* Create the clients table */
-		String tableName = "Clients";
 		tableColumns clientsTableColumns = new clientsTableColumns();
-		System.out.println("Creating table " + tableName + "...");
+		System.out.println("Creating table " + clientsTableColumns.getTableName() + "...");
 		try {
-			CreateTables.createTable(con, tableName, clientsTableColumns.getPrimaryKeyName(), clientsTableColumns.getColumnNames(), clientsTableColumns.getColumnDataTypes());
-			System.out.println("***Table " + tableName + " created successfuly***");
+			CreateTables.createTable(con, clientsTableColumns.getTableName(), clientsTableColumns.getPrimaryKeyName(), clientsTableColumns.getColumnNames(), clientsTableColumns.getColumnDataTypes());
+			System.out.println("***Table " + clientsTableColumns.getTableName() + " created successfuly***");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			Assert.fail("Failed to create " + tableName + " table \n"
+			Assert.fail("Failed to create " + clientsTableColumns.getTableName() + " table \n"
 					+ e.getLocalizedMessage());
 		}
 
-//		// Create Accounts table
-//		tableName = "Accounts";
-//		System.out.println("Creating table " + tableName + "...");
-//		try {
-//			CreateTables.createTable(con, tableName, new tableColumns("account_id",
-//					DBVarTypes.BIGINT.getName()), new tableColumns("client_id",
-//					DBVarTypes.BIGINT.getName()), new tableColumns("balance",
-//					DBVarTypes.DOUBLE.getName()), new tableColumns("credit_limit",
-//					DBVarTypes.DOUBLE.getName()), new tableColumns("comment",
-//					DBVarTypes.LONGVARCHAR.getName()));
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			Assert.fail("Failed to create " + tableName + " table \n"
-//					+ e.getLocalizedMessage());
-//		}
+		// Create the Accounts table
+		tableColumns accountsTableColumns = new AccountsTableColumns();
+		System.out.println("Creating table " + accountsTableColumns.getTableName() + "...");
+		try {
+			CreateTables.createTable(con, accountsTableColumns.getTableName(), accountsTableColumns.getPrimaryKeyName(), accountsTableColumns.getColumnNames(), accountsTableColumns.getColumnDataTypes());
+			System.out.println("***Table " + accountsTableColumns.getTableName() + " created successfuly***");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail("Failed to create " + accountsTableColumns.getTableName() + " table \n"
+					+ e.getLocalizedMessage());
+		}
 //
 //		// Create Deposits table
 //		tableName = "Deposits";
