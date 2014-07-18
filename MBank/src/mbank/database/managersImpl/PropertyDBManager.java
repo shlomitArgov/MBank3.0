@@ -108,8 +108,8 @@ public class PropertyDBManager implements PropertyManager
 			if (rs != null)
 			{	
 				if(rs.next()) //next() returns false if there are no more rows in the RS
-				{	
-					Property p = new Property(rs.getString(1), rs.getString(2));
+				{	//the first column is the property ID - not needed
+					Property p = new Property(rs.getString(2), rs.getString(3));
 					return p;
 				}
 			}
