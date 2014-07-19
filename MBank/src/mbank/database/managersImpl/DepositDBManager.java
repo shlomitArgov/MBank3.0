@@ -28,7 +28,7 @@ public class DepositDBManager implements DepositManager
 	}
 
 	@Override
-	public boolean insert(Deposit deposit, Connection con)
+	public long insert(Deposit deposit, Connection con) throws MBankException
 	{
 		try
 		{
@@ -45,16 +45,23 @@ public class DepositDBManager implements DepositManager
 			ps.setDate(6,
 					new java.sql.Date(deposit.getClosing_date().getTime()));
 			ps.execute();
-			if (ps.getUpdateCount() > 0)
-			{
-				return true;
-			}
 		} catch (SQLException e)
 		{
-			System.err.println("Failed to insert into Deposits table");
-			e.printStackTrace();
+			throw new MBankException("Failed to insert into Deposits table");
 		}
-		return false;
+		String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
+		PreparedStatement ps2;
+		long depositId = 0;
+		try {
+			ps2 = con.prepareStatement(sql2);
+			ps2.execute();
+			ResultSet rs = ps2.getResultSet();
+			rs.next();
+			depositId = rs.getLong(1);
+		} catch (SQLException e) {
+			throw new MBankException("Failed to retrieve new deposit ID");
+		}
+	return depositId;
 	}
 
 	@Override

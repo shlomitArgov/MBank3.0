@@ -13,6 +13,7 @@ import java.util.List;
 import mbank.database.beans.Activity;
 import mbank.database.beans.enums.ActivityType;
 import mbank.database.managersInterface.ActivityManager;
+import mbankExceptions.MBankException;
 
 /**
  * @author Shlomit Argov
@@ -27,7 +28,7 @@ public class ActivityDBManager implements ActivityManager
 	}
 	
 	@Override
-	public boolean insert(Activity activity, Connection con)
+	public long insert(Activity activity, Connection con) throws MBankException
 	{
 		try
 		{
@@ -42,16 +43,23 @@ public class ActivityDBManager implements ActivityManager
 			ps.setInt(5, activity.getActivityType().getVal());
 			ps.setString(6, activity.getDescription());
 			ps.execute();
-			if (ps.getUpdateCount() > 0)
-			{
-				return true;
-			}
 		} catch (SQLException e)
 		{
-			System.err.println("Failed to insert into Activity table");
-			e.printStackTrace();
+			throw new MBankException("Failed to into '" + tableName + "' table");
 		}
-		return false;
+		String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
+		PreparedStatement ps2;
+		long activityId = 0;
+		try {
+			ps2 = con.prepareStatement(sql2);
+			ps2.execute();
+			ResultSet rs = ps2.getResultSet();
+			rs.next();
+			activityId = rs.getLong(1);
+		} catch (SQLException e) {
+			throw new MBankException("Failed to retrieve new activity ID");
+		}
+	return activityId;
 	}
 
 	@Override

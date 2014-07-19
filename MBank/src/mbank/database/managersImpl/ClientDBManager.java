@@ -27,7 +27,7 @@ public class ClientDBManager implements ClientManager
 	}
 
 	@Override
-	public void insert(Client client, Connection con) throws MBankException
+	public long insert(Client client, Connection con) throws MBankException
 	{
 		try
 		{
@@ -45,8 +45,21 @@ public class ClientDBManager implements ClientManager
 			
 		} catch (SQLException e)
 		{
-			throw new MBankException("Database error:\n" + e.getLocalizedMessage());
+			throw new MBankException("Failed to add new client:\n");
 		}
+			String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
+			PreparedStatement ps2;
+			long clientId = 0;
+			try {
+				ps2 = con.prepareStatement(sql2);
+				ps2.execute();
+				ResultSet rs = ps2.getResultSet();
+				rs.next();
+				clientId = rs.getLong(1);
+			} catch (SQLException e) {
+				throw new MBankException("Failed to retrieve new client ID");
+			}
+		return clientId;
 	}
 
 	@Override

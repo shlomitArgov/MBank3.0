@@ -15,7 +15,7 @@ import mbankExceptions.MBankException;
  */
 public interface ClientManager
 {
-	void insert(Client client, Connection con) throws MBankException;
+	long insert(Client client, Connection con) throws MBankException;
 
 	boolean update(Client client, Connection con) throws MBankException;
 

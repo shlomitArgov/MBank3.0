@@ -15,7 +15,7 @@ import mbankExceptions.MBankException;
  */
 public interface AccountManager
 {
-	void insert(Account account, Connection con) throws MBankException;
+	long insert(Account account, Connection con) throws MBankException;
 
 	boolean update(Account account, Connection con);
 

@@ -112,38 +112,32 @@ public class AdminAction extends Action
 		}
 		
 		// add the new client
-		long accountId;
 		ClientType clientType = getClientType(deposit); 
 		double creditLimit = getCreditLimit(clientType);
 		Client client = new Client(clientName, String.valueOf(clientPassword),clientType, clientAddress, clientEmail, clientPhone, "Created client with nam [" + clientName + "]"); // refactor to use properties file
-		//Add new account for the client
-		try{
-		accountId = CreateNewAccount(client.getClient_id(), deposit, creditLimit);
-		}
-		catch(MBankException e)
-		{
-			throw new MBankException(e.getLocalizedMessage());
-		}
+		boolean addClientSucceeded = false;
 		try
 		{
-			clientManager.insert(client, this.getCon());
+			client.setClient_id(clientManager.insert(client, this.getCon()));
+			/* If we reached this point then the client was added successfully */
+			addClientSucceeded = true;
 		}
 		catch(MBankException e)
+		{	/* Failed to add new client */
+			throw new MBankException(e.getLocalizedMessage());
+		}
+		if(addClientSucceeded)
 		{
-			//clean up added account in case adding a new client fails
-			AccountManager accountManager = new AccountDBManager();
-			String sqlError="";
-			try
+			//Add new account for the client
+			try{
+			CreateNewAccount(client.getClient_id(), deposit, creditLimit);
+			}
+			catch(MBankException e)
 			{
-				accountManager.delete(accountId, this.getCon());	
+				/* Delete the client since an account could not be created for it */
+				clientManager.delete(client, this.getCon());
+				throw new MBankException("\nFailed to add an for the new client\nClient has not been added");
 			}
-			catch(MBankException e1)
-			{/* Retrieve exception information in case of problem when trying to delete the account that was 
-			created for the user that could not be added*/
-				sqlError+=e1.getLocalizedMessage();
-			}
-			
-			throw new MBankException(e.getLocalizedMessage() + "\nFailed to remove account with ID [" + accountId + "]:\n" + sqlError);
 		}
 		return client.getClient_id();
 	}
@@ -276,7 +270,10 @@ private void testUniqueClientnamePasswordCombination(
 		{
 			ActivityManager activityManager = new ActivityDBManager();
 			Activity activity = new Activity(clientId, accountBalance, new java.util.Date(System.currentTimeMillis()), commission * accountBalance * (-1), ActivityType.REMOVE_CLIENT,"Commission charged due to negative balance account upon client removal(client ID: " + clientId + ")");
-			if(!(activityManager.insert(activity, this.getCon())))
+			try
+			{
+				activityManager.insert(activity, this.getCon());
+			}catch (MBankException e)
 			{
 				throw new MBankException("Failed to insert activity for account[" + account.getAccount_id() + "]  removal");
 			}

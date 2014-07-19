@@ -9,6 +9,7 @@ import java.util.List;
 
 import mbank.database.beans.Activity;
 import mbank.database.beans.enums.ActivityType;
+import mbankExceptions.MBankException;
 
 /**
  * @author Shlomit
@@ -16,7 +17,7 @@ import mbank.database.beans.enums.ActivityType;
  */
 public interface ActivityManager
 {
-	boolean insert(Activity activity, Connection con);
+	long insert(Activity activity, Connection con) throws MBankException;
 
 	boolean update(Activity activity, Connection con);
 

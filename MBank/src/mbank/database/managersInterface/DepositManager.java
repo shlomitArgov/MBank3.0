@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mbank.database.beans.Deposit;
+import mbankExceptions.MBankException;
 
 /**
  * @author Shlomit
@@ -15,7 +16,7 @@ import mbank.database.beans.Deposit;
  */
 public interface DepositManager
 {
-	boolean insert(Deposit deposit, Connection con);
+	long insert(Deposit deposit, Connection con) throws MBankException;
 
 	boolean update(Deposit deposit, Connection con);
 

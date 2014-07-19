@@ -27,7 +27,7 @@ public class AccountDBManager implements AccountManager
 	}
 
 	@Override
-	public void insert(Account account, Connection con) throws MBankException
+	public long insert(Account account, Connection con) throws MBankException
 	{
 		try
 		{
@@ -43,6 +43,19 @@ public class AccountDBManager implements AccountManager
 		{
 			throw new MBankException("Database error:\n" + e.getLocalizedMessage());
 		}
+		String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
+		PreparedStatement ps2;
+		long accountId = 0;
+		try {
+			ps2 = con.prepareStatement(sql2);
+			ps2.execute();
+			ResultSet rs = ps2.getResultSet();
+			rs.next();
+			accountId = rs.getLong(1);
+		} catch (SQLException e) {
+			throw new MBankException("Failed to retrieve new account ID");
+		}
+	return accountId;
 	}
 
 	@Override
