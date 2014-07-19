@@ -32,15 +32,15 @@ public class ActivityDBManager implements ActivityManager
 		try
 		{
 			String sql = "INSERT INTO " + tableName
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+					+ " VALUES (?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setLong(1, activity.getId());
-			ps.setLong(2, activity.getClient_id());
-			ps.setDouble(3, activity.getAmount());
-			ps.setDate(4, new java.sql.Date(activity.getActivity_date().getTime()));
-			ps.setDouble(5, activity.getCommission());
-			ps.setInt(6, activity.getActivityType().getVal());
-			ps.setString(7, activity.getDescription());
+//			ps.setLong(1, activity.getId());
+			ps.setLong(1, activity.getClient_id());
+			ps.setDouble(2, activity.getAmount());
+			ps.setDate(3, new java.sql.Date(activity.getActivity_date().getTime()));
+			ps.setDouble(4, activity.getCommission());
+			ps.setInt(5, activity.getActivityType().getVal());
+			ps.setString(6, activity.getDescription());
 			ps.execute();
 			if (ps.getUpdateCount() > 0)
 			{
@@ -59,7 +59,7 @@ public class ActivityDBManager implements ActivityManager
 	{
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
-			sql += "id = ?, ";
+//			sql += "id = ?, ";
 			sql += "client_id = ?, ";
 			sql += "amount = ?, ";
 			sql += "activity_date = ?, ";
@@ -71,14 +71,14 @@ public class ActivityDBManager implements ActivityManager
 			
 			PreparedStatement ps = con.prepareStatement(sql);
 			
-			ps.setLong(1, activity.getId());
-			ps.setLong(2, activity.getClient_id());
-			ps.setDouble(3, activity.getAmount());
-			ps.setDate(4, new java.sql.Date(activity.getActivity_date().getTime()));
-			ps.setDouble(5, activity.getCommission());
-			ps.setInt(6, activity.getActivityType().getVal());
-			ps.setString(7, activity.getDescription());
-			ps.setLong(8, activity.getId());
+//			ps.setLong(1, activity.getId());
+			ps.setLong(1, activity.getClient_id());
+			ps.setDouble(2, activity.getAmount());
+			ps.setDate(3, new java.sql.Date(activity.getActivity_date().getTime()));
+			ps.setDouble(4, activity.getCommission());
+			ps.setInt(5, activity.getActivityType().getVal());
+			ps.setString(6, activity.getDescription());
+			ps.setLong(7, activity.getId());
 			ps.execute();
 			if (ps.getUpdateCount() > 0)
 			{

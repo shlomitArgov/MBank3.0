@@ -33,16 +33,16 @@ public class DepositDBManager implements DepositManager
 		try
 		{
 			String sql = "INSERT INTO " + tableName
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+					+ " VALUES (?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setLong(1, deposit.getDeposit_id());
-			ps.setLong(2, deposit.getClient_id());
-			ps.setDouble(3, deposit.getBalance());
-			ps.setString(4, deposit.getType().getTypeStringValue());
-			ps.setDouble(5, deposit.getEstimated_balance());
-			ps.setDate(6,
+//			ps.setLong(1, deposit.getDeposit_id());
+			ps.setLong(1, deposit.getClient_id());
+			ps.setDouble(2, deposit.getBalance());
+			ps.setString(3, deposit.getType().getTypeStringValue());
+			ps.setDouble(4, deposit.getEstimated_balance());
+			ps.setDate(5,
 					new java.sql.Date(deposit.getOpening_date().getTime()));
-			ps.setDate(7,
+			ps.setDate(6,
 					new java.sql.Date(deposit.getClosing_date().getTime()));
 			ps.execute();
 			if (ps.getUpdateCount() > 0)
@@ -63,7 +63,7 @@ public class DepositDBManager implements DepositManager
 		try
 		{
 			String sql = "UPDATE " + tableName + " SET ";
-			sql += "deposit_id = ?, ";
+//			sql += "deposit_id = ?, ";
 			sql += "client_id = ?, ";
 			sql += "balance = ?, ";
 			sql += "type = ?, ";
@@ -74,14 +74,14 @@ public class DepositDBManager implements DepositManager
 
 			PreparedStatement ps = con.prepareStatement(sql);
 
-			ps.setLong(1, deposit.getDeposit_id());
-			ps.setLong(2, deposit.getClient_id());
-			ps.setDouble(3, deposit.getBalance());
-			ps.setString(4, deposit.getType().getTypeStringValue());
-			ps.setDouble(5, deposit.getEstimated_balance());
-			ps.setDate(6, new java.sql.Date(deposit.getOpening_date().getTime()));
-			ps.setDate(7, new java.sql.Date(deposit.getClosing_date().getTime()));
-			ps.setLong(8, deposit.getDeposit_id());
+//			ps.setLong(1, deposit.getDeposit_id());
+			ps.setLong(1, deposit.getClient_id());
+			ps.setDouble(2, deposit.getBalance());
+			ps.setString(3, deposit.getType().getTypeStringValue());
+			ps.setDouble(4, deposit.getEstimated_balance());
+			ps.setDate(5, new java.sql.Date(deposit.getOpening_date().getTime()));
+			ps.setDate(6, new java.sql.Date(deposit.getClosing_date().getTime()));
+			ps.setLong(7, deposit.getDeposit_id());
 			ps.execute();
 
 			if (ps.getUpdateCount() > 0)

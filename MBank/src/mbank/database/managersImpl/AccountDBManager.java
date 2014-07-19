@@ -34,7 +34,6 @@ public class AccountDBManager implements AccountManager
 			String sql = "INSERT INTO " + tableName
 					+ " (client_id, balance, credit_limit, comment) VALUES ( ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
-//			ps.setLong(1, account.getAccount_id());
 			ps.setLong(1, account.getClient_id());
 			ps.setDouble(2, account.getBalance());
 			ps.setDouble(3, account.getCredit_limit());
@@ -51,7 +50,7 @@ public class AccountDBManager implements AccountManager
 	{		
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
-			sql += "account_id = ?, ";
+//			sql += "account_id = ?, ";
 			sql += "client_id = ?, ";
 			sql += "balance = ?, ";
 			sql += "credit_limit = ?, ";
@@ -60,12 +59,12 @@ public class AccountDBManager implements AccountManager
 					
 			PreparedStatement ps = con.prepareStatement(sql);
 			
-			ps.setLong(1, account.getAccount_id());
-			ps.setLong(2, account.getClient_id());
-			ps.setDouble(3, account.getBalance());
-			ps.setDouble(4, account.getCredit_limit());
-			ps.setString(5, account.getComment());
-			ps.setLong(6, account.getAccount_id());
+//			ps.setLong(1, account.getAccount_id());
+			ps.setLong(1, account.getClient_id());
+			ps.setDouble(2, account.getBalance());
+			ps.setDouble(3, account.getCredit_limit());
+			ps.setString(4, account.getComment());
+			ps.setLong(5, account.getAccount_id());
 			
 			ps.execute();
 			if (ps.getUpdateCount() > 0)

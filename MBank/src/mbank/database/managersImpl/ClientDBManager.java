@@ -54,7 +54,7 @@ public class ClientDBManager implements ClientManager
 	 {
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
-			sql += "client_id = ?, ";
+//			sql += "client_id = ?, ";
 			sql += "client_name = ?, ";
 			sql += "password = ?, ";
 			sql += "type = ?, ";
@@ -66,15 +66,15 @@ public class ClientDBManager implements ClientManager
 					
 			PreparedStatement ps = con.prepareStatement(sql);
 			
-			ps.setLong(1, client.getClient_id());
-			ps.setString(2, client.getClient_name());
-			ps.setString(3, client.getPassword());
-			ps.setString(4, client.getType().getTypeStringValue());
-			ps.setString(5, client.getAddress());
-			ps.setString(6, client.getEmail());
-			ps.setString(7, client.getPhone());
-			ps.setString(8, client.getComment());
-			ps.setLong(9, client.getClient_id());
+//			ps.setLong(1, client.getClient_id());
+			ps.setString(1, client.getClient_name());
+			ps.setString(2, client.getPassword());
+			ps.setString(3, client.getType().getTypeStringValue());
+			ps.setString(4, client.getAddress());
+			ps.setString(5, client.getEmail());
+			ps.setString(6, client.getPhone());
+			ps.setString(7, client.getComment());
+			ps.setLong(8, client.getClient_id());
 			ps.execute();
 			if (ps.getUpdateCount() > 0)
 			{
