@@ -91,13 +91,8 @@ public class ConsolePage extends JSplitPane{
 							.showMessageDialog(viewClientDetailsPane,e1.getLocalizedMessage(),"Error", JOptionPane.ERROR_MESSAGE);
 //					viewClientDetailsPane = new noSuchClientPanel(e1.getLocalizedMessage());
 				}
-				if(viewClientDetailsPane == null) /* Failed to retrieve the client details --> set the panel to be the empty panel */
-				{
-					/* Update the display pane with the empty pane */
-					ConsolePage.displayCardLayout.show(displayPane, ConsolePage.emptyCard);
-				}
-				else
-				{
+				if(!(viewClientDetailsPane == null))
+				{/* Didn't fail to retrieve the client details --> set the panel to be the empty panel */
 					/* Update the display pane with the client details pane */
 					viewClientDetailsPane.setVisible(true);
 					

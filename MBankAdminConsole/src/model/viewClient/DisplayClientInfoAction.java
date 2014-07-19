@@ -57,6 +57,8 @@ public class DisplayClientInfoAction {
                 return tooltip;
             }
 		};
+		/* Table is for display only */
+		clientTable.setEnabled(false);
 
 		// Add the table to a panel
 		JScrollPane clientDetailsPane = new JScrollPane();
