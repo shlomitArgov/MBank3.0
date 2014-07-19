@@ -28,9 +28,6 @@ import mbank.database.managersInterface.ActivityManager;
 import mbank.database.managersInterface.ClientManager;
 import mbank.database.managersInterface.DepositManager;
 import mbank.database.managersInterface.PropertyManager;
-import mbank.sequences.AccountIdSequence;
-import mbank.sequences.ActivityIdSequence;
-import mbank.sequences.ClientIdSequence;
 import mbankExceptions.MBankException;
 
 /**
@@ -115,14 +112,13 @@ public class AdminAction extends Action
 		}
 		
 		// add the new client
-		long clientId = ClientIdSequence.getNext(); //get unique ID for client
 		long accountId;
 		ClientType clientType = getClientType(deposit); 
 		double creditLimit = getCreditLimit(clientType);
-		Client client = new Client(clientId, clientName, String.valueOf(clientPassword),clientType, clientAddress, clientEmail, clientPhone, "Created client[" + clientId + "]"); // refactor to use properties file
+		Client client = new Client(clientName, String.valueOf(clientPassword),clientType, clientAddress, clientEmail, clientPhone, "Created client with nam [" + clientName + "]"); // refactor to use properties file
 		//Add new account for the client
 		try{
-		accountId = CreateNewAccount(clientId, deposit, creditLimit);
+		accountId = CreateNewAccount(client.getClient_id(), deposit, creditLimit);
 		}
 		catch(MBankException e)
 		{
@@ -149,7 +145,7 @@ public class AdminAction extends Action
 			
 			throw new MBankException(e.getLocalizedMessage() + "\nFailed to remove account with ID [" + accountId + "]:\n" + sqlError);
 		}
-		return clientId;
+		return client.getClient_id();
 	}
 
 /**
@@ -177,12 +173,11 @@ private void testUniqueClientnamePasswordCombination(
 	//executed as part of the AddNewClient method - therefore defined as private
 	private long CreateNewAccount(long clientID, double deposit, double creditLimit) throws MBankException
 	{
-		long accountID = AccountIdSequence.getNext();//get unique ID for account
 		if(deposit < 0)
 		{
 			throw new MBankException("Deposit value must be a non-negative number.\nValue entered: " + deposit);
 		}
-		Account account = new Account(accountID, clientID, deposit, creditLimit, "Created account[" + accountID + "] for client[" + clientID + "]");// refactor to use properties file
+		Account account = new Account(clientID, deposit, creditLimit, "Created account for client[" + clientID + "]");// refactor to use properties file
 		//insert account into DB
 		AccountManager accountManager = new AccountDBManager();
 		try{
@@ -261,7 +256,7 @@ private void testUniqueClientnamePasswordCombination(
 				//update bank balance by updating the activities table
 				ActivityManager activityManager = new ActivityDBManager();
 				double chargeAmount = commission*(d.getBalance() + 1);
-				Activity deleteAccountActivity = new Activity(ActivityIdSequence.getNext(), client.getClient_id(), d.getBalance(), new java.util.Date(System.currentTimeMillis()), chargeAmount, ActivityType.REMOVE_ACCOUNT, "Charged deposit[" + d.getDeposit_id() + "] with commission of " + chargeAmount + "for opening deposit before end-date (on client[" + client.getClient_id() + "] removal"); 
+				Activity deleteAccountActivity = new Activity(client.getClient_id(), d.getBalance(), new java.util.Date(System.currentTimeMillis()), chargeAmount, ActivityType.REMOVE_ACCOUNT, "Charged deposit[" + d.getDeposit_id() + "] with commission of " + chargeAmount + "for opening deposit before end-date (on client[" + client.getClient_id() + "] removal"); 
 				activityManager.insert(deleteAccountActivity, this.getCon());
 
 			}
@@ -280,7 +275,7 @@ private void testUniqueClientnamePasswordCombination(
 		if(accountBalance < 0)//the client owes the bank money
 		{
 			ActivityManager activityManager = new ActivityDBManager();
-			Activity activity = new Activity(ActivityIdSequence.getNext(), clientId, accountBalance, new java.util.Date(System.currentTimeMillis()), commission * accountBalance * (-1), ActivityType.REMOVE_CLIENT,"Commission charged due to negative balance account upon client removal(client ID: " + clientId + ")");
+			Activity activity = new Activity(clientId, accountBalance, new java.util.Date(System.currentTimeMillis()), commission * accountBalance * (-1), ActivityType.REMOVE_CLIENT,"Commission charged due to negative balance account upon client removal(client ID: " + clientId + ")");
 			if(!(activityManager.insert(activity, this.getCon())))
 			{
 				throw new MBankException("Failed to insert activity for account[" + account.getAccount_id() + "]  removal");

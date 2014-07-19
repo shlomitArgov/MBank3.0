@@ -24,8 +24,6 @@ import mbank.database.managersInterface.ActivityManager;
 import mbank.database.managersInterface.ClientManager;
 import mbank.database.managersInterface.DepositManager;
 import mbank.database.managersInterface.PropertyManager;
-import mbank.sequences.ActivityIdSequence;
-import mbank.sequences.DepositIdSequence;
 import mbankExceptions.MBankException;
 
 /**
@@ -113,7 +111,7 @@ public class ClientAction extends Action
 			account.setBalance(accountBalance - commissionRate - withdrawAmount);
 			accountManager.update(account, this.getCon());
 			ActivityManager activityManager = new ActivityDBManager();
-			Activity activity = new Activity(ActivityIdSequence.getNext(), client.getClient_id(), accountBalance - commissionRate - withdrawAmount, new java.util.Date(System.currentTimeMillis()), commissionRate, ActivityType.WITHDRAW_FROM_ACCOUNT, "Withdrew " + withdrawAmount + "from accout[" + account.getAccount_id() + "]");
+			Activity activity = new Activity(client.getClient_id(), accountBalance - commissionRate - withdrawAmount, new java.util.Date(System.currentTimeMillis()), commissionRate, ActivityType.WITHDRAW_FROM_ACCOUNT, "Withdrew " + withdrawAmount + "from accout[" + account.getAccount_id() + "]");
 			//update activity table
 			activityManager.insert(activity, this.getCon());
 			return true;
@@ -189,10 +187,10 @@ public class ClientAction extends Action
 			//safe explicit cast to int because duration is validated to be smaller than 365/40 years which are both less than MAX_INT
 			calender.add(Calendar.DAY_OF_YEAR, (int)depositDurationInDays);
 			//create deposit 
-			Deposit deposit = new Deposit(DepositIdSequence.getNext(), client.getClient_id(), depositAmount, depositType, estimatedBalance, new java.util.Date(System.currentTimeMillis()), new java.util.Date(calender.getTimeInMillis()));
+			Deposit deposit = new Deposit(client.getClient_id(), depositAmount, depositType, estimatedBalance, new java.util.Date(System.currentTimeMillis()), new java.util.Date(calender.getTimeInMillis()));
 			depositManager.insert(deposit, this.getCon());
 			//update activity table
-			Activity activity = new Activity(ActivityIdSequence.getNext(), client.getClient_id(), depositAmount, new java.util.Date(System.currentTimeMillis()), 0, ActivityType.CREATE_NEW_DEPOSIT, "Create new deposit of type: " + deposit.getType().getTypeStringValue() + " for client[" + client.getClient_id() + "]");
+			Activity activity = new Activity(client.getClient_id(), depositAmount, new java.util.Date(System.currentTimeMillis()), 0, ActivityType.CREATE_NEW_DEPOSIT, "Create new deposit of type: " + deposit.getType().getTypeStringValue() + " for client[" + client.getClient_id() + "]");
 			activityManager.insert(activity, this.getCon());
 			return true;
 		}
