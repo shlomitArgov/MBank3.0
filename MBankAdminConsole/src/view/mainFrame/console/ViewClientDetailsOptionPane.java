@@ -26,9 +26,33 @@ public class ViewClientDetailsOptionPane extends JOptionPane {
 	    String clientId = JOptionPane.showInputDialog(this,message);
 	    if (clientId != null)
 	    {
-	    	 DisplayClientInfoAction displayClientInfoAction= new DisplayClientInfoAction(clientId);
-	    	 viewClientDetailsPanel = displayClientInfoAction.getClientDetailsPane();
+	    	/* Validate client id */
+	    	if(clientId.trim().isEmpty() || (!(validateClientId(clientId))))
+	    	{
+	    		JOptionPane.showMessageDialog(this, "Client ID must be a number", "Error", JOptionPane.ERROR_MESSAGE);
+	    	}	
+	    	else
+	    	{
+		    	 DisplayClientInfoAction displayClientInfoAction= new DisplayClientInfoAction(clientId);
+		    	 viewClientDetailsPanel = displayClientInfoAction.getClientDetailsPane();
+	    	}
 	    }
 	   return viewClientDetailsPanel;
+	}
+
+	/**
+	 * @param clientId - String input from user representing the clientID in the DB
+	 * @return true if the ID is a number
+	 * 		   false - else
+	 */
+	private boolean validateClientId(String clientId) {
+		char[] clientIdCharArr = clientId.toCharArray();
+		for(char c :clientIdCharArr){
+			if(!(Character.isDigit(c)))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }
