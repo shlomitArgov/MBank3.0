@@ -28,7 +28,7 @@ public class PropertyDBManager implements PropertyManager
 	{
 		try
 		{
-			String sql = "INSERT INTO " + tableName + " VALUES (?, ?)";
+			String sql = "INSERT INTO " + tableName + " (prop_name, prop_value) VALUES (?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, property.getProp_key());
 			ps.setString(2, property.getProp_value());
@@ -108,8 +108,8 @@ public class PropertyDBManager implements PropertyManager
 			if (rs != null)
 			{	
 				if(rs.next()) //next() returns false if there are no more rows in the RS
-				{	//the first column is the property ID - not needed
-					Property p = new Property(rs.getString(2), rs.getString(3));
+				{	
+					Property p = new Property(rs.getString(1), rs.getString(2));
 					return p;
 				}
 			}
@@ -131,7 +131,7 @@ public class PropertyDBManager implements PropertyManager
 			ResultSet rs = ps.getResultSet();
 			ArrayList<Property> propertiesList= new ArrayList<>();
 			if (rs != null)
-			{
+			{	
 				while (rs.next()) // next() returns false if there are no more rows
 								// in the RS
 				{

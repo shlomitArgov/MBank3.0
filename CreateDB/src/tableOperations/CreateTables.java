@@ -16,14 +16,25 @@ import tableOperations.dbStructure.DBVarTypes;
 public class CreateTables {
 	public static boolean createTable(Connection con, String tableName, String primaryKeyName, String[]  columnNames, DBVarTypes[] columnTypes) throws SQLException
 	{
-		String sql = "CREATE TABLE " + tableName + "( ";
-		sql += primaryKeyName + " INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)";
+		String sql = "CREATE TABLE " + tableName + " (";
+		if (primaryKeyName != null)
+		{
+			sql += primaryKeyName + " INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)";
 		
-		for (int i = 0; i < columnNames.length; i++) {
-			sql += ", " + columnNames[i] + " " + columnTypes[i].getName() ;
+		
+			for (int i = 0; i < columnNames.length; i++) {
+				sql += ", " + columnNames[i] + " " + columnTypes[i].getName() ;
+			}
 		}
-//		sql += "CONSTRAINT primary_key PRIMARY KEY (" + primaryKeyName + ")";
+		else
+		{
+			for (int i = 0; i < columnNames.length -1; i++) {
+				sql += columnNames[i] + " " + columnTypes[i].getName() + ", ";
+			}
+			sql += columnNames[columnNames.length -1] + " " + columnTypes[columnTypes.length -1].getName();
+		}
 		sql+=")";
+		System.out.println(sql);
 		PreparedStatement pstatement = con.prepareStatement(sql);
 		pstatement.execute();
 		return true;
