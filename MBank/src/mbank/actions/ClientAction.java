@@ -141,7 +141,7 @@ public class ClientAction extends Action
 		return true;
 	}
 	
-	public boolean createNewDeposit(Client client, DepositType depositType, Double depositAmount, java.util.Date closeDate)
+	public boolean createNewDeposit(Client client, DepositType depositType, Double depositAmount, java.util.Date closeDate) throws  MBankException
 	{
 		
 		long depositDurationInDays = (closeDate.getTime() - System.currentTimeMillis())/(60*60*24*1000);

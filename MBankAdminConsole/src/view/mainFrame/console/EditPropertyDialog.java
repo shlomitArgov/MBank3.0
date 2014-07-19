@@ -28,11 +28,13 @@ public class EditPropertyDialog extends JDialog {
 	private Property prop;
 	private SystemPropertyTableModel tableModel;
 	private JTextField propertyValue;
+	private JFrame frame;
 	
 	public EditPropertyDialog(JFrame frame, Property prop, SystemPropertyTableModel tableModel) {
 		super(frame, "Edit property", true);
 		this.prop = prop;
 		this.tableModel = tableModel;
+		this.frame = frame;
 		setMinimumSize(new Dimension(300, 200));
 		setMaximumSize(new Dimension(300, 200));
 		setLocationRelativeTo(null); /* center of screen */
@@ -64,13 +66,13 @@ public class EditPropertyDialog extends JDialog {
 				try {
 					/* Update the system property in the DB */
 					SystemPropertyModel.getInstance(LoginAction.getAdminAction()).setProperty(new Property(prop.getProp_key(), propertyValue.getText()));
+					/* This will only take place if not exception was thrown when trying to edit a property */
+					tableModel.fireTableDataChanged();
+					closeDialog();
 				} catch (MBankException e) {
-					new JOptionPane("Failed to update property value: \n" + e.getLocalizedMessage(), JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION);
+					closeDialog(); // Close the edit property dialog
+					JOptionPane.showMessageDialog(frame, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-				tableModel.fireTableDataChanged();
-				closeDialog();
-//				(newCourseId, "Course #" + newCourseId++, (int)(Math.random() * 51));
-//				this.coursesTableModel.fireTableDataChanged();
 			}
 		});
 		this.add(okBtn, BorderLayout.SOUTH);

@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import mbank.actions.AdminAction;
 import mbank.database.beans.Property;
+import mbankExceptions.MBankException;
 import model.login.LoginAction;
 /**
  * @author Shlomit Argov
@@ -20,7 +21,16 @@ public class SystemPropertyTableModel extends AbstractTableModel{
 	private List<Property> properties;
 	
 	public SystemPropertyTableModel() {
-		this.properties = SystemPropertyModel.getInstance(adminAction).getProperties();
+		try {
+			this.properties = SystemPropertyModel.getInstance(adminAction).getProperties();
+		} catch (MBankException e) {
+			/* This should be unreachable code - it should be impossible to enter
+			 * invalid values into the properties table */
+			
+			/* Display error message */
+//			JOptionPane.showMessageDialog(ConsolePage.displayPane, "Login failed:\n" + e1.getLocalizedMessage(), "Failed to retrieve system properties", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -36,7 +46,13 @@ public class SystemPropertyTableModel extends AbstractTableModel{
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		/* Update properties from DB */
-		this.properties = SystemPropertyModel.getInstance(adminAction).getProperties();
+		try {
+			this.properties = SystemPropertyModel.getInstance(adminAction).getProperties();
+		} catch (MBankException e) {
+			/* This should be unreachable code - it should be impossible to enter
+			 * invalid values into the properties table */
+			e.printStackTrace();
+		}
 		
 		/* Return the property at the requested location */
 		Property property = this.properties.get(rowIndex);

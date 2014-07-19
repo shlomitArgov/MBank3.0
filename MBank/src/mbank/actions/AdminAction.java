@@ -197,7 +197,7 @@ private void testUniqueClientnamePasswordCombination(
 	}
 	
 //helper method: get credit limit according to client type
-	private double getCreditLimit(ClientType clientType)
+	private double getCreditLimit(ClientType clientType) throws MBankException
 	{
 		PropertyManager propertyManager = new PropertyDBManager();
 		double regularCreditLimit = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_CREDIT_LIMIT.getPropertyName(), this.getCon()).getProp_value());
@@ -327,13 +327,13 @@ private void testUniqueClientnamePasswordCombination(
 		return Arrays.toString(activities.toArray());
 	}
 	
-	public ArrayList<Property> viewSystemProperties()
+	public ArrayList<Property> viewSystemProperties() throws MBankException
 	{
 		PropertyManager propertyManager = new PropertyDBManager();
 		return propertyManager.queryAllProperties(this.getCon());
 	}
 	
-	public void updateSystemProperty(Property property)
+	public void updateSystemProperty(Property property) throws MBankException
 	{
 		PropertyManager propertyManager = new PropertyDBManager();
 		propertyManager.update(property, this.getCon());

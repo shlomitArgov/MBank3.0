@@ -40,6 +40,7 @@ public class ConsolePage extends JSplitPane{
 	private JScrollPane viewClientDetailsPane;
 	private JPanel viewAndEditSystemPropertyPane;
 	private JPanel displayPane;
+
 	private JScrollPane emptyPane;
 		
 	public ConsolePage() {
@@ -111,7 +112,16 @@ public class ConsolePage extends JSplitPane{
 		createButton(buttonsPane, "View and edit a system property", 'P', "View and edit system property", new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				viewAndEditSystemPropertyPane = new ViewAndEditSystemPropertyPanel();
+				try {
+					viewAndEditSystemPropertyPane = new ViewAndEditSystemPropertyPanel();
+				} catch (MBankException e1) {
+					/* This should be unreachable code - it should be impossible to enter
+					 * invalid values into the properties table */
+					
+					/* Display error message */
+					JOptionPane.showMessageDialog(displayPane, "Failed to retrieve properties\n" + e1.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+				}
 				viewAndEditSystemPropertyPane.setVisible(true);
 				
 				/* Add the system properties table panel to the display panel */
@@ -138,6 +148,8 @@ public class ConsolePage extends JSplitPane{
 		createButton(buttonsPane, "Logout", 'L', "Logout", new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				/* Clear display pane in console */
+				ConsolePage.displayCardLayout.show(displayPane, emptyCard);
 				/* Display login page */
 				MainFrame.mainCardLayout.show(MainFrame.getInstance().getContentPane(), MainFrame.loginCard);
 			}

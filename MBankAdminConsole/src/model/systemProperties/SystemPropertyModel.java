@@ -18,11 +18,11 @@ public class SystemPropertyModel{
 	private static SystemPropertyModel instance = null; 
 	
 	/* Init model with data from the server */
-	private SystemPropertyModel(){
+	private SystemPropertyModel() throws MBankException{
 		getProperties();
 	}
 	/* Get properties from the DB */
-	public List<Property> getProperties(){
+	public List<Property> getProperties() throws MBankException{
 		return adminAction.viewSystemProperties();
 	}
 	
@@ -31,7 +31,7 @@ public class SystemPropertyModel{
 		adminAction.updateSystemProperty(property);
 	}
 	
-	public static SystemPropertyModel getInstance(AdminAction action){
+	public static SystemPropertyModel getInstance(AdminAction action) throws MBankException{
 		if(instance == null)
 		{
 			instance = new SystemPropertyModel();

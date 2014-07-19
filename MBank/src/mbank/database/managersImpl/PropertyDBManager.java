@@ -8,8 +8,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import mbank.database.beans.Property;
 import mbank.database.managersInterface.PropertyManager;
+import mbankExceptions.MBankException;
 
 /**
  * @author Shlomit Argov
@@ -46,8 +48,9 @@ public class PropertyDBManager implements PropertyManager
 	}
 
 	@Override
-	public boolean update(Property property, Connection con)
+	public void update(Property property, Connection con) throws MBankException
 	{
+
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
 			sql += "prop_value = ? ";
@@ -58,20 +61,13 @@ public class PropertyDBManager implements PropertyManager
 			ps.setString(2, property.getProp_key());
 			ps.setString(1, property.getProp_value());
 			ps.execute();
-			if (ps.getUpdateCount() > 0)
-			{
-				return true;
-			}
 		} 
 		catch (SQLException e)
 		{
-			System.err.println("Failed to update " + tableName + " table");
-			e.printStackTrace();
+			throw new MBankException("Failed to update '" + tableName + "' table\n" + e.getLocalizedMessage());
 		}
-	 
-	return false;
-	
 	}
+
 
 	@Override
 	public boolean delete(Property property, Connection con)
@@ -96,7 +92,7 @@ public class PropertyDBManager implements PropertyManager
 	}
 
 	@Override
-	public Property query(String propertyName, Connection con)
+	public Property query(String propertyName, Connection con) throws MBankException
 	{
 		try
 		{
@@ -122,7 +118,7 @@ public class PropertyDBManager implements PropertyManager
 	}
 
 	@Override
-	public ArrayList<Property> queryAllProperties(Connection con) {
+	public ArrayList<Property> queryAllProperties(Connection con) throws MBankException {
 		try
 		{
 			String sql = "SELECT * FROM " + tableName;

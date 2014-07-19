@@ -16,6 +16,7 @@ import javax.swing.plaf.FontUIResource;
 
 import view.mainFrame.MainFrame;
 import mbank.database.beans.Property;
+import mbankExceptions.MBankException;
 import model.systemProperties.SystemPropertyTableModel;
 
 public class ViewAndEditSystemPropertyPanel extends JPanel {
@@ -23,13 +24,13 @@ public class ViewAndEditSystemPropertyPanel extends JPanel {
 	private JTable propTable;
 	private SystemPropertyTableModel propertyTableModel;
 	
-	public ViewAndEditSystemPropertyPanel() {
+	public ViewAndEditSystemPropertyPanel() throws MBankException {
 		BorderLayout borderLayout = new BorderLayout(10, 20);
 		this.setLayout(borderLayout);
 		
 		init();	
 		}
-	private void init() {
+	private void init() throws MBankException {
 		/* Add header text to north */
 		JLabel headerText = new JLabel("System properties", JLabel.CENTER);
 		headerText.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -38,7 +39,7 @@ public class ViewAndEditSystemPropertyPanel extends JPanel {
 		this.add(headerText, BorderLayout.NORTH);
 		
 		/* Add instruction text to south text */
-		JLabel instructionText = new JLabel("*Click on a property in order to edit it");
+		JLabel instructionText = new JLabel("*Double click on a property entry in order to edit it");
 		instructionText.setFont(new Font("Arial", Font.ITALIC, 16));
 		instructionText.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.add(instructionText, BorderLayout.SOUTH);
