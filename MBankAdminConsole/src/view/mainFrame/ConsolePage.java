@@ -93,18 +93,23 @@ public class ConsolePage extends JSplitPane{
 				}
 				if(viewClientDetailsPane == null) /* Failed to retrieve the client details --> set the panel to be the empty panel */
 				{
-					viewClientDetailsPane = emptyPane;
+					/* Update the display pane with the empty pane */
+					ConsolePage.displayCardLayout.show(displayPane, ConsolePage.emptyCard);
 				}
-				viewClientDetailsPane.setVisible(true);
-				
-				/* Add the client details panel to the display panel */
-				displayPane.add(viewClientDetailsPane, ConsolePage.viewClientDetailsCard);
-				
-				/* Add the client details panel to the cardlayout */
-				ConsolePage.displayCardLayout.addLayoutComponent(viewClientDetailsPane, ConsolePage.viewClientDetailsCard);
+				else
+				{
+					/* Update the display pane with the client details pane */
+					viewClientDetailsPane.setVisible(true);
+					
+					/* Add the client details panel to the display panel */
+					displayPane.add(viewClientDetailsPane, ConsolePage.viewClientDetailsCard);
+					
+					/* Add the client details panel to the cardlayout */
+					ConsolePage.displayCardLayout.addLayoutComponent(viewClientDetailsPane, ConsolePage.viewClientDetailsCard);
 
-				/* Update the display pane with the client details */
-				ConsolePage.displayCardLayout.show(displayPane, ConsolePage.viewClientDetailsCard);
+					/* Update the display pane with the client details */
+					ConsolePage.displayCardLayout.show(displayPane, ConsolePage.viewClientDetailsCard);
+				}
 			}
 		});
 		
