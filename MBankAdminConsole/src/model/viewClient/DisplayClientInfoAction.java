@@ -1,5 +1,7 @@
 package model.viewClient;
 
+import java.awt.event.MouseEvent;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -35,7 +37,26 @@ public class DisplayClientInfoAction {
 				client.getType().getTypeStringValue(), client.getComment() } };
 
 		// Create a new table to display the client details
-		JTable clientTable = new JTable(dataValues, columnNames);
+		JTable clientTable = new JTable(dataValues, columnNames)
+		{
+			private static final long serialVersionUID = 2353889227742069842L;
+
+			//Implement table cell tool tips.  
+			@Override
+            public String getToolTipText(MouseEvent e) {
+                String tooltip = null;
+                java.awt.Point p = e.getPoint();
+                int rowIndex = rowAtPoint(p);
+                int colIndex = columnAtPoint(p);
+
+                try {
+                      tooltip = getValueAt(rowIndex, colIndex).toString();
+                } catch (RuntimeException e1) {
+                    //catch null pointer exception if mouse is over an empty line
+                }
+                return tooltip;
+            }
+		};
 
 		// Add the table to a panel
 		JScrollPane clientDetailsPane = new JScrollPane();
