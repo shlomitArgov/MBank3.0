@@ -32,13 +32,13 @@ public class AccountDBManager implements AccountManager
 		try
 		{
 			String sql = "INSERT INTO " + tableName
-					+ " VALUES (?, ?, ?, ?, ?)";
+					+ " (client_id, balance, credit_limit, comment) VALUES ( ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setLong(1, account.getAccount_id());
-			ps.setLong(2, account.getClient_id());
-			ps.setDouble(3, account.getBalance());
-			ps.setDouble(4, account.getCredit_limit());
-			ps.setString(5, account.getComment());
+//			ps.setLong(1, account.getAccount_id());
+			ps.setLong(1, account.getClient_id());
+			ps.setDouble(2, account.getBalance());
+			ps.setDouble(3, account.getCredit_limit());
+			ps.setString(4, account.getComment());
 			ps.execute();
 		} catch (SQLException e)
 		{

@@ -31,16 +31,16 @@ public class ClientDBManager implements ClientManager
 	{
 		try
 		{
-			String sql = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO " + tableName + " (client_name, password, client_type, address, email, phone, comment) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setLong(1, client.getClient_id());
-			ps.setString(2, client.getClient_name());
-			ps.setString(3, client.getPassword());
-			ps.setString(4, client.getType().getTypeStringValue());
-			ps.setString(5, client.getAddress());
-			ps.setString(6, client.getEmail());
-			ps.setString(7, client.getPhone());
-			ps.setString(8, client.getComment());
+//			ps.setLong(1, client.getClient_id());
+			ps.setString(1, client.getClient_name());
+			ps.setString(2, client.getPassword());
+			ps.setString(3, client.getType().getTypeStringValue());
+			ps.setString(4, client.getAddress());
+			ps.setString(5, client.getEmail());
+			ps.setString(6, client.getPhone());
+			ps.setString(7, client.getComment());
 			ps.execute();
 			
 		} catch (SQLException e)
