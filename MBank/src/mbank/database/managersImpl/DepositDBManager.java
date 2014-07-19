@@ -33,7 +33,7 @@ public class DepositDBManager implements DepositManager
 		try
 		{
 			String sql = "INSERT INTO " + tableName
-					+ " VALUES (?, ?, ?, ?, ?, ?)";
+					+ " (client_id, balance, deposit_type, estimated_balance, opening_date, closing_date) VALUES (?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
 //			ps.setLong(1, deposit.getDeposit_id());
 			ps.setLong(1, deposit.getClient_id());

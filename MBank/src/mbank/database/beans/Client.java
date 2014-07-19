@@ -56,6 +56,28 @@ public class Client
 		this.comment = comment;
 	}
 	
+	public Client(String client_name, String password,
+			ClientType type, String address, String email, String phone,
+			String comment) throws MBankException
+	{
+		if(client_name.length() == 0)
+		{
+			throw new MBankException("Client name must not be empty");
+		}
+		if(password.length() == 0)
+		{
+			throw new MBankException("Password must not be empty");
+		}
+		this.client_id = 0;
+		this.client_name = client_name;
+		this.password = password;
+		this.type = type;
+		this.address = address;
+		this.email = email;
+		this.phone = phone;
+		this.comment = comment;
+	}
+	
 	public String getClient_name()
 	{
 		return client_name;

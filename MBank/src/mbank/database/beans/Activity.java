@@ -60,6 +60,19 @@ public class Activity
 		this.description = description;
 		this.activityType = activityType;
 	}
+	
+	public Activity(long client_id, double amount, Date activity_date,
+			double commission, ActivityType activityType, String description)
+	{
+		super();
+		this.id = 0;
+		this.client_id = client_id;
+		this.amount = amount;
+		this.activity_date = activity_date;
+		this.commission = commission;
+		this.description = description;
+		this.activityType = activityType;
+	}
 
 	public long getClient_id()
 	{

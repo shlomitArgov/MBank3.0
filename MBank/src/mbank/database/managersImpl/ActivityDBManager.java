@@ -32,7 +32,7 @@ public class ActivityDBManager implements ActivityManager
 		try
 		{
 			String sql = "INSERT INTO " + tableName
-					+ " VALUES (?, ?, ?, ?, ?, ?)";
+					+ " (client_id, amount, activity_date, commission, ACTIVITY_TYPE, description) VALUES (?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
 //			ps.setLong(1, activity.getId());
 			ps.setLong(1, activity.getClient_id());
@@ -66,7 +66,7 @@ public class ActivityDBManager implements ActivityManager
 			sql += "commission = ?, ";
 			sql += "activity_type = ?, ";
 			sql += "description = ? ";
-			sql += "WHERE id = ?";
+			sql += "WHERE activity_id = ?";
 			
 			
 			PreparedStatement ps = con.prepareStatement(sql);
@@ -96,7 +96,7 @@ public class ActivityDBManager implements ActivityManager
 	@Override
 	public boolean delete(Activity activity, Connection con)
 	{
-		String sql = "DELETE FROM " + tableName + " WHERE id = ?";
+		String sql = "DELETE FROM " + tableName + " WHERE activity_id = ?";
 		try
 		{
 			PreparedStatement ps = con.prepareStatement(sql);

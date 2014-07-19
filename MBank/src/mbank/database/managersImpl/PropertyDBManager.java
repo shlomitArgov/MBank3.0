@@ -28,7 +28,7 @@ public class PropertyDBManager implements PropertyManager
 	{
 		try
 		{
-			String sql = "INSERT INTO " + tableName + " (prop_name, prop_value) VALUES (?, ?)";
+			String sql = "INSERT INTO " + tableName + " (prop_key, prop_value) VALUES (?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, property.getProp_key());
 			ps.setString(2, property.getProp_value());

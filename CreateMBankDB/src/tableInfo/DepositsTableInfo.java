@@ -19,7 +19,7 @@ public class DepositsTableInfo extends TableInfo {
 	{
 		DBVarTypes.BIGINT  // client id
 		,DBVarTypes.DOUBLE // balance
-		,DBVarTypes.DOUBLE // deposit_type
+		,DBVarTypes.VARCHAR // deposit_type
 		,DBVarTypes.DOUBLE // estimated_balance
 		,DBVarTypes.DATE // opening_date
 		,DBVarTypes.DATE // closing_date

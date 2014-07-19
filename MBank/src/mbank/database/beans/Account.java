@@ -34,6 +34,15 @@ public class Account
 		this.credit_limit = credit_limit;
 		this.comment = comment;
 	}
+	public Account(long client_id, double balance,
+			double credit_limit, String comment)
+	{
+		this.account_id = 0;
+		this.client_id = client_id;
+		this.balance = balance;
+		this.credit_limit = credit_limit;
+		this.comment = comment;
+	}
 
 	public long getClient_id()
 	{

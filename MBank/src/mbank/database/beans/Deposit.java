@@ -47,6 +47,19 @@ public class Deposit
 		this.opening_date = opening_date;
 		this.closing_date = closing_date;
 	}
+	
+	public Deposit(long client_id, double balance,
+			DepositType type, double estimated_balance, Date opening_date,
+			Date closing_date)
+	{
+		this.deposit_id = 0;
+		this.client_id = client_id;
+		this.balance = balance;
+		this.type = type;
+		this.estimated_balance = estimated_balance;
+		this.opening_date = opening_date;
+		this.closing_date = closing_date;
+	}
 
 	public long getClient_id()
 	{
