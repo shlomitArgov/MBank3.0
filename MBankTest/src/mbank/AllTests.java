@@ -1,5 +1,6 @@
-import mbank.actionsTest.ActionTest;
-import mbank.actionsTest.AdminActionTest;
+package mbank;
+import mbank.actions.ActionTest;
+import mbank.actions.AdminActionTest;
 import mbank.database.connectionTest.ConnectionPoolTest;
 import mbank.database.managersImplTest.DBManagersTest;
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package mbank.actionsTest;
+package mbank.actions;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

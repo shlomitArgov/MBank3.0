@@ -71,6 +71,7 @@ public class AdminAction extends Action
 			else if(details[i].getColumnName().equals(ClientAttributes.CLIENT_TYPE.getAttribute()))
 			{
 				c.setType(ClientType.getEnumFromString(details[i].getColumnValue()));
+				//TODO change client's account limit
 			}
 			else if(details[i].getColumnName().equals(ClientAttributes.COMMENT.getAttribute()))
 			{

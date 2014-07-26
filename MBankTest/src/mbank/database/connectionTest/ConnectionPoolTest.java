@@ -4,8 +4,11 @@
 package mbank.database.connectionTest;
 
 import java.sql.Connection;
+
+import mbank.Util;
 import mbank.database.connection.ConnectionPool;
 import mbankExceptions.MBankException;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,11 +19,12 @@ import org.junit.Test;
  */
 public class ConnectionPoolTest {
 
-	private static final String url = "jdbc:derby://localhost:1527/MBankDB;";
+	private static final String url = Util.DB_URL;
 	private static ConnectionPool connectionPool;
-	private static Connection[] connections =new Connection[20];
+	private static Connection[] connections = new Connection[20];
 			
 	@BeforeClass
+	/* Create a connection pool object initialized with 5 connections */
 	public static void oneTimeSetUp() {
 		try {
 			connectionPool = new ConnectionPool(url, 5);
@@ -35,7 +39,14 @@ public class ConnectionPoolTest {
 	public void testCheckout() {
 		try {
 			for (int i = 0; i < connections.length; i++) {
+				System.out.println("Number of free connections before checkout: " + connectionPool.getAvailableConnections().size());
+				System.out.println("Number of used connections before checkout: " + connectionPool.getUsedConnections().size());
 				connections[i] = connectionPool.checkout();
+				System.out.println("Checked out connection #:" + i);
+				System.out.println("Number of free connections after checkout: " + connectionPool.getAvailableConnections().size());
+				System.out.println("Number of used connections after checkout: " + connectionPool.getUsedConnections().size());
+				System.out.println();
+
 			}
 		} catch (MBankException e) {
 			Assert.fail("Failed to checkout connections from connection pool \n" + e.getMessage());
@@ -44,12 +55,14 @@ public class ConnectionPoolTest {
 
 	@Test
 	public void testCheckin() {
-		for (int i = 0; i < connections.length; i++) {
-//			if(connections[i] == null)
-//			{
-//				System.out.println("connection is null");
-//			}
+		for (int i = 0; i < connections.length ; i++) {
+			System.out.println("Number of free connections before checkin: " + connectionPool.getAvailableConnections().size());
+			System.out.println("Number of used connections before checkin: " + connectionPool.getUsedConnections().size());
 			connectionPool.checkin(connections[i]);
+			System.out.println("Checked in connection #:" + i);
+			System.out.println("Number of free connections after checkin: " + connectionPool.getAvailableConnections().size());
+			System.out.println("Number of used connections after checkin: " + connectionPool.getUsedConnections().size());
+			System.out.println();
 		}	
 	}
 }

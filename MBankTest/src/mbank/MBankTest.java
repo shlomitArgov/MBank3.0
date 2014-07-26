@@ -1,3 +1,4 @@
+package mbank;
 import static org.junit.Assert.*;
 
 import java.sql.Connection;
@@ -8,7 +9,6 @@ import mbank.actions.AdminAction;
 import mbank.database.beans.Client;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.managersImpl.ClientDBManager;
-import mbank.sequences.ClientIdSequence;
 import mbankExceptions.MBankException;
 
 import org.junit.Test;
@@ -34,11 +34,23 @@ public class MBankTest {
 		try {
 			con = myBank.getConnection();
 		} catch (MBankException e1) {
+			fail("Failed to connect to MBank DB");
+			e1.printStackTrace();
+		}
+		
+		Client adminClient = null;
+		try {
+			adminClient = new Client("system", "admin", ClientType.PLATINUM, "Ahad Ha'am 51, TLV", "mail@gmail.com", "555-5555555", "admin user comment");
+		} catch (MBankException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		Client adminClient = new Client(ClientIdSequence.getNext(), "system", "admin", ClientType.PLATINUM, "Ahad Ha'am 51, TLV", "mail@gmail.com", "555-5555555", "admin user comment");
-		clientDBManager.insert(adminClient, con);
+		try {
+			clientDBManager.insert(adminClient, con);
+		} catch (MBankException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			adminAction = myBank.login(adminUserName, adminPassword);
 		} catch (MBankException e) {

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package mbank.actionsTest;
+package mbank.actions;
 
 import static org.junit.Assert.fail;
 
