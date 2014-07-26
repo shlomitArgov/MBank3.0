@@ -63,11 +63,10 @@ public class ActivityDBManager implements ActivityManager
 	}
 
 	@Override
-	public boolean update(Activity activity, Connection con)
+	public void update(Activity activity, Connection con) throws MBankException
 	{
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
-//			sql += "id = ?, ";
 			sql += "client_id = ?, ";
 			sql += "amount = ?, ";
 			sql += "activity_date = ?, ";
@@ -79,7 +78,6 @@ public class ActivityDBManager implements ActivityManager
 			
 			PreparedStatement ps = con.prepareStatement(sql);
 			
-//			ps.setLong(1, activity.getId());
 			ps.setLong(1, activity.getClient_id());
 			ps.setDouble(2, activity.getAmount());
 			ps.setDate(3, new java.sql.Date(activity.getActivity_date().getTime()));
@@ -88,21 +86,19 @@ public class ActivityDBManager implements ActivityManager
 			ps.setString(6, activity.getDescription());
 			ps.setLong(7, activity.getId());
 			ps.execute();
-			if (ps.getUpdateCount() > 0)
+			if (!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
 		} 
-		catch (SQLException e)
+		catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to update Activity table");
-			e.printStackTrace();
+			throw new MBankException("Failed to update Activity table");
 		}
-	return false;
 	}
 
 	@Override
-	public boolean delete(Activity activity, Connection con)
+	public void delete(Activity activity, Connection con) throws MBankException
 	{
 		String sql = "DELETE FROM " + tableName + " WHERE activity_id = ?";
 		try
@@ -110,21 +106,19 @@ public class ActivityDBManager implements ActivityManager
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setLong(1, activity.getId());
 			ps.execute();
-			if(ps.getUpdateCount() > 0)
+			if(!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
 		} 
-		catch (SQLException e)
+		catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to delete activity with id: "+ activity.getId() + " from the Activity table");
-			e.printStackTrace();
+			throw new MBankException("Failed to delete activity with id: "+ activity.getId() + " from the Activity table");
 		}
-		return false;
 	}
 	
 	@Override
-	public Activity query(ActivityType activityType, long clientId, Connection con)
+	public Activity query(ActivityType activityType, long clientId, Connection con) throws MBankException
 	{
 		try
 		{
@@ -136,25 +130,29 @@ public class ActivityDBManager implements ActivityManager
 			ResultSet rs = ps.getResultSet();
 			if (rs != null)
 			{	
+				Activity a = null;
 				if(rs.next()) //next() returns false if there are no more rows in the RS
 				{	
-					Activity a = new Activity(rs.getLong(1), rs.getLong(2), rs.getDouble(3), new java.util.Date(rs.getDate(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
-					return a;
+					a = new Activity(rs.getLong(1), rs.getLong(2), rs.getDouble(3), new java.util.Date(rs.getDate(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
+					
 				}
+				return a;
 			}
-		} catch (SQLException e)
+			else
+			{
+				throw new MBankException();
+			}
+		} catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to query the Activity table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the Activity table");
 		}
-		return null;
 	}
 
 	/* (non-Javadoc)
 	 * @see mbank.database.managersInterface.ActivityManager#queryAllActivities(java.sql.Connection)
 	 */
 	@Override
-	public ArrayList<Activity> queryAllActivities(Connection con)
+	public ArrayList<Activity> queryAllActivities(Connection con) throws MBankException
 	{
 		String sql = "SELECT * FROM " + tableName;
 		try
@@ -180,14 +178,12 @@ public class ActivityDBManager implements ActivityManager
 			
 		} catch (SQLException e)
 		{
-			System.err.println("Failed to query the Activity table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the Activity table");
 		} 		
-		return null;
 	}
 
 	@Override
-	public List<Activity> queryByClientId(long clientId, Connection con) {
+	public List<Activity> queryByClientId(long clientId, Connection con) throws MBankException{
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE client_id = ?";
@@ -205,12 +201,14 @@ public class ActivityDBManager implements ActivityManager
 				}
 				return clientActivities;
 			}
-		} catch (SQLException e)
+			else
+			{
+				throw new MBankException();
+			}
+		} catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to query the Activity table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the Activity table");
 		}
-		return null;
 	}
 
 }

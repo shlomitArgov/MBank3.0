@@ -19,13 +19,13 @@ public interface ActivityManager
 {
 	long insert(Activity activity, Connection con) throws MBankException;
 
-	boolean update(Activity activity, Connection con);
+	void update(Activity activity, Connection con) throws MBankException;
 
-	boolean delete(Activity activity, Connection con);
+	void delete(Activity activity, Connection con) throws MBankException;
 
-	Activity query(ActivityType activityType,long clientId, Connection con);
+	Activity query(ActivityType activityType,long clientId, Connection con) throws MBankException;
 	
-	ArrayList<Activity> queryAllActivities(Connection con);
+	ArrayList<Activity> queryAllActivities(Connection con) throws MBankException;
 
-	List<Activity> queryByClientId(long clientId, Connection con);
+	List<Activity> queryByClientId(long clientId, Connection con) throws MBankException;
 }

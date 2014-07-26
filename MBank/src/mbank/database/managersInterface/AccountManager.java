@@ -17,15 +17,15 @@ public interface AccountManager
 {
 	long insert(Account account, Connection con) throws MBankException;
 
-	boolean update(Account account, Connection con);
-
-	boolean delete(Account account, Connection con);
+	void update(Account account, Connection con) throws MBankException;
+ 
+	void delete(Account account, Connection con) throws MBankException;
 	
 	void delete(long accountID, Connection con) throws MBankException;
 
-	Account query(Account account, Connection con);
+	Account query(Account account, Connection con) throws MBankException;
 
 	Account queryAccountByClient(long clientId, Connection con) throws MBankException;
 
-	List<Account> queryAllAccounts(Connection con);
+	List<Account> queryAllAccounts(Connection con) throws MBankException;
 }

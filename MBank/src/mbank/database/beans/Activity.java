@@ -24,7 +24,7 @@ public class Activity
 				+ ", description=" + description + "]";
 	}
 
-	private final long  id;
+	private long  id;
 	private long client_id;
 	private double amount;
 	private Date activity_date;
@@ -127,6 +127,10 @@ public class Activity
 	public long getId()
 	{
 		return id;
+	}
+	
+	public void setActivityId(long id) {
+		this.id = id;
 	}
 
 	@Override

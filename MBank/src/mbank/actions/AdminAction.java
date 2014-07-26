@@ -284,8 +284,9 @@ private void testUniqueClientnamePasswordCombination(
 	/**
 	 *
 	 * @return string containing all clients' toString() values 
+	 * @throws MBankException 
 	 */
-	public String ViewAllClientDetails()
+	public String ViewAllClientDetails() throws MBankException
 	{
 		ClientManager clientManager = new ClientDBManager();
 		List<Client> clients = clientManager.queryAllClients(this.getCon());
@@ -299,7 +300,7 @@ private void testUniqueClientnamePasswordCombination(
 		return string;
 	}
 	
-	public String viewAllAccountsDetails()
+	public String viewAllAccountsDetails() throws MBankException
 	{
 		AccountManager accountManager = new AccountDBManager();
 		List<Account> accounts = accountManager.queryAllAccounts(this.getCon());

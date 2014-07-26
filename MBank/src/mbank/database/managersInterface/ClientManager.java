@@ -17,13 +17,13 @@ public interface ClientManager
 {
 	long insert(Client client, Connection con) throws MBankException;
 
-	boolean update(Client client, Connection con) throws MBankException;
+	void update(Client client, Connection con) throws MBankException;
 
-	boolean delete(Client client, Connection con);
+	void delete(Client client, Connection con) throws MBankException;
 
-	Client query(Client client, Connection con);
+	Client query(Client client, Connection con) throws MBankException;
 	
-	ArrayList<Client> queryAllClients(Connection con);
+	ArrayList<Client> queryAllClients(Connection con) throws MBankException;
 
 	Client query(long client_id, Connection con) throws MBankException;
 	

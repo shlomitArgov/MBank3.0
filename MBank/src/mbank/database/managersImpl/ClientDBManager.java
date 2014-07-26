@@ -63,14 +63,13 @@ public class ClientDBManager implements ClientManager
 	}
 
 	@Override
-	public boolean update(Client client, Connection con) throws MBankException
+	public void update(Client client, Connection con) throws MBankException
 	 {
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
-//			sql += "client_id = ?, ";
 			sql += "client_name = ?, ";
 			sql += "password = ?, ";
-			sql += "type = ?, ";
+			sql += "client_type = ?, ";
 			sql += "address = ?, ";
 			sql += "email = ?, ";
 			sql += "phone = ?, ";
@@ -79,7 +78,6 @@ public class ClientDBManager implements ClientManager
 					
 			PreparedStatement ps = con.prepareStatement(sql);
 			
-//			ps.setLong(1, client.getClient_id());
 			ps.setString(1, client.getClient_name());
 			ps.setString(2, client.getPassword());
 			ps.setString(3, client.getType().getTypeStringValue());
@@ -89,21 +87,19 @@ public class ClientDBManager implements ClientManager
 			ps.setString(7, client.getComment());
 			ps.setLong(8, client.getClient_id());
 			ps.execute();
-			if (ps.getUpdateCount() > 0)
+			if (!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
 		} 
-		catch (SQLException e)
+		catch (MBankException | SQLException e)
 		{
 			throw new MBankException("Failed to update Clients table", e);
 		}
-	 
-	return false;
 	}
 
 	@Override
-	public boolean delete(Client client, Connection con)
+	public void delete(Client client, Connection con) throws MBankException
 	{
 		String sql = "DELETE FROM " + tableName + " WHERE client_id = ?";
 		try
@@ -111,21 +107,19 @@ public class ClientDBManager implements ClientManager
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setLong(1, client.getClient_id());
 			ps.execute();
-			if(ps.getUpdateCount() > 0)
+			if(!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
 		} 
-		catch (SQLException e)
+		catch (MBankException | SQLException e)
 		{
 			System.err.println("Failed to delete client with id: "+ client.getClient_id() + " from the Clients table");
-			e.printStackTrace();
 		}
-		return false;
 	}
 
 	@Override
-	public Client query(Client client, Connection con)
+	public Client query(Client client, Connection con) throws MBankException
 	{
 		try
 		{
@@ -144,14 +138,13 @@ public class ClientDBManager implements ClientManager
 			}
 		} catch (SQLException | MBankException e)
 		{
-			System.err.println("Failed to query the Clients table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the Clients table");
 		}
 		return null;
 	}
 
 	@Override
-	public ArrayList<Client> queryAllClients(Connection con)
+	public ArrayList<Client> queryAllClients(Connection con) throws MBankException
 	{
 		String sql = "SELECT * FROM " + tableName;
 		try
@@ -178,15 +171,11 @@ public class ClientDBManager implements ClientManager
 			
 		} catch (SQLException e)
 		{
-			System.err.println("Failed to query the Clients table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the Clients table");
 		} catch (MBankException e)
 		{
-			System.err.println("Unknown client type");
-			e.printStackTrace();
+			throw new MBankException(e.getLocalizedMessage());
 		}
-		
-		return null;
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class Account
 				+ ", comment=" + comment + "]";
 	}
 
-	private final long account_id;
+	private long account_id;
 	private long client_id;
 	private double balance;
 	private double credit_limit;
@@ -103,5 +103,8 @@ public class Account
 		return false;
 	}
 	
-	
+	public void setAccount_id(long account_id)
+	{
+		this.account_id = account_id;
+	}
 }

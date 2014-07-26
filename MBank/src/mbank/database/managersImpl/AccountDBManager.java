@@ -59,7 +59,7 @@ public class AccountDBManager implements AccountManager
 	}
 
 	@Override
-	public boolean update(Account account, Connection con)
+	public void update(Account account, Connection con) throws MBankException
 	{		
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
@@ -80,21 +80,19 @@ public class AccountDBManager implements AccountManager
 			ps.setLong(5, account.getAccount_id());
 			
 			ps.execute();
-			if (ps.getUpdateCount() > 0)
+			if (!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
 		} 
-		catch (SQLException e)
+		catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to update Accounts table");
-			e.printStackTrace();
+			throw new MBankException("Failed to update Accounts table");
 		}
-	return false;
 	}
 
 	@Override
-	public boolean delete(Account account, Connection con)
+	public void delete(Account account, Connection con) throws MBankException
 	{
 		String sql = "DELETE FROM " + tableName + " WHERE account_id = ?";
 		try
@@ -102,17 +100,15 @@ public class AccountDBManager implements AccountManager
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setLong(1, account.getAccount_id());
 			ps.execute();
-			if(ps.getUpdateCount() > 0)
+			if(!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
 		} 
-		catch (SQLException e)
+		catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to delete account with id: "+ account.getAccount_id() + " from the Accounts table");
-			e.printStackTrace();
+			throw new MBankException("Failed to delete account with id: "+ account.getAccount_id() + " from the Accounts table");
 		}
-		return false;
 	}
 
 	@Override
@@ -132,7 +128,7 @@ public class AccountDBManager implements AccountManager
 	}
 
 	@Override
-	public Account query(Account account, Connection con)
+	public Account query(Account account, Connection con) throws MBankException
 	{
 		try
 		{
@@ -149,10 +145,13 @@ public class AccountDBManager implements AccountManager
 					return a;
 				}
 			}
-		} catch (SQLException e)
+			else
+			{
+				throw new MBankException();
+			}
+		} catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to query the Accounts table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the Accounts table");
 		}
 		return null;
 	}
