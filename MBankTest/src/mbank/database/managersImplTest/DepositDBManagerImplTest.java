@@ -6,12 +6,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import mbank.Util;
-import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
-import mbank.database.beans.enums.ActivityType;
+import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ClientType;
-import mbank.database.managersImpl.ActivityDBManager;
+import mbank.database.beans.enums.DepositType;
 import mbank.database.managersImpl.ClientDBManager;
+import mbank.database.managersImpl.DepositDBManager;
 import mbankExceptions.MBankException;
 
 import org.junit.After;
@@ -20,24 +20,26 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-public class ActivityDBManagerImplTest {
+public class DepositDBManagerImplTest {
 
 	static final String url = Util.DB_URL;
 	static Connection con;
 
 	private static ClientDBManager clientDBManager;
-	private static ActivityDBManager activityDBManager;
+	private static DepositDBManager depositDBManager;
 	
 	
 	private static Client client1;
 	private static Client client2;
+	private static Deposit deposit1;
+	private static Deposit deposit2;
 	
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws SQLException, MBankException {
 		con = DriverManager.getConnection(url);
 		clientDBManager = new ClientDBManager();
-		activityDBManager = new ActivityDBManager();
+		depositDBManager = new DepositDBManager();
 		
 		/* Add clients that the test activities will associated with */
 		client1 = new Client("user_name3", "password1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
@@ -46,6 +48,10 @@ public class ActivityDBManagerImplTest {
 		/* Insert the clients into the DB */
 		client1.setClient_id(clientDBManager.insert(client1, con));
 		client2.setClient_id(clientDBManager.insert(client2, con));
+		
+		/* create deposits for testing */
+		deposit1 = new Deposit(client1.getClient_id(), 2000.20, DepositType.SHORT, 350, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis()));
+		deposit2 = new Deposit(client2.getClient_id(), 1050.40, DepositType.LONG, 580, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis()));
 	}
 	
 	@After
@@ -56,73 +62,73 @@ public class ActivityDBManagerImplTest {
 		clientDBManager.delete(client2, con);
 	}
 	@Test
-	public void testActivityDBManager() {
+	public void testDepositsDBManager() {
 		// test insert
-		Activity activity1 = new Activity(client1.getClient_id(), 513.3, new java.util.Date(System.currentTimeMillis()) ,0.2, ActivityType.ADD_NEW_CLIENT, "activity 1 description");
-		Activity activity2 = new Activity(client2.getClient_id(), 2000, new java.util.Date(System.currentTimeMillis()) , 0.3, ActivityType.REMOVE_CLIENT, "activity 2 description");
 		try
 		{
-			activity1.setActivityId(activityDBManager.insert(activity1, con));
-			activity2.setActivityId(activityDBManager.insert(activity2, con));
+			deposit1.setDeposit_id(depositDBManager.insert(deposit1, con));
+			deposit2.setDeposit_id(depositDBManager.insert(deposit2, con));
 		}
 		catch(MBankException e)
 		{
 			e.printStackTrace();
-			Assert.fail("Insert into Activity table failed");
+			Assert.fail("Insert into Deposits table failed");
 		}
 
 		// test query
 		try
 		{
-			activityDBManager.query(activity1.getActivityType(), activity1.getClient_id(), con);
+			Deposit temp = depositDBManager.query(deposit1, con);
+			if(temp == null)
+			{
+				throw new MBankException();
+			}
 		}
 		catch (MBankException e)
 		{
 			e.printStackTrace();
-			Assert.fail("Failed to query Accounts table");
+			Assert.fail("Query Deposits table failed");
 		}
-		
 
 		//test queryAllAccount
-		ArrayList<Activity> activityList = null;
 		try
 		{
-			activityList = activityDBManager.queryAllActivities(con);
+			ArrayList<Deposit> depositsList = depositDBManager.queryDepositsByClient(client1.getClient_id(), con);
+			if (depositsList == null)
+			{
+				throw new MBankException();
+			}
 		}
 		catch (MBankException e)
 		{
 			e.printStackTrace();
-			Assert.fail("Failed to query all rows from Clients table");
+			Assert.fail("Failed to query all rows from Deposits table");
 		}
-		ArrayList<Activity> originalActivities = new ArrayList<>();
-		originalActivities.add(activity1);
-		originalActivities.add(activity2);
-		Assert.assertTrue("Failed to query all rows from Clients table", activityList.containsAll(originalActivities) && originalActivities.containsAll(activityList));
 		
 		// test update
-		String s = "test update Activity method";
-		activity1.setDescription(s);
 		try
 		{
-			activityDBManager.update(activity1, con);	
+			deposit1.setBalance(50000);
+			depositDBManager.update(deposit1, con);
 		}
-		catch(MBankException e)
+		catch (MBankException e)
 		{
 			e.printStackTrace();
-			Assert.fail("Failed to update the Activities table");
+			Assert.fail("Update Deposits table failed");
+			
 		}
+
 		
 		// test delete
 		try
 		{
-			activityDBManager.delete(activity1, con);
-			activityDBManager.delete(activity2, con);
-			
+			depositDBManager.delete(deposit1, con);
+			depositDBManager.delete(deposit2, con);
 		}
-		catch(MBankException e)
+		catch (MBankException e)
 		{
 			e.printStackTrace();
-			Assert.fail("Delete client from Clients table failed");
+			Assert.fail("Delete client from Deposits table failed");
 		}
-	}
+	}	
 }

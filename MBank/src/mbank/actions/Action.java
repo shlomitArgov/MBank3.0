@@ -171,23 +171,23 @@ public abstract class Action
 		return null;
 	}
 
-	public String viewClientDeposits(long clientId)
+	public String viewClientDeposits(long clientId) throws MBankException
 	{
 		return queryClientDeposits(clientId);
 	}
 
-	protected String queryClientDeposits(long clientId) {
+	protected String queryClientDeposits(long clientId) throws MBankException {
 		DepositManager depositManager = new DepositDBManager();
 		List<Deposit> deposits = depositManager.queryDepositsByClient(clientId, this.getCon());
 		String string = Arrays.toString(deposits.toArray());
 		return string;
 	}
-	public String viewClientctivities(long clientId)
+	public String viewClientctivities(long clientId) throws MBankException
 	{
 		return queryClientActivities(clientId);
 	}
 
-	protected String queryClientActivities(long clientId) {
+	protected String queryClientActivities(long clientId) throws MBankException {
 		ActivityManager activityManager = new ActivityDBManager();
 		List<Activity> clientActivities = activityManager.queryByClientId(clientId, this.getCon());
 		return Arrays.toString(clientActivities.toArray());

@@ -53,7 +53,7 @@ public class AccountsDBManagerImplTest {
 	@After
 	//cleanup
 	public void tearDownAfterClass() throws Exception {
-		/* Clean accounts from DB */
+		/* Clean clients from DB */
 		clientDBManager.delete(client1, con);
 		clientDBManager.delete(client2, con);
 	}
@@ -69,8 +69,8 @@ public class AccountsDBManagerImplTest {
 		}
 		catch (MBankException e)
 		{
-			Assert.fail("Failed to insert into accounts table");
 			e.printStackTrace();
+			Assert.fail("Failed to insert into accounts table");
 		}
 		
 		//test queryAccountByClient
@@ -80,10 +80,10 @@ public class AccountsDBManagerImplTest {
 			account2 = accountDBManager.queryAccountByClient(client2.getClient_id(), con);
 		}
 		
-		catch(MBankException m)
+		catch(MBankException e)
 		{
-			Assert.fail("Failed to query Accounts table\n" + m.getLocalizedMessage());
-			m.printStackTrace();
+			e.printStackTrace();
+			Assert.fail("Failed to query Accounts table\n" + e.getLocalizedMessage());
 		}
 		
 		// test query
@@ -94,6 +94,7 @@ public class AccountsDBManagerImplTest {
 		}
 		catch(MBankException e)
 		{
+			e.printStackTrace();
 			Assert.fail("Query Accounts table failed");
 		}
 		Assert.assertTrue("Query Accounts table failed", account1.equals(temp));
@@ -108,8 +109,8 @@ public class AccountsDBManagerImplTest {
 		}
 		catch(MBankException e)
 		{
-			Assert.fail("Failed to update the accounts table\n" + e.getLocalizedMessage());
 			e.printStackTrace();
+			Assert.fail("Failed to update the accounts table\n" + e.getLocalizedMessage());
 		}
 		
 		// test delete
@@ -120,8 +121,8 @@ public class AccountsDBManagerImplTest {
 		}
 		catch(MBankException e)
 		{
-			Assert.fail("Delete client from Clients table failed\n" + e.getLocalizedMessage());
 			e.printStackTrace();
+			Assert.fail("Delete client from Clients table failed\n" + e.getLocalizedMessage());
 		}
 	}
 

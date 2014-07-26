@@ -307,14 +307,14 @@ private void testUniqueClientnamePasswordCombination(
 		return Arrays.toString(accounts.toArray());
 	}
 	
-	public String viewAllDepositsDetails()
+	public String viewAllDepositsDetails() throws MBankException
 	{
 		DepositManager depositManager = new DepositDBManager();
 		List<Deposit> deposits = depositManager.queryAllDeposits(this.getCon());
 		return Arrays.toString(deposits.toArray());
 	}
 	
-	public String viewAllActivitiesDetails()
+	public String viewAllActivitiesDetails() throws MBankException
 	{
 		ActivityManager activityManager = new ActivityDBManager();
 		List<Activity> activities = activityManager.queryAllActivities(this.getCon());

@@ -39,7 +39,7 @@ public class ClientAction extends Action
 	}
 
 	@Override
-	public String viewClientDeposits(long clientId)
+	public String viewClientDeposits(long clientId) throws MBankException
 	{
 		if(this.getId() != clientId)
 		{
@@ -52,7 +52,7 @@ public class ClientAction extends Action
 	}
 
 	@Override
-	public String viewClientctivities(long clientId)
+	public String viewClientctivities(long clientId) throws MBankException
 	{
 		if(clientId != this.getId())
 		{

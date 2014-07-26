@@ -7,7 +7,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 
 @RunWith(Suite.class)
-@SuiteClasses({ClientDBManagerImplTest.class,AccountsDBManagerImplTest.class, ActivityDBManagerImplTest.class})
+@SuiteClasses({ClientDBManagerImplTest.class,
+	AccountsDBManagerImplTest.class,
+	ActivityDBManagerImplTest.class,
+	DepositDBManagerImplTest.class,
+	PropertyDBManagerImplTest.class})
 public class DBManagersImplTests {
 
 }

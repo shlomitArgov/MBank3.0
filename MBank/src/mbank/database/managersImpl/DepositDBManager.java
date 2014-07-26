@@ -65,15 +65,14 @@ public class DepositDBManager implements DepositManager
 	}
 
 	@Override
-	public boolean update(Deposit deposit, Connection con)
+	public void update(Deposit deposit, Connection con) throws MBankException
 	{
 		try
 		{
 			String sql = "UPDATE " + tableName + " SET ";
-//			sql += "deposit_id = ?, ";
 			sql += "client_id = ?, ";
 			sql += "balance = ?, ";
-			sql += "type = ?, ";
+			sql += "deposit_type = ?, ";
 			sql += "estimated_balance = ?, ";
 			sql += "opening_date = ?, ";
 			sql += "closing_date = ? ";
@@ -81,7 +80,6 @@ public class DepositDBManager implements DepositManager
 
 			PreparedStatement ps = con.prepareStatement(sql);
 
-//			ps.setLong(1, deposit.getDeposit_id());
 			ps.setLong(1, deposit.getClient_id());
 			ps.setDouble(2, deposit.getBalance());
 			ps.setString(3, deposit.getType().getTypeStringValue());
@@ -91,20 +89,18 @@ public class DepositDBManager implements DepositManager
 			ps.setLong(7, deposit.getDeposit_id());
 			ps.execute();
 
-			if (ps.getUpdateCount() > 0)
+			if (!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
-		} catch (SQLException e)
+		} catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to update Deposit table");
-			e.printStackTrace();
+			throw new MBankException("Failed to update Deposit table");
 		}
-		return false;
 	}
 
 	@Override
-	public boolean delete(Deposit deposit, Connection con)
+	public void delete(Deposit deposit, Connection con) throws MBankException
 	{
 		String sql = "DELETE FROM " + tableName + " WHERE deposit_id = ?";
 		try
@@ -112,21 +108,19 @@ public class DepositDBManager implements DepositManager
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setLong(1, deposit.getDeposit_id());
 			ps.execute();
-			if (ps.getUpdateCount() > 0)
+			if (!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
-		} catch (SQLException e)
+		} catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to delete deposit with id: "
+			throw new MBankException("Failed to delete deposit with id: "
 					+ deposit.getDeposit_id() + " from the Activity table");
-			e.printStackTrace();
 		}
-		return false;
 	}
 
 	@Override
-	public Deposit query(Deposit deposit, Connection con)
+	public Deposit query(Deposit deposit, Connection con) throws MBankException
 	{
 		try
 		{
@@ -137,27 +131,30 @@ public class DepositDBManager implements DepositManager
 			ResultSet rs = ps.getResultSet();
 			if (rs != null)
 			{
+				Deposit d = null;
 				if (rs.next()) // next() returns false if there are no more rows
 								// in the RS
 				{
-					Deposit d = new Deposit(rs.getLong(1), rs.getLong(2),
+					d = new Deposit(rs.getLong(1), rs.getLong(2),
 							rs.getDouble(3), DepositType.getEnumFromString(rs
 									.getString(4)), rs.getDouble(5),
 							new java.util.Date(rs.getDate(6).getTime()),
 							new java.util.Date(rs.getDate(7).getTime()));
-					return d;
 				}
+				return d;
+			}
+			else
+			{
+				throw new MBankException();
 			}
 		} catch (SQLException | MBankException e)
 		{
-			System.err.println("Failed to query the " + tableName + " table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the " + tableName + " table");
 		}
-		return null;
 	}
 
 	@Override
-	public ArrayList<Deposit> queryDepositsByClient(long clientId, Connection con)
+	public ArrayList<Deposit> queryDepositsByClient(long clientId, Connection con) throws MBankException
 	{
 		String sql = "SELECT * FROM " + tableName + " Where client_id = ?";
 		try
@@ -185,14 +182,14 @@ public class DepositDBManager implements DepositManager
 			}
 		} catch (SQLException | MBankException e)
 		{
-			System.err.println("Failed to query the " + tableName + " table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the " + tableName + " table");
 		} 		
 		return null;
 	}
 
 	@Override
-	public Deposit query(long depositId, Connection con) {
+	public Deposit query(long depositId, Connection con) throws MBankException
+	{
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE deposit_id = ?";
@@ -215,15 +212,15 @@ public class DepositDBManager implements DepositManager
 			}
 		} catch (SQLException | MBankException e)
 		{
-			System.err.println("Failed to query the " + tableName + " table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the " + tableName + " table");
 		}
 		return null;
 	
 	}
 
 	@Override
-	public List<Deposit> queryAllDeposits(Connection con) {
+	public List<Deposit> queryAllDeposits(Connection con) throws MBankException
+	{
 		try
 		{
 			String sql = "SELECT * FROM " + tableName;
@@ -247,8 +244,7 @@ public class DepositDBManager implements DepositManager
 			}
 		} catch (SQLException | MBankException e)
 		{
-			System.err.println("Failed to query the " + tableName + " table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the " + tableName + " table");
 		}
 		return null;
 	}

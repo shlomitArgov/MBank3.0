@@ -8,11 +8,11 @@ import mbankExceptions.MBankException;
 
 public interface PropertyManager
 {
-	boolean insert(Property property, Connection con);
+	void insert(Property property, Connection con) throws MBankException;
 
 	void update(Property property, Connection con) throws MBankException;
 
-	boolean delete(Property property, Connection con);
+	void delete(Property property, Connection con) throws MBankException;
 
 	Property query(String propertyName, Connection con) throws MBankException;
 	

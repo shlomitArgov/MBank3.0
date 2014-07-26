@@ -27,7 +27,7 @@ public class Deposit
 				+ closing_date + "]";
 	}
 
-	private final long deposit_id;
+	private long deposit_id;
 	private long client_id;
 	private double balance;
 	private DepositType type;
@@ -124,6 +124,10 @@ public class Deposit
 	public long getDeposit_id()
 	{
 		return deposit_id;
+	}
+	
+	public void setDeposit_id(long deposit_id) {
+		this.deposit_id = deposit_id;
 	}
 	
 	@Override

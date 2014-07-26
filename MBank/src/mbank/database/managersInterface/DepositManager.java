@@ -18,16 +18,16 @@ public interface DepositManager
 {
 	long insert(Deposit deposit, Connection con) throws MBankException;
 
-	boolean update(Deposit deposit, Connection con);
+	void update(Deposit deposit, Connection con) throws MBankException;
 
-	boolean delete(Deposit deposit, Connection con);
+	void delete(Deposit deposit, Connection con) throws MBankException;
 
-	Deposit query(Deposit deposit, Connection con);
+	Deposit query(Deposit deposit, Connection con) throws MBankException;
 
-	ArrayList<Deposit> queryDepositsByClient(long clientId, Connection con);
+	ArrayList<Deposit> queryDepositsByClient(long clientId, Connection con) throws MBankException;
 
-	Deposit query(long depositId, Connection con);
+	Deposit query(long depositId, Connection con) throws MBankException;
 
-	List<Deposit> queryAllDeposits(Connection con);
+	List<Deposit> queryAllDeposits(Connection con) throws MBankException;
 
 }

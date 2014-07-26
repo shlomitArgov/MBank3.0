@@ -26,7 +26,7 @@ public class PropertyDBManager implements PropertyManager
 	}
 
 	@Override
-	public boolean insert(Property property, Connection con)
+	public void insert(Property property, Connection con) throws MBankException
 	{
 		try
 		{
@@ -35,16 +35,14 @@ public class PropertyDBManager implements PropertyManager
 			ps.setString(1, property.getProp_key());
 			ps.setString(2, property.getProp_value());
 			ps.execute();
-			if (ps.getUpdateCount() > 0)
+			if (!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
-		} catch (SQLException e)
+		} catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to insert into " + tableName + " table");
-			e.printStackTrace();
+			throw new MBankException("Failed to insert into " + tableName + " table");
 		}
-		return false;
 	}
 
 	@Override
@@ -70,7 +68,7 @@ public class PropertyDBManager implements PropertyManager
 
 
 	@Override
-	public boolean delete(Property property, Connection con)
+	public void delete(Property property, Connection con) throws MBankException
 	{
 		String sql = "DELETE FROM " + tableName + " WHERE prop_key = ?";
 		try
@@ -78,17 +76,15 @@ public class PropertyDBManager implements PropertyManager
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, property.getProp_key());
 			ps.execute();
-			if(ps.getUpdateCount() > 0)
+			if(!(ps.getUpdateCount() > 0))
 			{
-				return true;
+				throw new MBankException();
 			}
 		} 
-		catch (SQLException e)
+		catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to delete property: "+ property.getProp_key() + " from the " + tableName + "table");
-			e.printStackTrace();
+			throw new MBankException("Failed to delete property: "+ property.getProp_key() + " from the " + tableName + "table");
 		}
-		return false;
 	}
 
 	@Override
