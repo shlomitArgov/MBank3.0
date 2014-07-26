@@ -6,6 +6,7 @@ package mbank.actions;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import mbank.Util;
 import mbank.actions.AdminAction;
 import mbank.database.beans.Account;
 import mbank.database.beans.Client;
@@ -21,7 +22,6 @@ import mbank.database.managersInterface.AccountManager;
 import mbank.database.managersInterface.ActivityManager;
 import mbank.database.managersInterface.ClientManager;
 import mbank.database.managersInterface.DepositManager;
-import mbank.sequences.AccountIdSequence;
 import mbankExceptions.MBankException;
 
 import org.junit.AfterClass;
@@ -35,29 +35,27 @@ import org.junit.Test;
  */
 public class AdminActionTest {
 	private static Connection con;
-	private static long clientID1;
-	private static long clientID2;
 	private static ClientManager clientManager;
 	private static ActivityManager activityManager;
-	private static Client client1;
-	private static Client client2;
-	private static Account account1;
-	private static Deposit deposit1;
+	private static Client client;
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		String url = "jdbc:derby://localhost:1527/MBankDB;";
+		String url = Util.DB_URL;
 		con = DriverManager.getConnection(url);
 		
-		client1 = new Client(0, "moshe1", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
-		client2 = new Client(0, "Moshe2", "Pass2", ClientType.GOLD, "address2", "email2","phone2", "comment2");
-		account1 = new Account(AccountIdSequence.getNext(), clientID1, 500.0, 500.0, "comment1");
-		deposit1 = new Deposit(0L, clientID1, 500.0, DepositType.LONG, 5000L, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis() + 99999999));
 		clientManager = new ClientDBManager();	
+		client = new Client("testAccountClient", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
+		clientManager.insert(client, con);
+		
 		activityManager = new ActivityDBManager();
+		
+		
+		
+		
 		
 	}
 
@@ -66,17 +64,26 @@ public class AdminActionTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		clientManager.delete(client1, con);
-		clientManager.delete(client2, con);
+		clientManager.delete(client, con);
 	}
 	
 	@Test
 	public void testAddNewClient() {
-		AdminAction adminAction = new AdminAction(con, clientID1);
+		/* Create clients for testing */
+		Client client1 = null;
+		Client client2 = null;
+		try {
+			client1 = new Client("moshe1", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
+			client2 = new Client("Moshe2", "Pass2", ClientType.GOLD, "address2", "email2","phone2", "comment2");
+		} catch (MBankException e1) {
+			e1.printStackTrace();
+		}
+		
+		AdminAction adminAction = new AdminAction(con, 1);
+		
 		try 
 		{
-			clientID1 = adminAction.addNewClient(client1.getClient_name(), client1.getPassword().toCharArray(), client1.getAddress(), client1.getEmail(),	client1.getPhone(), 512.12);
-			client1.setClient_id(clientID1);
+			client1.setClient_id(adminAction.addNewClient(client1.getClient_name(), client1.getPassword().toCharArray(), client1.getAddress(), client1.getEmail(),	client1.getPhone(), 512.12));
 		} catch (MBankException e) 
 		{
 			Assert.fail("Failed to add new client via AdminAction");
@@ -84,8 +91,7 @@ public class AdminActionTest {
 		}
 		
 		try {
-			clientID2 = adminAction.addNewClient(client2.getClient_name(), client2.getPassword().toCharArray(), client2.getAddress(), client2.getEmail(), client2.getPhone(), 1024.12);
-			client2.setClient_id(clientID2);
+			client2.setClient_id(adminAction.addNewClient(client2.getClient_name(), client2.getPassword().toCharArray(), client2.getAddress(), client2.getEmail(), client2.getPhone(), 1024.12));
 		} catch (MBankException e) {
 			Assert.fail("Failed to add new client with existing name and different password than in the DB");
 			e.printStackTrace();
@@ -96,28 +102,36 @@ public class AdminActionTest {
 			Assert.assertTrue("Succeeded in adding a client with an existing client-name/pasword combination", e.getMessage().equalsIgnoreCase("Client name/password combination already exists"));
 		}
 		
-		clientManager.delete(client1, con);
-		clientManager.delete(client2, con);
+		/* cleanup */
+		try {
+			clientManager.delete(client1, con);
+			clientManager.delete(client2, con);
+		} catch (MBankException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Test
 	public void testRemoveClient() throws MBankException {
-		AdminAction adminAction = new AdminAction(con, clientID1);
-		ClientManager clientManager = new ClientDBManager();
-		clientManager.insert(client1, con);
-		AccountManager accountManager = new AccountDBManager();
-		accountManager.insert(account1, con);
-		DepositManager depositManager = new DepositDBManager();
-		depositManager.insert(deposit1, con);
+		AdminAction adminAction = new AdminAction(con, 1);
+		Account testAccount = new Account(client.getClient_id(), 500.0, 500.0, "comment1");
+		Deposit testDeposit = new Deposit(client.getClient_id(), 500.0, DepositType.LONG, 5000L, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis() + 99999999));
 		
-		adminAction.removeClient(client1);
+		AccountManager accountManager = new AccountDBManager();
+		accountManager.insert(testAccount, con);
+	
+		DepositManager depositManager = new DepositDBManager();
+		depositManager.insert(testDeposit, con);
+		
+		adminAction.removeClient(client);
 		
 		//Refactor - add test of properties table update
-		activityManager.query(ActivityType.REMOVE_CLIENT, client1.getClient_id(), con);
+		activityManager.query(ActivityType.REMOVE_CLIENT, client.getClient_id(), con);
 //		Assert.assertTrue("Bank balance was not updated before client deposits were removed", MBank.getBankBalance().equals(2000.0 + 2000.0*0.015));
 		
-		Assert.assertTrue("Client accounts were not removed", accountManager.queryAccountByClient(client1.getClient_id(), con) == null);
-		Assert.assertTrue("Client deposits were not removed", depositManager.queryDepositsByClient(client1.getClient_id(), con) == null);
-		Assert.assertTrue("Client was not removed from Clients table", clientManager.query(client1, con) == null);
+		Assert.assertTrue("Client accounts were not removed", accountManager.queryAccountByClient(client.getClient_id(), con) == null);
+		Assert.assertTrue("Client deposits were not removed", depositManager.queryDepositsByClient(client.getClient_id(), con) == null);
+		Assert.assertTrue("Client was not removed from Clients table", clientManager.query(client, con) == null);
 	}	
 }

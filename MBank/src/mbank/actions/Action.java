@@ -35,6 +35,7 @@ public abstract class Action
 {
 	private Connection con;
 	private long id;
+	private static final String TMP_STR = "tmpVal";
 	/**
 	 * @return the id
 	 */
@@ -55,25 +56,27 @@ public abstract class Action
 	 * @return true upon success, false otherwise
 	 * @throws MBankException 
 	 */
-	public boolean updateClientDetails(String clientId, TableValue... details) throws MBankException 
+	public void updateClientDetails(String clientId, TableValue... details) throws MBankException 
 	{
 		ClientManager clientManager = new ClientDBManager();
 		//get client from DB
-		Client c = new Client(Long.parseLong(clientId), null, null, null, null, null, null, null);
+		Client c = new Client(Long.parseLong(clientId), TMP_STR, TMP_STR, null, null, null, null, null);
 		c = clientManager.query(c, this.getCon());
 		
 		//update values
 		updateValues(c, details);
+		if(c.getPassword().equalsIgnoreCase(TMP_STR) || c.getClient_name().equalsIgnoreCase(TMP_STR))
+		{
+			throw new MBankException("Client and password fields cannot be empty");
+		}
 		//execute update (commit to DB)
 		try
 		{
 		clientManager.update(c, this.getCon());
 		} catch (MBankException e)
 		{
-			//write to log
-			return false;
+			throw e;
 		}
-		return true;
 	}
  
 	protected void updateValues(Client c, TableValue[] details) throws MBankException
