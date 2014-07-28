@@ -59,20 +59,20 @@ public abstract class Action
 	public void updateClientDetails(String clientId, TableValue... details) throws MBankException 
 	{
 		ClientManager clientManager = new ClientDBManager();
-		//get client from DB
+		/* get client from DB */
 		Client c = new Client(Long.parseLong(clientId), TMP_STR, TMP_STR, null, null, null, null, null);
 		c = clientManager.query(c, this.getCon());
 		
-		//update values
+		/* update values */
 		updateValues(c, details);
 		if(c.getPassword().equalsIgnoreCase(TMP_STR) || c.getClient_name().equalsIgnoreCase(TMP_STR))
 		{
-			throw new MBankException("Client and password fields cannot be empty");
+			throw new MBankException("Client and password fields must not be empty");
 		}
-		//execute update (commit to DB)
+		/* execute update (commit to DB) */
 		try
 		{
-		clientManager.update(c, this.getCon());
+			clientManager.update(c, this.getCon());
 		} catch (MBankException e)
 		{
 			throw e;
@@ -97,7 +97,7 @@ public abstract class Action
 			}
 			else
 			{
-				throw new MBankException("Cannot update client attribute " + details[i].getColumnName());
+				throw new MBankException("Cannot update client attribute '" + details[i].getColumnName() + "' - Unauthorized action") ;
 			}
 		}				
 	}

@@ -3,6 +3,8 @@
  */
 package mbank.actions;
 
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -12,6 +14,7 @@ import mbank.database.beans.Account;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ActivityType;
+import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.beans.enums.DepositType;
 import mbank.database.managersImpl.AccountDBManager;
@@ -27,6 +30,7 @@ import mbankExceptions.MBankException;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -52,11 +56,15 @@ public class AdminActionTest {
 		clientManager.insert(client, con);
 		
 		activityManager = new ActivityDBManager();
-		
-		
-		
-		
-		
+		try
+		{
+			client.setClient_id(clientManager.insert(client, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}	
 	}
 
 	/**
@@ -66,7 +74,8 @@ public class AdminActionTest {
 	public static void tearDownAfterClass() throws Exception {
 		clientManager.delete(client, con);
 	}
-	
+	//TODO fix this test
+	@Ignore
 	@Test
 	public void testAddNewClient() {
 		/* Create clients for testing */
@@ -112,6 +121,39 @@ public class AdminActionTest {
 		
 	}
 	
+	@Test 
+	public void testUpdateClientDetails()
+	{
+		/* Create an AdminAction */
+		AdminAction adminAction =  new AdminAction(con, client.getClient_id());
+		/* Create an array of details to use for updating the client's details */
+		TableValue[] details = new TableValue[]{new TableValue(ClientAttributes.ADDRESS.getAttribute(), "updated address"),new TableValue(ClientAttributes.PHONE.getAttribute(),"updated phone"),new TableValue(ClientAttributes.EMAIL.getAttribute(), "updated email"),  new TableValue(ClientAttributes.CLIENT_TYPE.getAttribute(), ClientType.PLATINUM.getTypeStringValue())};
+		/* Attempt to update the client details */
+		try
+		{
+			adminAction.updateClientDetails(Long.toString(client.getClient_id()), details);
+		}
+		catch(MBankException e)
+		{
+			Assert.fail("AdminAction: updateClientDetails method failed");
+			e.printStackTrace();
+		}
+		
+		/* Check that the client details have been updated */
+		Client c = null;
+		try {
+			c = clientManager.query(client.getClient_id(), con);
+		} catch (MBankException e) {
+			e.printStackTrace();
+		}
+		Assert.assertTrue("AdminAction: updateClientDetails method failed", c.getAddress().equalsIgnoreCase(details[0].getColumnValue()) 
+		&& c.getPhone().equalsIgnoreCase(details[1].getColumnValue()) 
+		&& c.getEmail().equalsIgnoreCase(details[2].getColumnValue())
+		&& c.getType().getTypeStringValue().equalsIgnoreCase(details[3].getColumnValue()));
+	}
+	
+	//TODO fix this test
+	@Ignore
 	@Test
 	public void testRemoveClient() throws MBankException {
 		AdminAction adminAction = new AdminAction(con, 1);
