@@ -115,7 +115,7 @@ public class AdminAction extends Action
 		// add the new client
 		ClientType clientType = getClientType(deposit); 
 		double creditLimit = getCreditLimit(clientType);
-		Client client = new Client(clientName, String.valueOf(clientPassword),clientType, clientAddress, clientEmail, clientPhone, "Created client with nam [" + clientName + "]"); // refactor to use properties file
+		Client client = new Client(clientName, String.valueOf(clientPassword),clientType, clientAddress, clientEmail, clientPhone, "Created client with name [" + clientName + "]"); // refactor to use properties file
 		boolean addClientSucceeded = false;
 		try
 		{

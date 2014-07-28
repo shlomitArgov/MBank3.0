@@ -47,7 +47,6 @@ public class CreateTables {
 			sql += columnNames[columnNames.length -1] + " " + columnTypes[columnTypes.length -1].getName();
 		}
 		sql+=")";
-		System.out.println(sql);
 		PreparedStatement pstatement = con.prepareStatement(sql);
 		pstatement.execute();
 		return true;
