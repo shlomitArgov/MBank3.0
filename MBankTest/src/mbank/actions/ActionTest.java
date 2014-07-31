@@ -12,12 +12,15 @@ import mbank.Util;
 import mbank.actions.ClientAction;
 import mbank.actions.TableValue;
 import mbank.database.beans.Account;
+import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
+import mbank.database.beans.enums.ActivityType;
 import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.beans.enums.DepositType;
 import mbank.database.managersImpl.AccountDBManager;
+import mbank.database.managersImpl.ActivityDBManager;
 import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersImpl.DepositDBManager;
 import mbank.database.managersInterface.ClientManager;
@@ -244,8 +247,8 @@ public class ActionTest
 		if((deposits.size() == 2))
 		{
 			Assert.assertTrue("View client deposit details action returned deposits that differ from the test deposits' details ", 
-					deposits.get(0).equalsWithoutId(tempDeposit1) && deposits.get(1).equalsWithoutId(tempDeposit2)
-					|| deposits.get(1).equalsWithoutId(tempDeposit1) && deposits.get(0).equalsWithoutId(tempDeposit2));
+					deposits.get(0).equals(tempDeposit1) && deposits.get(1).equals(tempDeposit2)
+					|| deposits.get(1).equals(tempDeposit1) && deposits.get(0).equals(tempDeposit2));
 		}
 		
 		/* cleanup */
@@ -253,4 +256,56 @@ public class ActionTest
 		depositManager.delete(tempDeposit1, con);
 		depositManager.delete(tempDeposit2, con);
 	}
+	
+	/* Test view client activities action */
+	@Test
+	public void testViewClientActivites() throws MBankException 
+	{
+		/* Create a temp client for this test */
+		Client tempClient = new Client("tempClientForTestingViewAccountDetails", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
+
+		/* Insert the temp client into the DB */
+		try
+		{
+			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}
+
+		/* Create a clientAction for testing the viewAccountDetails method */
+		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		
+		Activity tempActivity1 = new Activity(tempClient.getClient_id(), 500, new Date(), 200, ActivityType.UPDATE_CLIENT_DETAILS, "TestingViewClientActivities");
+		Activity tempActivity2 = new Activity(tempClient.getClient_id(), 500, new Date(), 200, ActivityType.UPDATE_CLIENT_DETAILS, "TestingViewClientActivities");
+		
+		
+		ActivityDBManager activityManager =  new ActivityDBManager();
+		try
+		{
+			tempActivity1.setActivityId(activityManager.insert(tempActivity1, con));
+			tempActivity2.setActivityId(activityManager.insert(tempActivity2, con));	
+		} catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail();
+		}
+		
+		ArrayList<Activity> activities = (ArrayList<Activity>) clientAction.viewClientActivities(tempClient.getClient_id());
+		
+		if((activities.size() == 2))
+		{
+			Assert.assertTrue("View client activity details action returned activities that differ from the test activities' details ", 
+					activities.get(0).equals(tempActivity1) && activities.get(1).equals(tempActivity2)
+					|| activities.get(1).equals(tempActivity1) && activities.get(0).equals(tempActivity2));
+		}
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
+		activityManager.delete(tempActivity1, con);
+		activityManager.delete(tempActivity2, con);
+	}
+
 }

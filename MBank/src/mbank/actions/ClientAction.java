@@ -53,7 +53,7 @@ public class ClientAction extends Action
 	}
 
 	@Override
-	public String viewClientctivities(long clientId) throws MBankException
+	public List<Activity> viewClientActivities(long clientId) throws MBankException
 	{
 		if(clientId != this.getId())
 		{

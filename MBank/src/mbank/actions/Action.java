@@ -4,7 +4,6 @@
 package mbank.actions;
 
 import java.sql.Connection;
-import java.util.Arrays;
 import java.util.List;
 
 import mbank.database.beans.Account;
@@ -180,15 +179,15 @@ public abstract class Action
 		List<Deposit> deposits = depositManager.queryDepositsByClient(clientId, this.getCon());
 		return deposits;
 	}
-	public String viewClientctivities(long clientId) throws MBankException
+	public List<Activity> viewClientActivities(long clientId) throws MBankException
 	{
 		return queryClientActivities(clientId);
 	}
 
-	protected String queryClientActivities(long clientId) throws MBankException {
+	protected List<Activity> queryClientActivities(long clientId) throws MBankException {
 		ActivityManager activityManager = new ActivityDBManager();
 		List<Activity> clientActivities = activityManager.queryByClientId(clientId, this.getCon());
-		return Arrays.toString(clientActivities.toArray());
+		return clientActivities;
 	}
 	public String viewSystemProperty(String propertyName) throws MBankException
 	{
