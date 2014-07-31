@@ -40,13 +40,10 @@ public class DepositDBManager implements DepositManager
 			ps.setDouble(2, deposit.getBalance());
 			ps.setString(3, deposit.getType().getTypeStringValue());
 			ps.setDouble(4, deposit.getEstimated_balance());
-			/*ps.setDate(5,
+			ps.setDate(5,
 					new java.sql.Date(deposit.getOpening_date().getTime()));
 			ps.setDate(6,
-					new java.sql.Date(deposit.getClosing_date().getTime())); */
-			ps.setLong(5, deposit.getOpening_date().getTime());
-			ps.setLong(6, deposit.getClosing_date().getTime()); 
-			
+					new java.sql.Date(deposit.getClosing_date().getTime()));
 			ps.execute();
 		} catch (SQLException e)
 		{
@@ -87,9 +84,8 @@ public class DepositDBManager implements DepositManager
 			ps.setDouble(2, deposit.getBalance());
 			ps.setString(3, deposit.getType().getTypeStringValue());
 			ps.setDouble(4, deposit.getEstimated_balance());
-			ps.setLong(5, deposit.getOpening_date().getTime());
-			ps.setLong(6, deposit.getClosing_date().getTime());
-//			ps.setDate(6, new java.sql.Date(deposit.getClosing_date().getTime()));
+			ps.setDate(5, new java.sql.Date(deposit.getOpening_date().getTime()));
+			ps.setDate(6, new java.sql.Date(deposit.getClosing_date().getTime()));
 			ps.setLong(7, deposit.getDeposit_id());
 			ps.execute();
 
@@ -142,8 +138,8 @@ public class DepositDBManager implements DepositManager
 					d = new Deposit(rs.getLong(1), rs.getLong(2),
 							rs.getDouble(3), DepositType.getEnumFromString(rs
 									.getString(4)), rs.getDouble(5),
-							new java.util.Date(rs.getLong(6)),
-							new java.util.Date(rs.getLong(7)));
+							new java.util.Date(rs.getDate(6).getTime()),
+							new java.util.Date(rs.getDate(7).getTime()));
 				}
 				return d;
 			}
@@ -175,10 +171,8 @@ public class DepositDBManager implements DepositManager
 				double balance = rs.getDouble(3);
 				DepositType type = DepositType.getEnumFromString(rs.getString(4));
 				Double estimated_balance = rs.getDouble(5);
-//				java.util.Date opening_date = new java.util.Date(rs.getDate(6).getTime());
-//				java.util.Date closing_date = new java.util.Date(rs.getDate(7).getTime());
-				java.util.Date opening_date = new java.util.Date(rs.getLong(6));
-				java.util.Date closing_date = new java.util.Date(rs.getLong(7));
+				java.util.Date opening_date = new java.util.Date(rs.getDate(6).getTime());
+				java.util.Date closing_date = new java.util.Date(rs.getDate(7).getTime());
 				Deposit d = new Deposit(deposit_id, client_id, balance, type, estimated_balance, opening_date, closing_date);
 				depositsList.add(d);
 			}
@@ -211,10 +205,8 @@ public class DepositDBManager implements DepositManager
 					Deposit d = new Deposit(rs.getLong(1), rs.getLong(2),
 							rs.getDouble(3), DepositType.getEnumFromString(rs
 									.getString(4)), rs.getDouble(5),
-//							new java.util.Date(rs.getDate(6).getTime()),
-//							new java.util.Date(rs.getDate(7).getTime()));
-							new java.util.Date(rs.getLong(6)),
-							new java.util.Date(rs.getLong(7)));
+							new java.util.Date(rs.getDate(6).getTime()),
+							new java.util.Date(rs.getDate(7).getTime()));
 					return d;
 				}
 			}
@@ -244,10 +236,8 @@ public class DepositDBManager implements DepositManager
 					Deposit d = new Deposit(rs.getLong(1), rs.getLong(2),
 							rs.getDouble(3), DepositType.getEnumFromString(rs
 									.getString(4)), rs.getDouble(5),
-//							new java.util.Date(rs.getDate(6).getTime()),
-//							new java.util.Date(rs.getDate(7).getTime()));
-							new java.util.Date(rs.getLong(6)),
-							new java.util.Date(rs.getLong(7)));
+							new java.util.Date(rs.getDate(6).getTime()),
+							new java.util.Date(rs.getDate(7).getTime()));
 					depositsList.add(d);
 				}
 				return depositsList;
