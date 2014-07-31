@@ -9,7 +9,7 @@ package mbank.database.beans.enums;
  */
 public enum ClientAttributes
 {
-	ADDRESS("Adress"), PHONE("Phone"), EMAIL("Email"), CLIENT_TYPE("client_type"), COMMENT("comment");
+	ADDRESS("Address"), PHONE("Phone"), EMAIL("Email"), CLIENT_TYPE("client_type"), COMMENT("comment");
 	
 	ClientAttributes(String attribute)
 	{

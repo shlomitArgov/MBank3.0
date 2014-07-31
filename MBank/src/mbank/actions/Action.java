@@ -170,16 +170,15 @@ public abstract class Action
 		return account;
 	}
 
-	public String viewClientDeposits(long clientId) throws MBankException
+	public List<Deposit> viewClientDeposits(long clientId) throws MBankException
 	{
 		return queryClientDeposits(clientId);
 	}
 
-	protected String queryClientDeposits(long clientId) throws MBankException {
+	protected List<Deposit> queryClientDeposits(long clientId) throws MBankException {
 		DepositManager depositManager = new DepositDBManager();
 		List<Deposit> deposits = depositManager.queryDepositsByClient(clientId, this.getCon());
-		String string = Arrays.toString(deposits.toArray());
-		return string;
+		return deposits;
 	}
 	public String viewClientctivities(long clientId) throws MBankException
 	{

@@ -135,7 +135,29 @@ public class Deposit
 	{
 		if (obj instanceof Deposit)
 		{
-			if (((Deposit)obj).getDeposit_id() == this.deposit_id)
+			if (((Deposit)obj).getDeposit_id() == this.deposit_id &&
+					((Deposit)obj).getBalance() == this.balance &&
+					((Deposit)obj).getClient_id()== this.client_id &&
+					((Deposit)obj).getEstimated_balance() == this.estimated_balance &&
+					((Deposit)obj).getType().getTypeStringValue().equals(this.type.getTypeStringValue())&&
+					((Deposit)obj).getOpening_date().equals(this.opening_date) &&
+					((Deposit)obj).getClosing_date() == this.closing_date)
+			{
+				return true;
+			}		
+		}
+		return false;
+	}
+	public boolean equalsWithoutId(Object obj)
+	{
+		if (obj instanceof Deposit)
+		{
+			if (((Deposit)obj).getBalance() == this.balance &&
+					((Deposit)obj).getClient_id()== this.client_id &&
+					((Deposit)obj).getEstimated_balance() == this.estimated_balance &&
+					((Deposit)obj).getType().getTypeStringValue().equals(this.type.getTypeStringValue())&&
+					((Deposit)obj).getOpening_date() == this.opening_date &&
+					((Deposit)obj).getClosing_date() == this.closing_date)
 			{
 				return true;
 			}		

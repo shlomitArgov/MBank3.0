@@ -5,6 +5,7 @@ package mbank.actions;
 
 import java.sql.Connection;
 import java.util.Calendar;
+import java.util.List;
 
 import mbank.database.beans.Account;
 import mbank.database.beans.Activity;
@@ -39,7 +40,7 @@ public class ClientAction extends Action
 	}
 
 	@Override
-	public String viewClientDeposits(long clientId) throws MBankException
+	public List<Deposit> viewClientDeposits(long clientId) throws MBankException
 	{
 		if(this.getId() != clientId)
 		{

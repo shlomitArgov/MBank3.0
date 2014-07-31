@@ -4,16 +4,22 @@ import static org.junit.Assert.fail;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import mbank.Util;
 import mbank.actions.ClientAction;
 import mbank.actions.TableValue;
 import mbank.database.beans.Account;
 import mbank.database.beans.Client;
+import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.ClientType;
+import mbank.database.beans.enums.DepositType;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ClientDBManager;
+import mbank.database.managersImpl.DepositDBManager;
 import mbank.database.managersInterface.ClientManager;
 import mbankExceptions.MBankException;
 
@@ -98,7 +104,6 @@ public class ActionTest
 		catch(MBankException e)
 		{
 			Assert.assertTrue(true);
-			System.out.println(e.getLocalizedMessage());
 		}
 	}
 	
@@ -135,6 +140,9 @@ public class ActionTest
 		}
 		/* Make sure that the correct client is returned */
 		Assert.assertTrue("View client details action returned details that differ from the test client's details", tempClient.equals(clientDetails));
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
 	}
 	
 	/* Test view account details action */
@@ -186,5 +194,63 @@ public class ActionTest
 		}
 		/* Make sure that the correct account is returned */
 		Assert.assertTrue("View account details action returned details that differ from the test account's details", tempAccount.equals(accountDetails));
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
+		accountManager.delete(tempAccount, con);
+	}
+	
+	/* Test view client deposits action */
+	@Test
+	public void testViewClientDeposits() throws MBankException 
+	{
+		/* Create a temp client for this test */
+		Client tempClient = new Client("tempClientForTestingViewAccountDetails", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
+
+		/* Insert the temp client into the DB */
+		try
+		{
+			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}
+		
+		DepositDBManager depositManager = new DepositDBManager();
+		Date startDate =  new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		cal.add(Calendar.MONTH, 3);
+		Date endDate = new Date(cal.getTimeInMillis());
+		Deposit tempDeposit1 = new Deposit(tempClient.getClient_id(), 100000, DepositType.LONG, 2000000, startDate, endDate);
+		Deposit tempDeposit2 = new Deposit(tempClient.getClient_id(), 100000, DepositType.LONG, 2000000, startDate, endDate);
+		try
+		{
+			depositManager.insert(tempDeposit1, con);
+			depositManager.insert(tempDeposit2, con);
+		} catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail();
+		}
+		
+		/* Create a clientAction for testing the viewAccountDetails method */
+		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		
+		ArrayList<Deposit> deposits = (ArrayList<Deposit>) clientAction.viewClientDeposits(tempClient.getClient_id());
+		
+		if((deposits.size() == 2))
+		{
+			Assert.assertTrue("View client deposit details action returned deposits that differ from the test deposits' details ", 
+					deposits.get(0).equalsWithoutId(tempDeposit1) && deposits.get(1).equalsWithoutId(tempDeposit2)
+					|| deposits.get(1).equalsWithoutId(tempDeposit1) && deposits.get(0).equalsWithoutId(tempDeposit2));
+		}
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
+		depositManager.delete(tempDeposit1, con);
+		depositManager.delete(tempDeposit2, con);
 	}
 }
