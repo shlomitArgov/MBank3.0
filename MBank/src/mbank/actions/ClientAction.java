@@ -254,7 +254,7 @@ public class ClientAction extends Action
 	}
 	
 	@Override
-	public String viewAccountDetails(Client client)
+	public Account viewAccountDetails(Client client) throws MBankException
 	{
 		if(client.getClient_id() != this.getId())
 		{

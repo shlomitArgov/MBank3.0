@@ -94,7 +94,11 @@ public class Account
 	{
 		if (obj instanceof Account)
 		{
-			if (((Account)obj).getAccount_id() == this.account_id)
+			if (((Account)obj).getAccount_id() == this.account_id
+					&& ((Account)obj).getClient_id() == this.client_id
+					&&((Account)obj).getBalance() == this.balance
+					&& ((Account)obj).getCredit_limit() == this.credit_limit
+					&& ((Account)obj).getComment().equals(this.comment));
 			{
 				return true;
 			}

@@ -165,10 +165,24 @@ public class Client
 			{
 			return false;
 			}
-		if(this.client_id == ((Client)obj).getClient_id())
+		else
 		{
-			return true;
+			Client c = (Client)obj;
+			if(this.client_id == ((Client)obj).getClient_id() 
+					&& this.client_name.equals((c.getClient_name()))
+					&& this.password.equals(c.getPassword())
+					&& this.address.equals(c.getAddress())
+					&& this.comment.equals(c.getComment())
+					&& this.email.equals(c.getEmail())
+					&& this.phone.equals(c.getPhone())
+					&& this.type.getTypeStringValue().equals(c.getType().getTypeStringValue()))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}	
 		}
-		return false;
 	}
 }

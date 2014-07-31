@@ -156,22 +156,18 @@ public abstract class Action
 	 * 
 	 * @param client
 	 * @return account details (String) or null if retrieval of details from DB failed
+	 * @throws MBankException 
 	 */
-	public String viewAccountDetails(Client client)
+	public Account viewAccountDetails(Client client) throws MBankException
 	{
 		return queryClientAccount(client.getClient_id());
 		
 	}
-	protected String queryClientAccount(long clientId) {
+	protected Account queryClientAccount(long clientId) throws MBankException 
+	{
 		AccountManager accountManager = new AccountDBManager();
-		try {
-			Account account = accountManager.queryAccountByClient(clientId, this.getCon());
-			return account.toString();
-		} catch (MBankException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();	
-		}
-		return null;
+		Account account = accountManager.queryAccountByClient(clientId, this.getCon());
+		return account;
 	}
 
 	public String viewClientDeposits(long clientId) throws MBankException

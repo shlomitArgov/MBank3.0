@@ -85,7 +85,7 @@ public class AdminAction extends Action
 	}
 
 	@Override
-	public String viewAccountDetails(Client client)
+	public Account viewAccountDetails(Client client)
 	{
 		// TODO Auto-generated method stub
 		return null;
