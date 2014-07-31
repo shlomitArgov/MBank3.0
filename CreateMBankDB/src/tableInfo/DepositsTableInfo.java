@@ -21,8 +21,8 @@ public class DepositsTableInfo extends TableInfo {
 		,DBVarTypes.DOUBLE // balance
 		,DBVarTypes.VARCHAR // deposit_type
 		,DBVarTypes.DOUBLE // estimated_balance
-		,DBVarTypes.DATE // opening_date
-		,DBVarTypes.DATE // closing_date
+		,DBVarTypes.BIGINT // opening_date in milliseconds
+		,DBVarTypes.BIGINT // closing_date in milliseconds
 	};	
 	
 	public DepositsTableInfo() {
