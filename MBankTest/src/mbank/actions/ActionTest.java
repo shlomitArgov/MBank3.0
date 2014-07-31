@@ -19,6 +19,7 @@ import mbank.database.beans.enums.ActivityType;
 import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.beans.enums.DepositType;
+import mbank.database.beans.enums.SystemProperties;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ActivityDBManager;
 import mbank.database.managersImpl.ClientDBManager;
@@ -208,7 +209,7 @@ public class ActionTest
 	public void testViewClientDeposits() throws MBankException 
 	{
 		/* Create a temp client for this test */
-		Client tempClient = new Client("tempClientForTestingViewAccountDetails", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
+		Client tempClient = new Client("tempClientForTestingViewClientDeposits", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
 
 		/* Insert the temp client into the DB */
 		try
@@ -262,7 +263,7 @@ public class ActionTest
 	public void testViewClientActivites() throws MBankException 
 	{
 		/* Create a temp client for this test */
-		Client tempClient = new Client("tempClientForTestingViewAccountDetails", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
+		Client tempClient = new Client("tempClientForTestingViewClientActivities", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
 
 		/* Insert the temp client into the DB */
 		try
@@ -308,4 +309,23 @@ public class ActionTest
 		activityManager.delete(tempActivity2, con);
 	}
 
+	/* Test view system property activities action */
+	@Test
+	public void testViewSystemProperty() throws MBankException 
+	{
+		/* Create a clientAction for testing the viewSystemProperty method */
+		ClientAction clientAction = new ClientAction(con, client.getClient_id());
+		String systemProperty = null;
+		try
+		{
+			systemProperty = clientAction.viewSystemProperty(SystemProperties.PRE_OPEN_FEE.getPropertyName());	
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail();
+		}
+		/* Assumes that if no exception was thrown and the property is not empty/null - that it was retrieve successfully */
+		Assert.assertTrue("System property is empty", (systemProperty != null) && !(systemProperty.isEmpty()));
+	}
 }
