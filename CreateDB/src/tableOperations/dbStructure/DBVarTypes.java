@@ -1,6 +1,6 @@
 package tableOperations.dbStructure;
 public enum DBVarTypes {
-	VARCHAR("VARCHAR(255)"), BIGINT("BIGINT"), DOUBLE("DOUBLE"), LONGVARCHAR(
+	VARCHAR("VARCHAR(255)"), BIGINT("BIGINT"), INTEGER("INTEGER"), DOUBLE("DOUBLE"), LONGVARCHAR(
 			"VARCHAR(1024)"), DATE("DATE");
 
 	private DBVarTypes(String name) {

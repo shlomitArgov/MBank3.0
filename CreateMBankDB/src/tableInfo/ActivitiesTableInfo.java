@@ -20,7 +20,7 @@ public class ActivitiesTableInfo extends TableInfo {
 		,DBVarTypes.DOUBLE // amount
 		,DBVarTypes.DATE // activity_date
 		,DBVarTypes.DOUBLE //commission
-		,DBVarTypes.VARCHAR // ACTIVITY_TYPE
+		,DBVarTypes.INTEGER // ACTIVITY_TYPE
 		,DBVarTypes.LONGVARCHAR // description
 	};	
 	

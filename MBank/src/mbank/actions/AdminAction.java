@@ -219,8 +219,38 @@ private void testUniqueClientnamePasswordCombination(
 		PropertyManager propertyManager = new PropertyDBManager();
 		
 		//remove client
-		clientManager.delete(client, this.getCon());
-		double commission = 0;
+		try
+		{
+			clientManager.delete(client, this.getCon());			
+		}
+		catch (MBankException e)
+		{
+			throw e;
+		}
+		String removeClientComment = "removed client with id "+ client.getClient_id();			
+		/* If removal was successful - update the activity table */
+		ActivityManager activityManager = new ActivityDBManager();
+		Activity deleteClientActivity = new Activity(client.getClient_id(), 0, new java.util.Date(System.currentTimeMillis()), 0, ActivityType.REMOVE_CLIENT, removeClientComment);
+		activityManager.insert(deleteClientActivity, this.getCon());
+		
+		// remove the client's account
+		AccountDBManager accountManager = new AccountDBManager();
+		double accountCommission = 0;
+		Account clientAccount = accountManager.queryAccountByClient(client.getClient_id(), this.getCon());
+		if(clientAccount.getBalance() < 0) // commission in case the client owes the bank money is equal to the amount the user owes
+		{
+			accountCommission = clientAccount.getBalance();
+		}
+		try
+		{
+			RemoveAccount(client.getClient_id(), accountCommission);
+		} catch (MBankException e)
+		{
+			throw e;
+		}
+		
+		double depositCommission = 0;
+		
 		//remove client deposits
 		ArrayList<Deposit> clientDeposits = depositManager.queryDepositsByClient(client.getClient_id(), this.getCon());
 		for (Iterator<Deposit> depositIterator = clientDeposits.iterator(); depositIterator.hasNext();)
@@ -233,33 +263,45 @@ private void testUniqueClientnamePasswordCombination(
 				{
 				case REGULAR: 
 				{
-					commission = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
+					depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
 					break;
 				}
 				case GOLD: 
 				{
-					commission = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
+					depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
 					break;
 				}	
 				case PLATINUM: 
 				{
-					commission = Double.parseDouble(propertyManager.query(SystemProperties.PLATINUM_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
+					depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.PLATINUM_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
 					break;
 				}
 				}
-
-				//update bank balance by updating the activities table
-				ActivityManager activityManager = new ActivityDBManager();
-				double chargeAmount = commission*(d.getBalance() + 1);
-				Activity deleteAccountActivity = new Activity(client.getClient_id(), d.getBalance(), new java.util.Date(System.currentTimeMillis()), chargeAmount, ActivityType.REMOVE_ACCOUNT, "Charged deposit[" + d.getDeposit_id() + "] with commission of " + chargeAmount + "for opening deposit before end-date (on client[" + client.getClient_id() + "] removal"); 
-				activityManager.insert(deleteAccountActivity, this.getCon());
-
 			}
-			depositManager.delete(d, this.getCon());
+			//update the activities table
+			double chargeAmount = depositCommission*(d.getBalance() + 1);
+			String removeDepositComment;
+			if (chargeAmount > 0)
+				{
+				removeDepositComment=  "removed deposit with id " + d.getClient_id() + " and Charged a commission of " + chargeAmount + " for opening deposit before end-date (on client[" + client.getClient_id() + "] removal)";
+				}
+			else
+			{
+				removeDepositComment= "removed deposit with id "+ d.getClient_id();
+			}
+			// remove deposit
+			try
+			{
+				depositManager.delete(d, this.getCon());
+			
+			} catch (MBankException e)
+			{
+				throw e;
+			}
+			/* If removal was successful - update the activity table */
+			Activity deleteDepositActivity = new Activity(client.getClient_id(), d.getBalance(), new java.util.Date(System.currentTimeMillis()), chargeAmount, ActivityType.REMOVE_DEPOSIT, removeDepositComment );
+			activityManager.insert(deleteDepositActivity, this.getCon());
 		}
-		
-		//remove client 
-		RemoveAccount(client.getClient_id(), commission);
 	}
 	
 	public void RemoveAccount(long clientId, double commission) throws MBankException

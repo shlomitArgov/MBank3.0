@@ -133,7 +133,7 @@ public class ActivityDBManager implements ActivityManager
 				Activity a = null;
 				if(rs.next()) //next() returns false if there are no more rows in the RS
 				{	
-					a = new Activity(rs.getLong(1), rs.getLong(2), rs.getDouble(3), new java.util.Date(rs.getDate(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
+					a = new Activity(rs.getLong(1), rs.getInt(2), rs.getDouble(3), new java.util.Date(rs.getDate(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
 					
 				}
 				return a;

@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import mbank.Util;
 import mbank.actions.AdminAction;
 import mbank.database.beans.Account;
+import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ActivityType;
@@ -28,7 +29,6 @@ import mbankExceptions.MBankException;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -39,12 +39,15 @@ public class AdminActionTest {
 	private static Connection con;
 	private static ClientManager clientManager;
 	private static ActivityManager activityManager;
+	private static AdminAction adminAction;
 	private static Client client;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		String url = Util.DB_URL;
 		con = DriverManager.getConnection(url);
+		
+		adminAction = new AdminAction(con, 1);
 		
 		activityManager = new ActivityDBManager();
 		
@@ -71,7 +74,7 @@ public class AdminActionTest {
 	@Test 
 	public void testUpdateClientDetails() throws MBankException 
 	{
-
+		/* Create a temp client for this test */
 		Client tempClient = new Client("testUpdateClientDetails", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
 		
 		/* Insert the temp client into the DB */
@@ -167,31 +170,53 @@ public class AdminActionTest {
 		}
 		
 	}
+
 	
-	
-	
-	//TODO fix this test
-	@Ignore
 	@Test
 	public void testRemoveClient() throws MBankException {
-		AdminAction adminAction = new AdminAction(con, 1);
-		Account testAccount = new Account(client.getClient_id(), 500.0, 500.0, "comment1");
-		Deposit testDeposit = new Deposit(client.getClient_id(), 500.0, DepositType.LONG, 5000L, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis() + 99999999));
 		
+		/* Create a temp client for this test */
+		Client tempClient = new Client("testUpdateClientDetails", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
+		
+		/* Insert the temp client into the DB */
+		try
+		{
+			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}
+		Account testAccount = new Account(tempClient.getClient_id(), 500.0, 500.0, "comment1");
+		Deposit testDeposit1 = new Deposit(tempClient.getClient_id(), 500.0, DepositType.LONG, 5000L, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis()));
+		Deposit testDeposit2 = new Deposit(tempClient.getClient_id(), 800.0, DepositType.LONG, 5000L, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis() + 999999));
+
 		AccountManager accountManager = new AccountDBManager();
-		accountManager.insert(testAccount, con);
+		testAccount.setAccount_id(accountManager.insert(testAccount, con));
 	
 		DepositManager depositManager = new DepositDBManager();
-		depositManager.insert(testDeposit, con);
-		
-		adminAction.removeClient(client);
-		
-		//Refactor - add test of properties table update
-		activityManager.query(ActivityType.REMOVE_CLIENT, client.getClient_id(), con);
-//		Assert.assertTrue("Bank balance was not updated before client deposits were removed", MBank.getBankBalance().equals(2000.0 + 2000.0*0.015));
-		
-		Assert.assertTrue("Client accounts were not removed", accountManager.queryAccountByClient(client.getClient_id(), con) == null);
-		Assert.assertTrue("Client deposits were not removed", depositManager.queryDepositsByClient(client.getClient_id(), con) == null);
-		Assert.assertTrue("Client was not removed from Clients table", clientManager.query(client, con) == null);
+		testDeposit1.setDeposit_id(depositManager.insert(testDeposit1, con));
+		testDeposit2.setDeposit_id(depositManager.insert(testDeposit2, con));
+
+		try
+		{
+			adminAction.removeClient(tempClient);
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to remove client from MBank database");
+		}
+		/* Make sure the client was removed from the clients table */
+		Assert.assertTrue("Client was not removed from Clients table", clientManager.query(tempClient, con) == null);
+		/* Make sure the activity table was updated */
+		Activity activity = activityManager.query(ActivityType.REMOVE_CLIENT, tempClient.getClient_id(), con);
+		Assert.assertTrue("Activity table was not updated regarding removal of a client", activity.getActivityType().equals(ActivityType.REMOVE_CLIENT));
+		/* Make sure the client's account was removed along with the client */
+		Assert.assertTrue("Client accounts were not removed", accountManager.queryAccountByClient(tempClient.getClient_id(), con) == null);
+		/* Make sure the client's deposits were removed along with the client */
+		Assert.assertTrue("Client deposits were not removed", depositManager.queryDepositsByClient(tempClient.getClient_id(), con) == null);
+	
 	}	
 }
