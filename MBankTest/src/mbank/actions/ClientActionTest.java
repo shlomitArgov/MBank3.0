@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 import mbank.Util;
+import mbank.database.beans.Account;
 import mbank.database.beans.Client;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.managersImpl.AccountDBManager;
@@ -45,7 +46,7 @@ public class ClientActionTest {
 	}
 	
 	@Test
-	public void testViewClientDetails() 
+	public void testViewClientDetails() throws MBankException 
 	{
 		Client tempClient = createAndInsertTempClient("testViewClientDetails", ClientType.REGULAR);
 		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
@@ -68,11 +69,40 @@ public class ClientActionTest {
 		{
 			Assert.assertNull("Authorization error - succeeded in retrieving client details for different client with ClientAction", clientDetails);
 		}
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
 	}
 
 	@Test
-	public void testViewAccountDetails() {
-		fail("Not yet implemented");
+	public void testViewAccountDetails() throws MBankException 
+	{
+		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
+		Account tempAccount = createAndInsertTempAccount("testViewAccountDetailsAccount", tempClient);
+		
+		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+
+		try 
+		{
+			clientAction.viewAccountDetails(tempClient);
+		} catch (MBankException e) 
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to retrieve client account details with ClientAction");
+		}
+		Account accountDetails = null;
+		try
+		{
+			accountDetails = clientAction.viewAccountDetails(client);
+		}
+		catch (MBankException e)
+		{
+			Assert.assertNull("Authorization error - succeeded in retrieving client account details for a different client's account with ClientAction", accountDetails);
+		}
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
+		accountManager.delete(tempAccount, con);
 	}
 
 	@Test
@@ -128,5 +158,25 @@ public class ClientActionTest {
 		}
 		
 		return tempClient;
+	}
+	
+	private static Account createAndInsertTempAccount(String comment, Client client)
+	{
+		/* Create a temp account for this test */
+		Account tempAccount = null;
+		tempAccount = new Account(client.getClient_id(), 1000, 10000, comment);
+		
+		/* Insert the temp account into the DB */
+		try
+		{
+			tempAccount.setAccount_id(accountManager.insert(tempAccount, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert account into the Accounts table");
+		}
+		
+		return tempAccount;
 	}
 }
