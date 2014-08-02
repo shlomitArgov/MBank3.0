@@ -230,7 +230,7 @@ public class DepositDBManager implements DepositManager
 			List<Deposit> depositsList = new ArrayList<>();
 			if (rs != null)
 			{
-				if (rs.next()) // next() returns false if there are no more rows
+				while (rs.next()) // next() returns false if there are no more rows
 								// in the RS
 				{
 					Deposit d = new Deposit(rs.getLong(1), rs.getLong(2),
@@ -239,13 +239,13 @@ public class DepositDBManager implements DepositManager
 							new java.util.Date(rs.getDate(6).getTime()),
 							new java.util.Date(rs.getDate(7).getTime()));
 					depositsList.add(d);
+					
 				}
-				return depositsList;
 			}
+			return depositsList;
 		} catch (SQLException | MBankException e)
 		{
 			throw new MBankException("Failed to query the " + tableName + " table");
 		}
-		return null;
 	}
 }

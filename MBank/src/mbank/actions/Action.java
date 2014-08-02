@@ -179,6 +179,7 @@ public abstract class Action
 		List<Deposit> deposits = depositManager.queryDepositsByClient(clientId, this.getCon());
 		return deposits;
 	}
+	
 	public List<Activity> viewClientActivities(long clientId) throws MBankException
 	{
 		return queryClientActivities(clientId);

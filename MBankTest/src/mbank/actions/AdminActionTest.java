@@ -5,6 +5,9 @@ package mbank.actions;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
 
 import mbank.Util;
 import mbank.actions.AdminAction;
@@ -301,4 +304,152 @@ public class AdminActionTest {
 		/* cleanup */
 		clientManager.delete(tempClient, con);
 	}
+	
+
+	@Test
+	public void testViewAllClientDetails() throws MBankException {
+		List<Client> clients = null;
+		try
+		{
+			clients = adminAction.ViewAllClientDetails();	
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to get all client details");
+		}
+		Assert.assertNotNull("Failed to get all client details", clients);
+		
+		String sql = "SELECT COUNT(*) FROM CLIENTS";
+		PreparedStatement ps;
+		int numRows = 0;
+		try 
+		{
+			ps = con.prepareStatement(sql);
+			ps.execute();
+			if(ps.getResultSet() != null)
+			{
+				if(ps.getResultSet().next())
+				{
+					numRows = ps.getResultSet().getInt(1);		
+				}
+			}
+		} catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+				 
+		Assert.assertTrue("Failed to get all client details", numRows == clients.size());
+		}
+	
+
+	@Test
+	public void testViewAllAccountDetails() throws MBankException {
+		List<Account> accounts = null;
+		try
+		{
+			accounts = adminAction.viewAllAccountsDetails();	
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to get all accounts details");
+		}
+		Assert.assertNotNull("Failed to get all accounts details", accounts);
+		
+		String sql = "SELECT COUNT(*) FROM ACCOUNTS";
+		PreparedStatement ps;
+		int numRows = 0;
+		try 
+		{
+			ps = con.prepareStatement(sql);
+			ps.execute();
+			if(ps.getResultSet() != null)
+			{
+				if(ps.getResultSet().next())
+				{
+					numRows = ps.getResultSet().getInt(1);		
+				}
+			}
+		} catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+				 
+		Assert.assertTrue("Failed to get all accounts details", numRows == accounts.size());
+	}
+	@Test
+	public void testViewAllActivitiesDetails() throws MBankException {
+		List<Activity> activities = null;
+		try
+		{
+			activities = adminAction.viewAllActivitiesDetails();	
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to get all activities details");
+		}
+		Assert.assertNotNull("Failed to get all activities details", activities);
+		
+		String sql = "SELECT COUNT(*) FROM ACTIVITY";
+		PreparedStatement ps;
+		int numRows = 0;
+		try 
+		{
+			ps = con.prepareStatement(sql);
+			ps.execute();
+			if(ps.getResultSet() != null)
+			{
+				if(ps.getResultSet().next())
+				{
+					numRows = ps.getResultSet().getInt(1);		
+				}
+			}
+		} catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+				 
+		Assert.assertTrue("Failed to get all activities details", numRows == activities.size());
+	}
+
+	@Test
+	public void testViewAllDepositsDetails() throws MBankException {
+		List<Deposit> deposits = null;
+		try
+		{
+			deposits = adminAction.viewAllDepositsDetails();	
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to get all deposits details");
+		}
+		Assert.assertNotNull("Failed to get all deposits details", deposits);
+		
+		String sql = "SELECT COUNT(*) FROM DEPOSITS";
+		PreparedStatement ps;
+		int numRows = 0;
+		try 
+		{
+			ps = con.prepareStatement(sql);
+			ps.execute();
+			if(ps.getResultSet() != null)
+			{
+				if(ps.getResultSet().next())
+				{
+					numRows = ps.getResultSet().getInt(1);		
+				}
+			}
+		} catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+				 
+		System.out.println("num rows = " + numRows);
+		System.out.println("size of rs = " + deposits.size());		
+		Assert.assertTrue("Failed to get all deposits details", numRows == deposits.size());
+	}
 }
+

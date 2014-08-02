@@ -5,7 +5,6 @@ package mbank.actions;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -328,39 +327,43 @@ private void testUniqueClientnamePasswordCombination(
 	 * @return string containing all clients' toString() values 
 	 * @throws MBankException 
 	 */
-	public String ViewAllClientDetails() throws MBankException
+	public List<Client> ViewAllClientDetails() throws MBankException
 	{
 		ClientManager clientManager = new ClientDBManager();
 		List<Client> clients = clientManager.queryAllClients(this.getCon());
-		Iterator<Client> clientsIt = clients.iterator();
-		String string = "";
-		while(clientsIt.hasNext())
-		{
-			Client c = clientsIt.next();
-			string += c.toString() + "\n";
-		}
-		return string;
+//		Iterator<Client> clientsIt = clients.iterator();
+//		String string = "";
+//		while(clientsIt.hasNext())
+//		{
+//			Client c = clientsIt.next();
+//			string += c.toString() + "\n";
+//		}
+//		return string;
+		return clients;
 	}
 	
-	public String viewAllAccountsDetails() throws MBankException
+	public List<Account> viewAllAccountsDetails() throws MBankException
 	{
 		AccountManager accountManager = new AccountDBManager();
 		List<Account> accounts = accountManager.queryAllAccounts(this.getCon());
-		return Arrays.toString(accounts.toArray());
+//		return Arrays.toString(accounts.toArray());
+		return accounts;
 	}
 	
-	public String viewAllDepositsDetails() throws MBankException
+	public List<Deposit> viewAllDepositsDetails() throws MBankException
 	{
 		DepositManager depositManager = new DepositDBManager();
 		List<Deposit> deposits = depositManager.queryAllDeposits(this.getCon());
-		return Arrays.toString(deposits.toArray());
+//		return Arrays.toString(deposits.toArray());
+		return deposits;
 	}
 	
-	public String viewAllActivitiesDetails() throws MBankException
+	public List<Activity> viewAllActivitiesDetails() throws MBankException
 	{
 		ActivityManager activityManager = new ActivityDBManager();
 		List<Activity> activities = activityManager.queryAllActivities(this.getCon());
-		return Arrays.toString(activities.toArray());
+//		return Arrays.toString(activities.toArray());
+		return activities;
 	}
 	
 	public ArrayList<Property> viewSystemProperties() throws MBankException
