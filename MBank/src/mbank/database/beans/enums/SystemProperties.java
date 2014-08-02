@@ -3,7 +3,9 @@
  */
 package mbank.database.beans.enums;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -43,7 +45,11 @@ public enum SystemProperties
 
 	public static boolean validateString(String propertyName2) {
 		List<SystemProperties> properties = Arrays.asList(SystemProperties.values());
-		if(properties.contains(propertyName2))
+		List<String> stringProperties = new ArrayList<>();
+		for (Iterator<SystemProperties> iterator = properties.iterator(); iterator.hasNext();) {
+			stringProperties.add((iterator.next()).toString());	
+		}
+		if(stringProperties.contains(propertyName2.toUpperCase()))
 		{
 			return true;
 		}

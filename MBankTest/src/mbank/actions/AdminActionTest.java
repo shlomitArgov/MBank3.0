@@ -69,10 +69,24 @@ public class AdminActionTest {
 	}
 	
 	@Test 
-	public void testUpdateClientDetails()
+	public void testUpdateClientDetails() throws MBankException 
 	{
+
+		Client tempClient = new Client("testUpdateClientDetails", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
+		
+		/* Insert the temp client into the DB */
+		try
+		{
+			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}
+		
 		/* Create an AdminAction */
-		AdminAction adminAction =  new AdminAction(con, client.getClient_id());
+		AdminAction adminAction =  new AdminAction(con, 1); // admin user ID is always 1
 	
 		/* Create an array of details to use for updating the client's details */
 		TableValue[] details = new TableValue[]{new TableValue(ClientAttributes.ADDRESS.getAttribute(), "updated address"),new TableValue(ClientAttributes.PHONE.getAttribute(),"updated phone"),new TableValue(ClientAttributes.EMAIL.getAttribute(), "updated email"),  new TableValue(ClientAttributes.CLIENT_TYPE.getAttribute(), ClientType.PLATINUM.getTypeStringValue())};
@@ -80,7 +94,7 @@ public class AdminActionTest {
 		/* Attempt to update the client's details */
 		try
 		{
-			adminAction.updateClientDetails(Long.toString(client.getClient_id()), details);
+			adminAction.updateClientDetails(Long.toString(tempClient.getClient_id()), details);
 		}
 		catch(MBankException e)
 		{
@@ -91,7 +105,7 @@ public class AdminActionTest {
 		/* Check that the client details have been updated */
 		Client c = null;
 		try {
-			c = clientManager.query(client.getClient_id(), con);
+			c = clientManager.query(tempClient.getClient_id(), con);
 		} catch (MBankException e) {
 			e.printStackTrace();
 		}
@@ -99,6 +113,9 @@ public class AdminActionTest {
 		&& c.getPhone().equalsIgnoreCase(details[1].getColumnValue()) 
 		&& c.getEmail().equalsIgnoreCase(details[2].getColumnValue())
 		&& c.getType().getTypeStringValue().equalsIgnoreCase(details[3].getColumnValue()));
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
 	}
 	
 
@@ -108,8 +125,8 @@ public class AdminActionTest {
 		Client client1 = null;
 		Client client2 = null;
 		try {
-			client1 = new Client("moshe1", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
-			client2 = new Client("Moshe1", "Pass2", ClientType.GOLD, "address2", "email2","phone2", "comment2");
+			client1 = new Client("testAddNewClient1", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
+			client2 = new Client("testAddNewClient2", "Pass2", ClientType.GOLD, "address2", "email2","phone2", "comment2");
 		} catch (MBankException e1) {
 			e1.printStackTrace();
 		}
