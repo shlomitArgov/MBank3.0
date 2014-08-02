@@ -15,14 +15,17 @@ import mbank.database.beans.Account;
 import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
+import mbank.database.beans.Property;
 import mbank.database.beans.enums.ActivityType;
 import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.beans.enums.DepositType;
+import mbank.database.beans.enums.SystemProperties;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ActivityDBManager;
 import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersImpl.DepositDBManager;
+import mbank.database.managersImpl.PropertyDBManager;
 import mbank.database.managersInterface.AccountManager;
 import mbank.database.managersInterface.DepositManager;
 import mbankExceptions.MBankException;
@@ -450,6 +453,43 @@ public class AdminActionTest {
 		System.out.println("num rows = " + numRows);
 		System.out.println("size of rs = " + deposits.size());		
 		Assert.assertTrue("Failed to get all deposits details", numRows == deposits.size());
+	}
+	
+	@Test
+	public void testUpdateSystemProperty() throws MBankException {
+	
+		/* save property value before temporary change needed for testing */
+		PropertyDBManager propertyManager = new PropertyDBManager();
+		String OriginalPropVal = null;
+		try
+		{
+			OriginalPropVal = propertyManager.query(SystemProperties.GOLD_CREDIT_LIMIT.getPropertyName(), con).getProp_value();	
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to read system property from database");
+		}
+		
+		Property testProperty = new Property(SystemProperties.GOLD_CREDIT_LIMIT.getPropertyName(), "6666");
+		
+		try
+		{
+			adminAction.updateSystemProperty(testProperty);
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to update system property");
+		}
+		Assert.assertTrue("Failed to update system property", testProperty.getProp_value().equalsIgnoreCase(adminAction.viewSystemProperty(testProperty.getProp_key())));
+		
+		 /* cleanup */
+		if (OriginalPropVal != null)
+		{
+			testProperty.setProp_value(OriginalPropVal);	
+		}
+		adminAction.updateSystemProperty(testProperty);
 	}
 }
 
