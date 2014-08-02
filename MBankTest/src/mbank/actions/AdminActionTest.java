@@ -21,8 +21,6 @@ import mbank.database.managersImpl.ActivityDBManager;
 import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersImpl.DepositDBManager;
 import mbank.database.managersInterface.AccountManager;
-import mbank.database.managersInterface.ActivityManager;
-import mbank.database.managersInterface.ClientManager;
 import mbank.database.managersInterface.DepositManager;
 import mbankExceptions.MBankException;
 
@@ -37,8 +35,9 @@ import org.junit.Test;
  */
 public class AdminActionTest {
 	private static Connection con;
-	private static ClientManager clientManager;
-	private static ActivityManager activityManager;
+	private static ClientDBManager clientManager;
+	private static AccountDBManager accountManager;
+	private static ActivityDBManager activityManager;
 	private static AdminAction adminAction;
 	private static Client client;
 	
@@ -50,6 +49,8 @@ public class AdminActionTest {
 		adminAction = new AdminAction(con, 1);
 		
 		activityManager = new ActivityDBManager();
+		
+		accountManager = new AccountDBManager();
 		
 		client = new Client("testAccountClient", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
 		clientManager = new ClientDBManager();	
@@ -176,7 +177,7 @@ public class AdminActionTest {
 	public void testRemoveClient() throws MBankException {
 		
 		/* Create a temp client for this test */
-		Client tempClient = new Client("testUpdateClientDetails", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
+		Client tempClient = new Client("testRemoveClient", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
 		
 		/* Insert the temp client into the DB */
 		try
@@ -218,5 +219,52 @@ public class AdminActionTest {
 		/* Make sure the client's deposits were removed along with the client */
 		Assert.assertTrue("Client deposits were not removed", depositManager.queryDepositsByClient(tempClient.getClient_id(), con) == null);
 	
-	}	
+	}
+	
+	@Test
+	public void testCreateNewAccount() throws MBankException {
+		
+		/* Create a temp client for this test */
+		Client tempClient = new Client("testCreateNewAccout", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
+		
+		/* Insert the temp client into the DB */
+		try
+		{
+			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}
+		
+//		/* Create a temp account for this test */
+//		Account tempAccount = new Account(tempClient.getClient_id(), 10000, 15000, "testCreateNewAccout");
+//		
+//		/* Insert the temp account into the DB */
+//		try
+//		{
+//			tempAccount.setAccount_id((clientManager.insert(tempClient, con)));	
+//		}
+//		catch(MBankException e)
+//		{
+//			e.printStackTrace();
+//			Assert.fail("Failed to insert acount into the Accounts table");
+//		}
+		Account account = null;
+		try
+		{
+			account = adminAction.CreateNewAccount(tempClient.getClient_id(), 1000, 10000);	
+		} catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to create new account with AdminAction");
+		}
+		Assert.assertTrue("Failed to create new account with AdminAction", account != null);
+		
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
+		accountManager.delete(account, con);
+	}
 }

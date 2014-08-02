@@ -166,7 +166,7 @@ private void testUniqueClientnamePasswordCombination(
 	}
 
 	//executed as part of the AddNewClient method - therefore defined as private
-	private long CreateNewAccount(long clientID, double deposit, double creditLimit) throws MBankException
+	public Account CreateNewAccount(long clientID, double deposit, double creditLimit) throws MBankException
 	{
 		if(deposit < 0)
 		{
@@ -176,14 +176,14 @@ private void testUniqueClientnamePasswordCombination(
 		//insert account into DB
 		AccountManager accountManager = new AccountDBManager();
 		try{
-			accountManager.insert(account, this.getCon());
+			account.setAccount_id(accountManager.insert(account, this.getCon()));
 		}
 		catch(MBankException e)
 		{
 			throw new MBankException(e.getLocalizedMessage());
 		}
 		
-		return account.getAccount_id();
+		return account;
 	}
 	
 //helper method: get credit limit according to client type
