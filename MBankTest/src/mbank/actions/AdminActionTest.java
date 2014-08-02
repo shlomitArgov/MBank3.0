@@ -238,19 +238,6 @@ public class AdminActionTest {
 			Assert.fail("Failed to insert client into the Clients table");
 		}
 		
-//		/* Create a temp account for this test */
-//		Account tempAccount = new Account(tempClient.getClient_id(), 10000, 15000, "testCreateNewAccout");
-//		
-//		/* Insert the temp account into the DB */
-//		try
-//		{
-//			tempAccount.setAccount_id((clientManager.insert(tempClient, con)));	
-//		}
-//		catch(MBankException e)
-//		{
-//			e.printStackTrace();
-//			Assert.fail("Failed to insert acount into the Accounts table");
-//		}
 		Account account = null;
 		try
 		{
@@ -266,5 +253,52 @@ public class AdminActionTest {
 		/* cleanup */
 		clientManager.delete(tempClient, con);
 		accountManager.delete(account, con);
+	}
+	
+	@Test
+	public void testRemoveAccount() throws MBankException {
+		
+		/* Create a temp client for this test */
+		Client tempClient = new Client("testRemoveAccout", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
+		
+		/* Insert the temp client into the DB */
+		try
+		{
+			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}
+		
+		/* Create a temp account for this test */
+		Account tempAccount = new Account(tempClient.getClient_id(), 1000, 5000, "testRemoveAccout");
+		
+		/* Insert the temp account into the DB */
+		try
+		{
+			tempAccount.setAccount_id((accountManager.insert(tempAccount, con)));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}
+		
+		try
+		{
+			adminAction.RemoveAccount(tempClient.getClient_id(), 500);	
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to remove account");
+		}
+		
+		Assert.assertNull("Failed to remove account", accountManager.queryAccountByClient(tempClient.getClient_id(), con));
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
 	}
 }
