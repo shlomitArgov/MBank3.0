@@ -152,15 +152,19 @@ public class ClientAction extends Action
 		}				
 	}
 	
-	public boolean createNewDeposit(Client client, DepositType depositType, Double depositAmount, java.util.Date closeDate) throws  MBankException
+	public Deposit createNewDeposit(Client client, DepositType depositType, double depositAmount, java.util.Date closeDate) throws  MBankException
 	{
 		
 		long depositDurationInDays = (closeDate.getTime() - System.currentTimeMillis())/(60*60*24*1000);
 		
 		//make sure deposit amount and duration are positive
-		if(depositAmount < 0 || depositDurationInDays < 0)
+		if(depositAmount < 0)
 		{
-			return false;
+			throw new MBankException("Deposit amount must be non-negative");
+		}
+		else if(depositDurationInDays < 0 || closeDate.getTime() < System.currentTimeMillis())
+		{
+			throw new MBankException("Deposit duration must be non-negative");
 		}
 		//get interest rate according to clientType
 		ClientType clientType = client.getType();
@@ -170,26 +174,23 @@ public class ClientAction extends Action
 		{
 		case REGULAR:
 			interestRate = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DAILY_INTEREST.getPropertyName(), this.getCon()).getProp_value());
+			break;
 		case GOLD:
 			interestRate = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DAILY_INTEREST.getPropertyName(), this.getCon()).getProp_value());
+			break;
 		case PLATINUM:
 			interestRate = Double.parseDouble(propertyManager.query(SystemProperties.PLATINUM_DAILY_INTEREST.getPropertyName(), this.getCon()).getProp_value());
+			break;
 		default: 
 			interestRate = 0.0;
 		}
 		
 		Calendar maxCloseCal = Calendar.getInstance();
-//		Calendar maxCloseCal;
-//		if(depositType.equals(DepositType.LONG))
-//		{
-//		calculate maximal valid close date for deposit (40 years from opening date)
-//			maxCloseCal = Calendar.getInstance();
-			maxCloseCal.add(Calendar.YEAR, 40);
-			java.util.Date maxCloseDate = new java.util.Date(maxCloseCal.getTimeInMillis());
-//		}		
+		maxCloseCal.add(Calendar.YEAR, 40);
+		java.util.Date maxCloseDate = new java.util.Date(maxCloseCal.getTimeInMillis());		
 		DepositManager depositManager = new DepositDBManager();
 		ActivityManager activityManager = new ActivityDBManager();
-		
+		Deposit deposit = null;
 		//validate deposit length according to deposit type
 		if ((depositType.equals(DepositType.SHORT) && depositDurationInDays <= 365) || (depositType.equals(DepositType.LONG) && closeDate.before(maxCloseDate)))
 		{
@@ -200,14 +201,17 @@ public class ClientAction extends Action
 			//safe explicit cast to int because duration is validated to be smaller than 365/40 years which are both less than MAX_INT
 			calender.add(Calendar.DAY_OF_YEAR, (int)depositDurationInDays);
 			//create deposit 
-			Deposit deposit = new Deposit(client.getClient_id(), depositAmount, depositType, estimatedBalance, new java.util.Date(System.currentTimeMillis()), new java.util.Date(calender.getTimeInMillis()));
-			depositManager.insert(deposit, this.getCon());
+			deposit = new Deposit(client.getClient_id(), depositAmount, depositType, estimatedBalance, new java.util.Date(System.currentTimeMillis()), new java.util.Date(calender.getTimeInMillis()));
+			deposit.setDeposit_id(depositManager.insert(deposit, this.getCon()));
 			//update activity table
 			Activity activity = new Activity(client.getClient_id(), depositAmount, new java.util.Date(System.currentTimeMillis()), 0, ActivityType.CREATE_NEW_DEPOSIT, "Create new deposit of type: " + deposit.getType().getTypeStringValue() + " for client[" + client.getClient_id() + "]");
 			activityManager.insert(activity, this.getCon());
-			return true;
 		}
-		return false;
+		else
+		{
+			throw new MBankException("deposit duration is invalid for deposit type: " + depositType.getTypeStringValue());
+		}
+		return deposit;
 	}
 	
 	public boolean preOpenDeposit(long depositId) throws MBankException

@@ -118,7 +118,7 @@ public class ClientActionTest {
 	
 		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
 		/* Populate the Deposits table with several activities */
-		List<Deposit> tempDeposits =  CreateTempDeposits(tempClient.getClient_id(), "testViewClientDeposits");
+		List<Deposit> tempDeposits =  CreateTempDeposits(tempClient.getClient_id(), "testViewClientDeposits", DepositType.SHORT);
 
 		List<Deposit> deposits = null;
 		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
@@ -234,10 +234,10 @@ public class ClientActionTest {
 	}
 
 	@Test
-	public void testDepositToAccount() {
+	public void testDepositToAccount() throws MBankException {
 		/* Create a client and an account for this test and associate the account with the client */
-		Client tempClient = createAndInsertTempClient("testWithdrowFromAccountClient", ClientType.REGULAR);
-		Account tempAccount = createAndInsertTempAccount("testWithdrowFromAccount", tempClient, 100);
+		Client tempClient = createAndInsertTempClient("testDepositToAccountClient", ClientType.REGULAR);
+		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
 		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
 		
 		/* deposit amount that will not change the client type */
@@ -272,11 +272,72 @@ public class ClientActionTest {
 		{
 			Assert.assertTrue("Error - managed to deposit negative amount into client account", e.getLocalizedMessage().equalsIgnoreCase("Deposit amount must be non-negative"));
 		}		
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
+		accountManager.delete(tempAccount, con);
 	}
 
 	@Test
-	public void testCreateNewDeposit() {
-		fail("Not yet implemented");
+	public void testCreateNewDeposit() throws MBankException 
+	{
+		/* Create a client this test */
+		Client tempClient = createAndInsertTempClient("testCreateNewDepositClient", ClientType.REGULAR);
+		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ArrayList<Deposit> deposits = new ArrayList<>();
+		/* create short term deposit */
+		try 
+		{
+			deposits.add(clientAction.createNewDeposit(tempClient, DepositType.SHORT, 100000, new Date(System.currentTimeMillis() + 1000*3600*24*2)));
+		} 
+		catch (MBankException e) 
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to create new short-term deposit");
+		}
+		Assert.assertTrue("Failed to create new short-term deposit", deposits.get(deposits.size() - 1) !=  null);
+		
+		/* create long term deposit */ 
+		try 
+		{
+			deposits.add(clientAction.createNewDeposit(tempClient, DepositType.LONG, 100000, new Date(System.currentTimeMillis() + 1000*3600*24*366)));
+		} 
+		catch (MBankException e) 
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to create new long-term deposit");
+		}
+		Assert.assertTrue("Failed to create new long-term deposit",  deposits.get(deposits.size() - 1) !=  null);
+		
+		/* try to create a short term deposit with an invalid closing date*/
+		try 
+		{
+			deposits.add(clientAction.createNewDeposit(tempClient, DepositType.SHORT, 100000, new Date(System.currentTimeMillis() - 10000)));
+			Assert.fail("Failed to create new short-term deposit");
+		} 
+		catch (MBankException e) 
+		{
+			Assert.assertTrue("Failed to create new short-term deposit", e.getLocalizedMessage().equalsIgnoreCase("Deposit duration must be non-negative"));
+		}
+		
+		/* try to create a long term deposit with an invalid closing date*/
+		try 
+		{
+			deposits.add(clientAction.createNewDeposit(tempClient, DepositType.LONG, 100000, new Date(System.currentTimeMillis() - 10000)));
+			Assert.fail("Failed to create new short-term deposit");
+		} 
+		catch (MBankException e) 
+		{
+			Assert.assertTrue("Failed to create new short-term deposit", e.getLocalizedMessage().equalsIgnoreCase("Deposit duration must be non-negative"));
+		}
+		
+		System.out.println(tempClient.getClient_id());
+		/* cleanup */
+		while (deposits.size() > 0)
+		{
+			depositManager.delete(deposits.get(deposits.size() -1), con);
+			deposits.remove(deposits.size() -1);
+		}
 	}
 
 	@Test
@@ -347,11 +408,11 @@ public class ClientActionTest {
 		return activities;
 	}
 	
-	private List<Deposit> CreateTempDeposits(long client_id, String string) {
+	private List<Deposit> CreateTempDeposits(long client_id, String string, DepositType type) {
 		ArrayList<Deposit> deposits = new ArrayList<Deposit>();
 		Deposit deposit = null;
 		for (int i = 0; i < 4; i++) {
-			deposit = new Deposit(client_id, 100*i, DepositType.SHORT, i*1000, new Date(), new Date());
+			deposit = new Deposit(client_id, 100*i, type, i*1000, new Date(), new Date(System.currentTimeMillis() + 1000*3600*24*2));
 			try
 			{
 				deposit.setDeposit_id(depositManager.insert(deposit, con));
