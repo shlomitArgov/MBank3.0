@@ -12,11 +12,14 @@ import mbank.Util;
 import mbank.database.beans.Account;
 import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
+import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ActivityType;
 import mbank.database.beans.enums.ClientType;
+import mbank.database.beans.enums.DepositType;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ActivityDBManager;
 import mbank.database.managersImpl.ClientDBManager;
+import mbank.database.managersImpl.DepositDBManager;
 import mbankExceptions.MBankException;
 
 import org.junit.AfterClass;
@@ -29,6 +32,7 @@ public class ClientActionTest {
 	private static Client client;
 	private static ClientDBManager clientManager;
 	private static AccountDBManager accountManager;
+	private static DepositDBManager depositManager;
 	private static ActivityDBManager activityManager;
 	
 	@BeforeClass
@@ -37,10 +41,9 @@ public class ClientActionTest {
 		con = DriverManager.getConnection(url);
 		
 		clientManager = new ClientDBManager();
-		
 		activityManager = new ActivityDBManager();
-		
 		accountManager = new AccountDBManager();
+		depositManager = new DepositDBManager();
 		
 		client = createAndInsertTempClient("ClientActionTestClient", ClientType.REGULAR);
 	}
@@ -113,14 +116,47 @@ public class ClientActionTest {
 	@Test
 	public void testViewClientDeposits() throws MBankException {
 	
+		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
+		/* Populate the Deposits table with several activities */
+		List<Deposit> tempDeposits =  CreateTempDeposits(tempClient.getClient_id(), "testViewClientDeposits");
+
+		List<Deposit> deposits = null;
+		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		try
+		{
+			deposits = clientAction.viewClientDeposits(tempClient.getClient_id());
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to retrieve client deposits details with ClientAction");
+		}
+		
+		Assert.assertTrue("Failed to retrieve client deposits details with ClientAction", (deposits != null) && deposits.equals(tempDeposits));
+		
+		List<Deposit> deposits2 = null;
+		try
+		{
+			deposits2 = clientAction.viewClientDeposits(client.getClient_id());
+		}
+		catch (MBankException e)
+		{
+			Assert.assertNull("Authorization error - succeeded in retrieving client deposits details for a different client with ClientAction", deposits2);
+		}
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
+		for (int i = 0; i < deposits.size() ; i++)
+		{
+			deposits.remove(i);
+		}
 	}
 
 	@Test
 	public void testViewClientActivities() throws MBankException {
 		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
 		/* Populate the Activity table with several activities */
-		
-		List<Activity> tempActivities =  CreateTempActivities(tempClient.getClient_id(), "testViewClientDeposits");
+		List<Activity> tempActivities =  CreateTempActivities(tempClient.getClient_id(), "testViewClientActivities");
 
 		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
 
@@ -236,5 +272,22 @@ public class ClientActionTest {
 			activities.add(activity);
 		}
 		return activities;
+	}
+	
+	private List<Deposit> CreateTempDeposits(long client_id, String string) {
+		ArrayList<Deposit> deposits = new ArrayList<Deposit>();
+		Deposit deposit = null;
+		for (int i = 0; i < 4; i++) {
+			deposit = new Deposit(client_id, 100*i, DepositType.SHORT, i*1000, new Date(), new Date());
+			try
+			{
+				deposit.setDeposit_id(depositManager.insert(deposit, con));
+			} catch (MBankException e)
+			{
+				e.printStackTrace();
+			}
+			deposits.add(deposit);
+		}
+		return deposits;
 	}
 }
