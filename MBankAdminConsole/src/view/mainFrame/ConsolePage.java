@@ -89,7 +89,7 @@ public class ConsolePage extends JSplitPane{
 					 */
 					JOptionPane
 							.showMessageDialog(viewClientDetailsPane,e1.getLocalizedMessage(),"Error", JOptionPane.ERROR_MESSAGE);
-//					viewClientDetailsPane = new noSuchClientPanel(e1.getLocalizedMessage());
+					viewClientDetailsPane = null; //clear the display
 				}
 				if(!(viewClientDetailsPane == null))
 				{/* Didn't fail to retrieve the client details --> set the panel to be the empty panel */
@@ -104,6 +104,11 @@ public class ConsolePage extends JSplitPane{
 
 					/* Update the display pane with the client details */
 					ConsolePage.displayCardLayout.show(displayPane, ConsolePage.viewClientDetailsCard);
+				}
+				else
+				{/* Update the display pane with the empty pane */
+					/* Update the display pane with the client details */
+					ConsolePage.displayCardLayout.show(displayPane, ConsolePage.emptyCard);
 				}
 			}
 		});
