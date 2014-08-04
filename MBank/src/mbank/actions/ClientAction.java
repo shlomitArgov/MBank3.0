@@ -214,7 +214,7 @@ public class ClientAction extends Action
 		return deposit;
 	}
 	
-	public boolean preOpenDeposit(long depositId) throws MBankException
+	public void preOpenDeposit(long depositId) throws MBankException
 	{
 		DepositManager depositManager = new DepositDBManager();
 		Deposit deposit = depositManager.query(depositId, this.getCon());
@@ -254,7 +254,10 @@ public class ClientAction extends Action
 			// remove deposit
 			depositManager.delete(deposit, this.getCon());
 		}
-		return false;
+		else
+		{
+			throw new MBankException("Only long-term deposits can be pre-opened");
+		}
 	}
 	
 	@Override

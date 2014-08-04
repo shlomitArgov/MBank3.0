@@ -331,7 +331,6 @@ public class ClientActionTest {
 			Assert.assertTrue("Failed to create new short-term deposit", e.getLocalizedMessage().equalsIgnoreCase("Deposit duration must be non-negative"));
 		}
 		
-		System.out.println(tempClient.getClient_id());
 		/* cleanup */
 		while (deposits.size() > 0)
 		{
@@ -341,8 +340,24 @@ public class ClientActionTest {
 	}
 
 	@Test
-	public void testPreOpenDeposit() {
-		fail("Not yet implemented");
+	public void testPreOpenDeposit() throws MBankException {
+		/* Create a client and an account for this test and associate the account with the client */
+		Client tempClient = createAndInsertTempClient("testCreateNewDepositClient", ClientType.REGULAR);
+		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
+		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		
+		Deposit tempDeposit = new Deposit(tempClient.getClient_id(), 10000, DepositType.LONG, 11000, new Date(), new Date(System.currentTimeMillis() + 1000*3600*24*380));
+		tempDeposit.setDeposit_id(depositManager.insert(tempDeposit, con));
+		
+		try 
+		{
+			clientAction.preOpenDeposit(tempDeposit.getDeposit_id());
+		} catch (MBankException e) 
+		{
+			Assert.fail("Failed to pre-open long-term deposit");
+		}
+		/* cleanup */
+		clientManager.delete(tempClient, con);
 	}
 
 	private static Client createAndInsertTempClient(String name, ClientType type)
