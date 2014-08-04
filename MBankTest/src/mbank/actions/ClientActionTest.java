@@ -4,10 +4,15 @@ import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import mbank.Util;
 import mbank.database.beans.Account;
+import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
+import mbank.database.beans.enums.ActivityType;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ActivityDBManager;
@@ -106,13 +111,48 @@ public class ClientActionTest {
 	}
 
 	@Test
-	public void testViewClientDeposits() {
-		fail("Not yet implemented");
+	public void testViewClientDeposits() throws MBankException {
+	
 	}
 
 	@Test
-	public void testViewClientActivities() {
-		fail("Not yet implemented");
+	public void testViewClientActivities() throws MBankException {
+		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
+		/* Populate the Activity table with several activities */
+		
+		List<Activity> tempActivities =  CreateTempActivities(tempClient.getClient_id(), "testViewClientDeposits");
+
+		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+
+		List<Activity> activities = null;
+		try
+		{
+			activities = clientAction.viewClientActivities(tempClient.getClient_id());
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to retrieve client activities details with ClientAction");
+		}
+		
+		Assert.assertTrue("Failed to retrieve client activities details with ClientAction", (activities != null) && activities.equals(tempActivities));
+		
+		List<Activity> activities2 = null;
+		try
+		{
+			activities2 = clientAction.viewClientActivities(client.getClient_id());
+		}
+		catch (MBankException e)
+		{
+			Assert.assertNull("Authorization error - succeeded in retrieving client activities details for a different client with ClientAction", activities2);
+		}
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
+		for (int i = 0; i < activities.size() ; i++)
+		{
+			activities.remove(i);
+		}
 	}
 
 	@Test
@@ -178,5 +218,23 @@ public class ClientActionTest {
 		}
 		
 		return tempAccount;
+	}
+	
+
+	private List<Activity> CreateTempActivities(long client_id, String description) {
+		ArrayList<Activity> activities = new ArrayList<Activity>();
+		Activity activity = null;
+		for (int i = 0; i < 4; i++) {
+			activity = new Activity(client_id, i*100, new Date(), i*0.2, ActivityType.UPDATE_CLIENT_DETAILS, description + i);
+			try
+			{
+				activity.setActivityId(activityManager.insert(activity, con));
+			} catch (MBankException e)
+			{
+				e.printStackTrace();
+			}
+			activities.add(activity);
+		}
+		return activities;
 	}
 }
