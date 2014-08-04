@@ -343,6 +343,7 @@ public class ClientActionTest {
 	public void testPreOpenDeposit() throws MBankException {
 		/* Create a client and an account for this test and associate the account with the client */
 		Client tempClient = createAndInsertTempClient("testCreateNewDepositClient", ClientType.REGULAR);
+		@SuppressWarnings("unused") // need to add account for the deposit money to be transfered to
 		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
 		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
 		
