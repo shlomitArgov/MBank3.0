@@ -86,7 +86,7 @@ public class ClientActionTest {
 	public void testViewAccountDetails() throws MBankException 
 	{
 		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
-		Account tempAccount = createAndInsertTempAccount("testViewAccountDetailsAccount", tempClient);
+		Account tempAccount = createAndInsertTempAccount("testViewAccountDetailsAccount", tempClient, 1000);
 		
 		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
 
@@ -192,8 +192,45 @@ public class ClientActionTest {
 	}
 
 	@Test
-	public void testWithdrawFromAccount() {
-		fail("Not yet implemented");
+	public void testWithdrawFromAccount() throws MBankException {
+		/* Create a client and an account for this test and associate the account with the client */
+		Client tempClient = createAndInsertTempClient("testWithdrowFromAccountClient", ClientType.REGULAR);
+		Account tempAccount = createAndInsertTempAccount("testWithdrowFromAccount", tempClient, 50000);
+		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+
+		try
+		{
+			clientAction.withdrawFromAccount(tempClient, 500);	
+		}
+		catch (MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to withdraw from account with ClientAction");
+		}
+		
+		/* try to overdraw the account */
+		try
+		{
+			clientAction.withdrawFromAccount(tempClient, 999999999);	
+		}
+		catch (MBankException e)
+		{
+			assertTrue("Authorization error - succeeded in overdrawing client account", e.getLocalizedMessage().equalsIgnoreCase("Ilegal Action - withdrawal exceeds client limit"));
+		}
+		
+		/* try to withdraw negative amount */
+		try
+		{
+			clientAction.withdrawFromAccount(tempClient, -3);	
+		}
+		catch (MBankException e)
+		{
+			assertTrue("Authorization error - succeeded in overdrawing client account", e.getLocalizedMessage().equalsIgnoreCase("Cannot withdraw negative amount"));
+		}
+		
+		/* cleanup */
+		clientManager.delete(tempClient, con);
+		accountManager.delete(tempAccount, con);
 	}
 
 	@Test
@@ -236,11 +273,11 @@ public class ClientActionTest {
 		return tempClient;
 	}
 	
-	private static Account createAndInsertTempAccount(String comment, Client client)
+	private static Account createAndInsertTempAccount(String comment, Client client, double balance)
 	{
 		/* Create a temp account for this test */
 		Account tempAccount = null;
-		tempAccount = new Account(client.getClient_id(), 1000, 10000, comment);
+		tempAccount = new Account(client.getClient_id(), balance, 10000, comment);
 		
 		/* Insert the temp account into the DB */
 		try

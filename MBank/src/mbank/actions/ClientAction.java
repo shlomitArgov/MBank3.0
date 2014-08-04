@@ -79,12 +79,12 @@ public class ClientAction extends Action
 	 * @return true: if withdrawal executed successfully, false if withdrawal failed
 	 * @throws MBankException
 	 */
-	public boolean withdrawFromAccount(Client client, double withdrawAmount) throws MBankException
+	public void withdrawFromAccount(Client client, double withdrawAmount) throws MBankException
 	{
 		//make sure withdrawal amount is positive
 		if(withdrawAmount < 0)
 		{
-			return false;
+			throw new MBankException("Cannot withdraw negative amount");
 		}
 		PropertyManager propertyManager = new PropertyDBManager();
 		double commissionRate = Double.parseDouble(propertyManager.query(SystemProperties.COMMISSION_RATE.getPropertyName(), this.getCon()).getProp_value());
@@ -107,7 +107,7 @@ public class ClientAction extends Action
 		Account account = accountManager.queryAccountByClient(client.getClient_id(), this.getCon());
 		double accountBalance = account.getBalance();
 		//Make sure account balance is greater than the account's credit limit
-		if (accountBalance > credit_limit)
+		if (accountBalance >= credit_limit)
 		{
 			account.setBalance(accountBalance - commissionRate - withdrawAmount);
 			accountManager.update(account, this.getCon());
@@ -115,10 +115,12 @@ public class ClientAction extends Action
 			Activity activity = new Activity(client.getClient_id(), accountBalance - commissionRate - withdrawAmount, new java.util.Date(System.currentTimeMillis()), commissionRate, ActivityType.WITHDRAW_FROM_ACCOUNT, "Withdrew " + withdrawAmount + "from accout[" + account.getAccount_id() + "]");
 			//update activity table
 			activityManager.insert(activity, this.getCon());
-			return true;
 		}
-		//account balance was not greater than credit limit - withdrawl could not be executed
-		return false;
+		else
+		{
+			//account balance was not greater than credit limit - withdrawal could not be executed
+			throw new MBankException("Ilegal Action - withdrawal exceeds client limit");	
+		}
 	}
 
 	public boolean depositToAccount(Client client, double depositAmount) throws MBankException
