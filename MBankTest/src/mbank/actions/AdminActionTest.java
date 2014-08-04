@@ -44,22 +44,19 @@ public class AdminActionTest {
 	private static ClientDBManager clientManager;
 	private static AccountDBManager accountManager;
 	private static ActivityDBManager activityManager;
-	private static AdminAction adminAction;
+	private static AdminAction adminAction; // admin user ID is always 1
 	private static Client client;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		String url = Util.DB_URL;
 		con = DriverManager.getConnection(url);
-		
 		adminAction = new AdminAction(con, 1);
-		
+		clientManager = new ClientDBManager();
 		activityManager = new ActivityDBManager();
-		
 		accountManager = new AccountDBManager();
 		
 		client = new Client("testAccountClient", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
-		clientManager = new ClientDBManager();	
 		
 		try
 		{
@@ -81,22 +78,8 @@ public class AdminActionTest {
 	@Test 
 	public void testUpdateClientDetails() throws MBankException 
 	{
-		/* Create a temp client for this test */
-		Client tempClient = new Client("testUpdateClientDetails", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
-		
-		/* Insert the temp client into the DB */
-		try
-		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
-		
-		/* Create an AdminAction */
-		AdminAction adminAction =  new AdminAction(con, 1); // admin user ID is always 1
+		/* Create a temp client for this test and insert it into the database*/
+		Client tempClient = createAndInsertTempClient("testUpdateClientDetails", ClientType.REGULAR);
 	
 		/* Create an array of details to use for updating the client's details */
 		TableValue[] details = new TableValue[]{new TableValue(ClientAttributes.ADDRESS.getAttribute(), "updated address"),new TableValue(ClientAttributes.PHONE.getAttribute(),"updated phone"),new TableValue(ClientAttributes.EMAIL.getAttribute(), "updated email"),  new TableValue(ClientAttributes.CLIENT_TYPE.getAttribute(), ClientType.PLATINUM.getTypeStringValue())};
@@ -141,9 +124,6 @@ public class AdminActionTest {
 			e1.printStackTrace();
 		}
 		
-		/* Create an AdminAction */
-		AdminAction adminAction = new AdminAction(con, 1); //administrator ID is always 1
-		
 		/* Try to add a new client to the system's database */
 		try 
 		{
@@ -182,19 +162,9 @@ public class AdminActionTest {
 	@Test
 	public void testRemoveClient() throws MBankException {
 		
-		/* Create a temp client for this test */
-		Client tempClient = new Client("testRemoveClient", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
-		
-		/* Insert the temp client into the DB */
-		try
-		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
+		/* Create a temp client for this test and insert it into the database */
+		Client tempClient = createAndInsertTempClient("testRemoveClient", ClientType.REGULAR);
+
 		Account testAccount = new Account(tempClient.getClient_id(), 500.0, 500.0, "comment1");
 		Deposit testDeposit1 = new Deposit(tempClient.getClient_id(), 500.0, DepositType.LONG, 5000L, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis()));
 		Deposit testDeposit2 = new Deposit(tempClient.getClient_id(), 800.0, DepositType.LONG, 5000L, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis() + 999999));
@@ -230,19 +200,8 @@ public class AdminActionTest {
 	@Test
 	public void testCreateNewAccount() throws MBankException {
 		
-		/* Create a temp client for this test */
-		Client tempClient = new Client("testCreateNewAccout", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
-		
-		/* Insert the temp client into the DB */
-		try
-		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
+		/* Create a temp client for this test and insert it into the database */
+		Client tempClient = createAndInsertTempClient("testCreateNewAccount", ClientType.REGULAR);
 		
 		Account account = null;
 		try
@@ -264,33 +223,12 @@ public class AdminActionTest {
 	@Test
 	public void testRemoveAccount() throws MBankException {
 		
-		/* Create a temp client for this test */
-		Client tempClient = new Client("testRemoveAccout", "pass", ClientType.REGULAR, "address", "email", "phone", "comment");
+		/* Create a temp client for this test and insert it into the database */
+		Client tempClient = createAndInsertTempClient("testRemoveAccount", ClientType.REGULAR);
 		
-		/* Insert the temp client into the DB */
-		try
-		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
-		
-		/* Create a temp account for this test */
-		Account tempAccount = new Account(tempClient.getClient_id(), 1000, 5000, "testRemoveAccout");
-		
-		/* Insert the temp account into the DB */
-		try
-		{
-			tempAccount.setAccount_id((accountManager.insert(tempAccount, con)));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
+		/* Create a temp account for this test and insert it into the database */
+		@SuppressWarnings("unused") //used in removal of account associated to client
+		Account tempAccount = createAndInsertTempAccount("testRemoveAccount", tempClient, 1000);
 		
 		try
 		{
@@ -490,6 +428,53 @@ public class AdminActionTest {
 			testProperty.setProp_value(OriginalPropVal);	
 		}
 		adminAction.updateSystemProperty(testProperty);
+	}
+	
+
+	private static Client createAndInsertTempClient(String name, ClientType type)
+	{
+		/* Create a temp client for this test */
+		Client tempClient = null;
+		try {
+			tempClient = new Client(name, "pass", type, "address", "email", "phone", "comment");
+		} catch (MBankException e1) {
+			e1.printStackTrace();
+			Assert.fail("Failed to create client");
+		}
+		
+		/* Insert the temp client into the DB */
+		try
+		{
+			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}
+		
+		return tempClient;
+	}
+	
+	
+	private static Account createAndInsertTempAccount(String comment, Client client, double balance)
+	{
+		/* Create a temp account for this test */
+		Account tempAccount = null;
+		tempAccount = new Account(client.getClient_id(), balance, 10000, comment);
+		
+		/* Insert the temp account into the DB */
+		try
+		{
+			tempAccount.setAccount_id(accountManager.insert(tempAccount, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert account into the Accounts table");
+		}
+		
+		return tempAccount;
 	}
 }
 

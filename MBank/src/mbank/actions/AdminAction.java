@@ -5,6 +5,7 @@ package mbank.actions;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -128,6 +129,9 @@ public class AdminAction extends Action
 			client.setClient_id(clientManager.insert(client, this.getCon()));
 			/* If we reached this point then the client was added successfully */
 			addClientSucceeded = true;
+			ActivityDBManager activityManager = new ActivityDBManager();
+			Activity createNewClientActivity = new Activity(client.getClient_id(), deposit, new Date(), 0, ActivityType.ADD_NEW_CLIENT, "Added new client with id [" + client.getClient_id() + "]");
+			activityManager.insert(createNewClientActivity, this.getCon());
 		}
 		catch(MBankException e)
 		{	/* Failed to add new client */
