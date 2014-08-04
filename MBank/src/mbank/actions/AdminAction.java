@@ -114,9 +114,11 @@ public class AdminAction extends Action
 		// add the new client
 		ClientType clientType = getClientType(deposit); 
 		double creditLimit = getCreditLimit(clientType);
-		if (deposit < creditLimit)
+		if (deposit < 0)
+//		if (deposit < creditLimit) //this makes no sense since for Platinum clients - the limit is infinity
 		{
-			throw new MBankException("Initial deposit must be greater than credit limit (" + creditLimit + ")");
+//			throw new MBankException("Initial deposit must be greater than credit limit (" + creditLimit + ")"); //
+			throw new MBankException("Initial deposit must be non-negative");
 		}
 		Client client = new Client(clientName, String.valueOf(clientPassword),clientType, clientAddress, clientEmail, clientPhone, "Created client with name [" + clientName + "]"); // refactor to use properties file
 		boolean addClientSucceeded = false;
