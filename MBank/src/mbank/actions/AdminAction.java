@@ -49,8 +49,9 @@ public class AdminAction extends Action
 	 */
 	
 
-	@Override
+	
 	//Admins can also update client type
+	@Override
 	protected void updateValues(Client c, TableValue[] details) throws MBankException
 	{
 		for (int i = 0; i < details.length; i++)

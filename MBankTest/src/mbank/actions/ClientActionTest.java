@@ -235,7 +235,44 @@ public class ClientActionTest {
 
 	@Test
 	public void testDepositToAccount() {
-		fail("Not yet implemented");
+		/* Create a client and an account for this test and associate the account with the client */
+		Client tempClient = createAndInsertTempClient("testWithdrowFromAccountClient", ClientType.REGULAR);
+		Account tempAccount = createAndInsertTempAccount("testWithdrowFromAccount", tempClient, 100);
+		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		
+		/* deposit amount that will not change the client type */
+		try 
+		{
+			clientAction.depositToAccount(tempClient, 550);
+		} 
+		catch (MBankException e) 
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to deposit to client account");
+		}
+	
+		/* deposit amount that will change the client type */
+		try 
+		{
+			clientAction.depositToAccount(tempClient, 100000);
+		} 
+		catch (MBankException e) 
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to deposit an amount that changes the client type to a client account");
+		}
+		 /* deposit non-positive amount */
+/*
+		try 
+		{
+			clientAction.depositToAccount(tempClient, 100000);
+		} 
+		catch (MBankException e) 
+		{
+			e.printStackTrace();
+			Assert.assertTrue("Error - managed to deposit negative amount into client account", e.getLocalizedMessage().equalsIgnoreCase(anotherString));
+		}	*/	
+		
 	}
 
 	@Test

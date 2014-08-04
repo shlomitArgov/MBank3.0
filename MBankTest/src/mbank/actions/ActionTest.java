@@ -232,8 +232,8 @@ public class ActionTest
 		Deposit tempDeposit2 = new Deposit(tempClient.getClient_id(), 100000, DepositType.LONG, 2000000, startDate, endDate);
 		try
 		{
-			depositManager.insert(tempDeposit1, con);
-			depositManager.insert(tempDeposit2, con);
+			tempDeposit1.setDeposit_id(depositManager.insert(tempDeposit1, con));
+			tempDeposit2.setDeposit_id(depositManager.insert(tempDeposit2, con));
 		} catch (MBankException e)
 		{
 			e.printStackTrace();

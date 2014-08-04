@@ -12,6 +12,7 @@ import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ActivityType;
+import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.beans.enums.DepositType;
 import mbank.database.beans.enums.SystemProperties;
@@ -123,12 +124,12 @@ public class ClientAction extends Action
 		}
 	}
 
-	public boolean depositToAccount(Client client, double depositAmount) throws MBankException
+	public void depositToAccount(Client client, double depositAmount) throws MBankException
 	{
 		//make sure withdrawal amount is positive
 		if (depositAmount < 0)
 		{
-			return false;
+			throw new MBankException("Deposit amount must be non-negative");
 		}
 		//get the commission rate for this action
 		PropertyManager propertyManager = new PropertyDBManager();
@@ -138,8 +139,17 @@ public class ClientAction extends Action
 		Account account = accountManager.queryAccountByClient(client.getClient_id(), this.getCon());
 		//update the account with the new deposit including action commission charge
 		account.setBalance(account.getBalance() + depositAmount - commissionRate);
-		accountManager.update(account, this.getCon());		
-		return true;
+		accountManager.update(account, this.getCon());
+		
+		/* Check if the client type has changed due to the deposit */
+		ClientType prevType = client.getType();
+		ClientType newType = getClientType(account.getBalance());
+		if (!(newType.equals(prevType)))
+		{
+				AdminAction adminAction = new AdminAction(this.getCon(), 1);
+				TableValue clientTypeUpdate = new TableValue(ClientAttributes.CLIENT_TYPE.getAttribute(), newType.getTypeStringValue());
+				adminAction.updateClientDetails(String.valueOf(client.getClient_id()), clientTypeUpdate);
+		}				
 	}
 	
 	public boolean createNewDeposit(Client client, DepositType depositType, Double depositAmount, java.util.Date closeDate) throws  MBankException
