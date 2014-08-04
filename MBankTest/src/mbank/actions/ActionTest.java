@@ -24,6 +24,7 @@ import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ActivityDBManager;
 import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersImpl.DepositDBManager;
+import mbank.database.managersInterface.AccountManager;
 import mbank.database.managersInterface.ClientManager;
 import mbankExceptions.MBankException;
 
@@ -40,6 +41,7 @@ public class ActionTest
 {
 	private static Connection con;
 	private static ClientManager clientManager;
+	private static AccountManager accountManager;
 	private static Client client;
 
 	/**
@@ -53,6 +55,7 @@ public class ActionTest
 		
 		client = new Client("moshe1", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
 		clientManager = new ClientDBManager();		
+		accountManager = new AccountDBManager();
 		
 		/* Insert the client into the DB */
 		try
@@ -115,20 +118,8 @@ public class ActionTest
 	@Test
 	public void testViewClientDetails() throws MBankException 
 	{
-		/* Create a temp client for this test */
-		
-		Client tempClient = new Client("testViewClientDetailsWithClientAction", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
-		
-		/* Insert the temp client into the DB */
-		try
-		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
+		/* Create a temp client for this test and insert it into the database */
+		Client tempClient = createAndInsertTempClient("testViewClientDetailsWithClientAction", ClientType.REGULAR);
 		
 		/* Create a clientAction for testing the viewClientDetails method */
 		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
@@ -153,36 +144,12 @@ public class ActionTest
 	@Test
 	public void testViewAccountDetails() throws MBankException 
 	{
-		/* Create a temp client for this test */
-		Client tempClient = new Client("tempClientForTestingViewAccountDetails", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
-
-		/* Insert the temp client into the DB */
-		try
-		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
-		
-		/* Create a temp account for this test */
-		Account tempAccount = new Account(tempClient.getClient_id(), 5000, 20000, "testing viewAccountDetails");
-		
-
-		/* Insert the temp account into the DB */
-		AccountDBManager accountManager = new AccountDBManager();
-		try
-		{
-			tempAccount.setAccount_id((accountManager.insert(tempAccount, con)));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
-		
+		/* Create a temp client for this test and insert it into the database */
+		Client tempClient = createAndInsertTempClient("tempClientForTestingViewAccountDetails", ClientType.REGULAR);
+				
+		/* Create a temp account for this test and insert it into the database */
+		Account tempAccount = createAndInsertTempAccount("testing viewAccountDetails", tempClient, 5000);
+				
 		/* Create a clientAction for testing the viewAccountDetails method */
 		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
 		Account accountDetails = null;
@@ -208,19 +175,8 @@ public class ActionTest
 	@Test
 	public void testViewClientDeposits() throws MBankException 
 	{
-		/* Create a temp client for this test */
-		Client tempClient = new Client("tempClientForTestingViewClientDeposits", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
-
-		/* Insert the temp client into the DB */
-		try
-		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
+		/* Create a temp client for this test and insert it into the database */
+		Client tempClient = createAndInsertTempClient("tempClientForTestingViewClientDeposits", ClientType.REGULAR);
 		
 		DepositDBManager depositManager = new DepositDBManager();
 		Date startDate =  new Date();
@@ -262,20 +218,9 @@ public class ActionTest
 	@Test
 	public void testViewClientActivites() throws MBankException 
 	{
-		/* Create a temp client for this test */
-		Client tempClient = new Client("tempClientForTestingViewClientActivities", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
-
-		/* Insert the temp client into the DB */
-		try
-		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
-		}
-		catch(MBankException e)
-		{
-			e.printStackTrace();
-			Assert.fail("Failed to insert client into the Clients table");
-		}
-
+		/* Create a temp client for this test and insert it into the database */
+		Client tempClient = createAndInsertTempClient("tempClientForTestingViewClientActivities", ClientType.REGULAR);
+		
 		/* Create a clientAction for testing the viewAccountDetails method */
 		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
 		
@@ -327,5 +272,50 @@ public class ActionTest
 		}
 		/* Assumes that if no exception was thrown and the property is not empty/null - that it was retrieve successfully */
 		Assert.assertTrue("System property is empty", (systemProperty != null) && !(systemProperty.isEmpty()));
+	}
+	
+	private static Client createAndInsertTempClient(String name, ClientType type)
+	{
+		/* Create a temp client for this test */
+		Client tempClient = null;
+		try {
+			tempClient = new Client(name, "pass", type, "address", "email", "phone", "comment");
+		} catch (MBankException e1) {
+			e1.printStackTrace();
+			Assert.fail("Failed to create client");
+		}
+		
+		/* Insert the temp client into the DB */
+		try
+		{
+			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert client into the Clients table");
+		}
+		
+		return tempClient;
+	}
+	
+	private static Account createAndInsertTempAccount(String comment, Client client, double balance)
+	{
+		/* Create a temp account for this test */
+		Account tempAccount = null;
+		tempAccount = new Account(client.getClient_id(), balance, 10000, comment);
+		
+		/* Insert the temp account into the DB */
+		try
+		{
+			tempAccount.setAccount_id(accountManager.insert(tempAccount, con));	
+		}
+		catch(MBankException e)
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to insert account into the Accounts table");
+		}
+		
+		return tempAccount;
 	}
 }
