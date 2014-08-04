@@ -262,17 +262,16 @@ public class ClientActionTest {
 			Assert.fail("Failed to deposit an amount that changes the client type to a client account");
 		}
 		 /* deposit non-positive amount */
-/*
+
 		try 
 		{
-			clientAction.depositToAccount(tempClient, 100000);
+			clientAction.depositToAccount(tempClient, -3);
+			Assert.fail("Error - managed to deposit negative amount into client account");
 		} 
 		catch (MBankException e) 
 		{
-			e.printStackTrace();
-			Assert.assertTrue("Error - managed to deposit negative amount into client account", e.getLocalizedMessage().equalsIgnoreCase(anotherString));
-		}	*/	
-		
+			Assert.assertTrue("Error - managed to deposit negative amount into client account", e.getLocalizedMessage().equalsIgnoreCase("Deposit amount must be non-negative"));
+		}		
 	}
 
 	@Test
