@@ -3,16 +3,19 @@ package Main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import mbank.MBank;
 import mbank.actions.AdminAction;
 import mbank.actions.ClientAction;
+import mbank.database.beans.Client;
 import mbankExceptions.MBankException;
 
 public class Main {
-	private static final String MAIN_MENU_DIALOG = "Enter the number of the action type you would like to test:\n1. Client action\n2. Admin action";
-	private static final String ADMIN_MENU_INSTRUCTION = "Enter the number of the method you would like to test: ";
-	private static final String CLIENT_MENU_INSTRUCTION = "Enter the number of the method you would like to test: ";
+	private static final String UNRECOGNIZED_COMMAND = "\n---Unrecognized command---\n";
+	private static final String MAIN_MENU_DIALOG = "Enter an option number:\n1. Test AdminAction methods\n2. Test ClientAction methods\n3. exit";
+	private static final String ADMIN_MENU_INSTRUCTION = "---AdminAction methods menu---\nEnter an option number: ";
+	private static final String CLIENT_MENU_INSTRUCTION = "---ClientAction methods menu---\nEnter an option number: ";
 
 	private static AdminAction adminAction;
 	private static ClientAction clientAction;
@@ -40,10 +43,14 @@ public class Main {
 		
 		switch (mainMenuChoice) {
 		case 1:
-			clientActionMenu();
+			adminActionMenu();
 			break;
 		case 2:
-			adminActionMenu();
+			clientActionMenu();
+			break;
+		case 3:
+			System.out.println("\nGoodbye!");
+			System.exit(0);
 			break;
 		default:
 			break;
@@ -54,9 +61,9 @@ public class Main {
 	{
 		System.out.println(MAIN_MENU_DIALOG);		
 		int input = getNumericInput();
-		while((input != 1) && (input != 2))
+		while((input < 1) || (input > 3))
 		{
-			System.out.println("Unrecognized command.\n");
+			System.out.println(UNRECOGNIZED_COMMAND);
 			System.out.println(MAIN_MENU_DIALOG);
 			input = getNumericInput();
 		}
@@ -68,22 +75,31 @@ public class Main {
 		AdminActionMethods method = adminMethods[adminMenuChoice - 1];
 		switch (method) {
 		case CREATE_NEW_ACCOUNT:
+			handleCreateNewAccount();
 			break;
 		case REMOVE_ACCCOUNT:
+			handleRemoveAccount();
 			break;
 		case CREATE_NEW_CLIENT:
+			handleCreateNewClient();
 			break;
 		case REMOVE_CLIENT:
+			handleRemoveClient();
 			break;
 		case VIEW_ALL_DEPOSITS_DETAILS:
+			handleViewAllDepositsDetails();
 			break;
 		case UPDATE_CLIENT_DETAILS:
+			handleUpdateclientDetails();
 			break;
 		case VIEW_ALL_ACCOUNTS_DETAILS:
+			handleViewAllAccountsDetails();
 			break;
 		case VIEW_ALL_ACTIVITIES_DETAILS:
+			handleViewAllActivitiesDetails();
 			break;
 		case VIEW_ALL_CLIENTS_DETAILS:
+			handleViewAllClientsDetails();
 			break;
 		case RETURN_TO_MAIN_MENU:
 			mainMenu();
@@ -91,6 +107,63 @@ public class Main {
 		default:
 			break;
 		}
+		adminActionMenu();
+	}
+
+	private static void handleViewAllClientsDetails() {
+		System.out.println("---Displaying all client details---");
+		try 
+		{
+			List<Client> clients = adminAction.ViewAllClientDetails();
+			for (Client client : clients) {
+				System.out.println(client.toString());
+			}
+		} catch (MBankException e) 
+		{
+			// TODO Auto-generated catch block
+			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.exit(1);
+		}
+	}
+
+	private static void handleViewAllActivitiesDetails() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleViewAllAccountsDetails() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleUpdateclientDetails() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleViewAllDepositsDetails() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleRemoveClient() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleCreateNewClient() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleRemoveAccount() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleCreateNewAccount() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private static int getAdminMenuChoice() {
@@ -99,7 +172,7 @@ public class Main {
 		int input = getNumericInput();
 		while((input < 1) || (input > adminMethods.length))
 		{
-			System.out.println("Unrecognized command.\n");
+			System.out.println(UNRECOGNIZED_COMMAND);
 			System.out.println(ADMIN_MENU_INSTRUCTION);
 			printAdminMethods();
 			input = getNumericInput();
@@ -144,6 +217,7 @@ public class Main {
 		default:
 			break;
 		}
+		clientActionMenu();
 	}
 	private static int getClientMenuChoice() {
 		System.out.println(CLIENT_MENU_INSTRUCTION);
@@ -151,7 +225,7 @@ public class Main {
 		int input = getNumericInput();
 		while((input < 1) || (input > clientMethods.length))
 		{
-			System.out.println("Unrecognized command.\n");
+			System.out.println(UNRECOGNIZED_COMMAND);
 			System.out.println(CLIENT_MENU_INSTRUCTION);
 			printAClientMethods();
 			input = getNumericInput();
