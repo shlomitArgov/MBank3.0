@@ -8,10 +8,12 @@ import java.util.List;
 import mbank.MBank;
 import mbank.actions.AdminAction;
 import mbank.actions.ClientAction;
+import mbank.actions.TableValue;
 import mbank.database.beans.Account;
 import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
+import mbank.database.beans.enums.ClientAttributes;
 import mbankExceptions.MBankException;
 
 public class Main {
@@ -174,8 +176,54 @@ public class Main {
 	}
 
 	private static void handleUpdateclientDetails() {
-		// TODO Auto-generated method stub
-		
+		String clientId = getValidStringInput("Enter the ID of the client whose details you wish to edit: ");
+		String columnName = selectClientAttributeToEdit();
+		String columnValue = getValidStringInput("Enter new value for the chosen client detail: ");
+		TableValue details = new TableValue(columnName, columnValue);
+		try {
+			adminAction.updateClientDetails(clientId, details);
+			System.out.println("\n---Updated client [id = " + clientId + "] details successfully---\n");
+		} catch (MBankException e) 
+		{
+			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.exit(1);
+		}	
+		System.out.println();		
+	}
+
+	private static String selectClientAttributeToEdit() {
+		int attributeNum = 0;
+		ClientAttributes[] clientAttributes;
+		do
+		{
+			System.out.println("Enter the number of the attribute you wish to edit: ");
+			clientAttributes = ClientAttributes.values();
+			for (int i = 0; i < clientAttributes.length; i++) {
+				System.out.println((i+1) + ". " + clientAttributes[i].getAttribute());
+			}
+			attributeNum = getNumericInput();
+			if (attributeNum < 1 || attributeNum > clientAttributes.length)
+			{
+				System.out.println("--Invalid value---\n");
+			}
+		} while(attributeNum < 1 || attributeNum > clientAttributes.length);
+		 
+		switch (attributeNum) 
+		{
+		case 1:
+			return clientAttributes[0].getAttribute();
+		case 2:
+			return clientAttributes[1].getAttribute();
+		case 3:
+			return clientAttributes[2].getAttribute();
+		case 4:
+			return clientAttributes[3].getAttribute();
+		case 5:
+			return clientAttributes[4].getAttribute();	
+		default:
+			break;
+		}
+		return clientAttributes[0].getAttribute(); //default
 	}
 
 	private static void handleViewAllDepositsDetails() {
@@ -204,12 +252,12 @@ public class Main {
 	}
 
 	private static void handleAddNewClient() {
-		String clientName = getValidStringInput("Enter client name");
-		String clientPassword = getValidStringInput("Enter client password");
-		String clientAddress = getValidStringInput("Enter client address");
-		String clientEmail = getValidStringInput("Enter client email");
-		String clientPhone = getValidStringInput("Enter client phone#");
-		double deposit = getValidDoubleInput("Enter initial deposit amount");
+		String clientName = getValidStringInput("Enter client name: ");
+		String clientPassword = getValidStringInput("Enter client password: ");
+		String clientAddress = getValidStringInput("Enter client address: ");
+		String clientEmail = getValidStringInput("Enter client email: ");
+		String clientPhone = getValidStringInput("Enter client phone#: ");
+		double deposit = getValidDoubleInput("Enter initial deposit amount: ");
 		try 
 		{
 			long clientId = adminAction.addNewClient(clientName, clientPassword.toCharArray(), clientAddress, clientEmail, clientPhone, deposit);
@@ -401,6 +449,36 @@ public class Main {
 		return num;
 	}
 	
+	private static long getValidLongInput(String message) 
+	{
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = null;
+		long num = 0;
+		do{
+			System.out.println(message);
+			/* Read the numeric input entered by the user in the command-line;
+		       * need to use try/catch with the readLine() method */
+		      try {
+		         input = br.readLine();
+		      } catch (IOException ioe) 
+		      {
+		         System.out.println("IO error occured. Program will exit.");
+		         System.exit(1);
+		      }
+		     
+		      try 
+		      {
+				num = Long.parseLong(input.trim());
+		      } 
+		      catch (NumberFormatException e) 
+		      {
+		    	  System.out.println("---Invalid value, expected an integer---\n");	  
+		      }	 
+		} while (num == 0);
+		
+		return num;
+	}
 	private enum ClientActionMethods {
 
 		VIEW_CLIENT_DETAILS("VIEW_CLIENT_DETAILS"),
