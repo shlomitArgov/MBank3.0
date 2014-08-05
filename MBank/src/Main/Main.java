@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import javax.xml.transform.Templates;
-
 import mbank.MBank;
 import mbank.actions.AdminAction;
 import mbank.actions.ClientAction;
@@ -20,7 +18,7 @@ import mbank.database.managersImpl.ClientDBManager;
 import mbankExceptions.MBankException;
 
 public class Main {
-	private static final String UNRECOGNIZED_COMMAND = "\n---Unrecognized command---\n";
+	private static final String UNRECOGNIZED_COMMAND = "\n---Unrecognized command---";
 	private static final String MAIN_MENU_DIALOG = "Enter an option number:\n1. Test AdminAction methods\n2. Test ClientAction methods\n3. exit";
 	private static final String ADMIN_MENU_INSTRUCTION = "---AdminAction methods menu---\nEnter an option number: ";
 	private static final String CLIENT_MENU_INSTRUCTION = "---ClientAction methods menu---\nEnter an option number: ";
@@ -207,7 +205,7 @@ public class Main {
 			attributeNum = getNumericInput();
 			if (attributeNum < 1 || attributeNum > clientAttributes.length)
 			{
-				System.out.println("--Invalid value---\n");
+				System.out.println(UNRECOGNIZED_COMMAND);
 			}
 		} while(attributeNum < 1 || attributeNum > clientAttributes.length);
 		 
@@ -291,12 +289,11 @@ public class Main {
 	}
 
 	private static void handleRemoveAccount() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Removal of accounts is performed as part of removal of client.\nYou cannot remove an account without removing a client completely");
 	}
 
 	private static void handleCreateNewAccount() {
-		// TODO Auto-generated method stub
+		System.out.println("Creation of a new account is performed as part of adding a new client.\nYou cannot create an account without creating a new client");
 		
 	}
 
@@ -427,7 +424,7 @@ public class Main {
 		    {
 		    	return input.trim();	
 		    }
-		    System.out.println("---Invalid value---");
+		    System.out.println(UNRECOGNIZED_COMMAND);
 		}
 		while(input == null);
 		
@@ -462,7 +459,7 @@ public class Main {
 		      } 
 		      catch (NumberFormatException e) 
 		      {
-		    	  System.out.println("---Invalid value, expected a number---\n");	  
+		    	  System.out.println(UNRECOGNIZED_COMMAND + "Expected a number\n");	  
 		      }	 
 		} while (num == 0);
 		
@@ -493,7 +490,7 @@ public class Main {
 		      } 
 		      catch (NumberFormatException e) 
 		      {
-		    	  System.out.println("---Invalid value, expected an integer---\n");	  
+		    	  System.out.println(UNRECOGNIZED_COMMAND + "Expected an integer\n");	  
 		      }	 
 		} while (num == 0);
 		
