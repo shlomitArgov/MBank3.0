@@ -79,7 +79,7 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 	}
 
 	@Test
@@ -109,7 +109,7 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 		accountManager.delete(tempAccount, con);
 	}
 
@@ -145,7 +145,7 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 		for (int i = 0; i < deposits.size() ; i++)
 		{
 			deposits.remove(i);
@@ -184,7 +184,7 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 		for (int i = 0; i < activities.size() ; i++)
 		{
 			activities.remove(i);
@@ -229,7 +229,7 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 		accountManager.delete(tempAccount, con);
 	}
 
@@ -274,7 +274,7 @@ public class ClientActionTest {
 		}		
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 		accountManager.delete(tempAccount, con);
 	}
 
@@ -358,7 +358,7 @@ public class ClientActionTest {
 			Assert.fail("Failed to pre-open long-term deposit");
 		}
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 	}
 
 	private static Client createAndInsertTempClient(String name, ClientType type)

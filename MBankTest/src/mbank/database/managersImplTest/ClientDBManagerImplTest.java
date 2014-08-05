@@ -102,8 +102,8 @@ public class ClientDBManagerImplTest {
 		// test delete
 		try
 		{
-			clientDBManager.delete(client1, con);
-			clientDBManager.delete(client2, con);
+			clientDBManager.delete(client1.getClient_id(), con);
+			clientDBManager.delete(client2.getClient_id(), con);
 		}
 		catch(MBankException e)
 		{

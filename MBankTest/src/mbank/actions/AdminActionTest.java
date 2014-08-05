@@ -72,7 +72,7 @@ public class AdminActionTest {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		clientManager.delete(client, con);
+		clientManager.delete(client.getClient_id(), con);
 	}
 	
 	@Test 
@@ -108,7 +108,7 @@ public class AdminActionTest {
 		&& c.getType().getTypeStringValue().equalsIgnoreCase(details[3].getColumnValue()));
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 	}
 	
 
@@ -150,8 +150,8 @@ public class AdminActionTest {
 		
 		/* cleanup */
 		try {
-			clientManager.delete(client1, con);
-			clientManager.delete(client2, con);
+			clientManager.delete(client1.getClient_id(), con);
+			clientManager.delete(client2.getClient_id(), con);
 		} catch (MBankException e) {
 			e.printStackTrace();
 		}
@@ -216,7 +216,7 @@ public class AdminActionTest {
 		
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 		accountManager.delete(account, con);
 	}
 	
@@ -243,7 +243,7 @@ public class AdminActionTest {
 		Assert.assertNull("Failed to remove account", accountManager.queryAccountByClient(tempClient.getClient_id(), con));
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 	}
 	
 

@@ -75,7 +75,7 @@ public class ActionTest
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception 
 	{
-		clientManager.delete(client, con);
+		clientManager.delete(client.getClient_id(), con);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class ActionTest
 		Assert.assertTrue("View client details action returned details that differ from the test client's details", tempClient.equals(clientDetails));
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 	}
 	
 	/* Test view account details action */
@@ -167,7 +167,7 @@ public class ActionTest
 		Assert.assertTrue("View account details action returned details that differ from the test account's details", tempAccount.equals(accountDetails));
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 		accountManager.delete(tempAccount, con);
 	}
 	
@@ -209,7 +209,7 @@ public class ActionTest
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 		depositManager.delete(tempDeposit1, con);
 		depositManager.delete(tempDeposit2, con);
 	}
@@ -249,7 +249,7 @@ public class ActionTest
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient, con);
+		clientManager.delete(tempClient.getClient_id(), con);
 		activityManager.delete(tempActivity1, con);
 		activityManager.delete(tempActivity2, con);
 	}

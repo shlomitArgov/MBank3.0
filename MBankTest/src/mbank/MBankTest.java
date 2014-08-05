@@ -60,7 +60,7 @@ public class MBankTest {
 		assertTrue("Failed to retrieve AdminAction by logging in to MBank with admin credentials", adminAction instanceof AdminAction);
 		//cleanup
 		try {
-			clientDBManager.delete(adminClient, con);
+			clientDBManager.delete(adminClient.getClient_id(), con);
 		} catch (MBankException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

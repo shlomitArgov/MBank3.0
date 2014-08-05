@@ -52,8 +52,8 @@ public class ActivityDBManagerImplTest {
 	//cleanup
 	public void tearDownAfterClass() throws Exception {
 		/* Clean clients from DB */
-		clientDBManager.delete(client1, con);
-		clientDBManager.delete(client2, con);
+		clientDBManager.delete(client1.getClient_id(), con);
+		clientDBManager.delete(client2.getClient_id(), con);
 	}
 	@Test
 	public void testActivityDBManager() {
