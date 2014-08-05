@@ -8,6 +8,7 @@ import java.util.List;
 import mbank.MBank;
 import mbank.actions.AdminAction;
 import mbank.actions.ClientAction;
+import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbankExceptions.MBankException;
 
@@ -120,15 +121,26 @@ public class Main {
 			}
 		} catch (MBankException e) 
 		{
-			// TODO Auto-generated catch block
 			System.out.println("An error occured: " + e.getLocalizedMessage());
 			System.exit(1);
 		}
+		System.out.println();
 	}
 
 	private static void handleViewAllActivitiesDetails() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("---Displaying all activities---");
+		try 
+		{
+			List<Activity> activities = adminAction.viewAllActivitiesDetails();
+			for (Activity activity : activities) {
+				System.out.println(activity.toString());
+			}
+		} catch (MBankException e) 
+		{
+			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.exit(1);
+		}	
+		System.out.println();
 	}
 
 	private static void handleViewAllAccountsDetails() {
