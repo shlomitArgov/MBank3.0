@@ -19,7 +19,7 @@ public interface ClientManager
 
 	void update(Client client, Connection con) throws MBankException;
 
-	void delete(Client client, Connection con) throws MBankException;
+	void delete(long clientId, Connection con) throws MBankException;
 
 	Client query(Client client, Connection con) throws MBankException;
 	

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import javax.xml.transform.Templates;
+
 import mbank.MBank;
 import mbank.actions.AdminAction;
 import mbank.actions.ClientAction;
@@ -14,6 +16,7 @@ import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ClientAttributes;
+import mbank.database.managersImpl.ClientDBManager;
 import mbankExceptions.MBankException;
 
 public class Main {
@@ -247,8 +250,25 @@ public class Main {
 	}
 
 	private static void handleRemoveClient() {
-		// TODO Auto-generated method stub
-		
+		long clientId = getValidLongInput("Enter the ID of the client you wish to remove");
+		/* Get the client bean from the DB */
+		ClientDBManager clientManager = new ClientDBManager();
+		Client tempClient = null;
+		try {
+			tempClient = clientManager.query(clientId, MBank.getInstance().getConnection());
+		} catch (MBankException e) 
+		{
+			System.out.println("Failed to retrieve client \n" + e.getLocalizedMessage());
+			System.exit(1);
+		}
+		try {
+			adminAction.removeClient(tempClient);
+			System.out.println("\n---Removed client with ID[" + clientId + "] successfuly---\n");
+		} catch (MBankException e) {
+			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.exit(1);
+		}
+		System.out.println();
 	}
 
 	private static void handleAddNewClient() {

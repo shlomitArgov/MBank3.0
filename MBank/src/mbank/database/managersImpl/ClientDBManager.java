@@ -99,13 +99,13 @@ public class ClientDBManager implements ClientManager
 	}
 
 	@Override
-	public void delete(Client client, Connection con) throws MBankException
+	public void delete(long clientId, Connection con) throws MBankException
 	{
 		String sql = "DELETE FROM " + tableName + " WHERE client_id = ?";
 		try
 		{
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setLong(1, client.getClient_id());
+			ps.setLong(1, clientId);
 			ps.execute();
 			if(!(ps.getUpdateCount() > 0))
 			{
@@ -114,7 +114,7 @@ public class ClientDBManager implements ClientManager
 		} 
 		catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to delete client with id: "+ client.getClient_id() + " from the Clients table");
+			System.err.println("Failed to delete client with id: "+ clientId + " from the Clients table");
 		}
 	}
 

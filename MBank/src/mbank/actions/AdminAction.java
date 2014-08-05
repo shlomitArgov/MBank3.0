@@ -146,7 +146,7 @@ public class AdminAction extends Action
 			catch(MBankException e)
 			{
 				/* Delete the client since an account could not be created for it */
-				clientManager.delete(client, this.getCon());
+				clientManager.delete(client.getClient_id(), this.getCon());
 				throw new MBankException("\nFailed to add an for the new client\nClient has not been added");
 			}
 		}
@@ -231,7 +231,7 @@ private void testUniqueClientnamePasswordCombination(
 		//remove client
 		try
 		{
-			clientManager.delete(client, this.getCon());			
+			clientManager.delete(client.getClient_id(), this.getCon());			
 		}
 		catch (MBankException e)
 		{
@@ -261,33 +261,36 @@ private void testUniqueClientnamePasswordCombination(
 		
 		double depositCommission = 0;
 		
-		//remove client deposits
+		//remove client deposits if any exist
 		ArrayList<Deposit> clientDeposits = depositManager.queryDepositsByClient(client.getClient_id(), this.getCon());
-		for (Iterator<Deposit> depositIterator = clientDeposits.iterator(); depositIterator.hasNext();)
+		if (clientDeposits != null)
 		{
-			Deposit d  = depositIterator.next();
-			//Check if the deposit has not reached its end-date yet
-			if(d.getClosing_date().after(new java.util.Date(System.currentTimeMillis())))
+			for (Iterator<Deposit> depositIterator = clientDeposits.iterator(); depositIterator.hasNext();)
 			{
-				switch(client.getType())
+				Deposit d  = depositIterator.next();
+				//Check if the deposit has not reached its end-date yet
+				if(d.getClosing_date().after(new java.util.Date(System.currentTimeMillis())))
 				{
-				case REGULAR: 
-				{
-					depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
-					break;
+					switch(client.getType())
+					{
+					case REGULAR: 
+					{
+						depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
+						break;
+					}
+					case GOLD: 
+					{
+						depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
+						break;
+					}	
+					case PLATINUM: 
+					{
+						depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.PLATINUM_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
+						break;
+					}
+					}
 				}
-				case GOLD: 
-				{
-					depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
-					break;
-				}	
-				case PLATINUM: 
-				{
-					depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.PLATINUM_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
-					break;
-				}
-				}
-			}
+				
 			//update the activities table
 			double chargeAmount = depositCommission*(d.getBalance() + 1);
 			String removeDepositComment;
@@ -311,7 +314,9 @@ private void testUniqueClientnamePasswordCombination(
 			/* If removal was successful - update the activity table */
 			Activity deleteDepositActivity = new Activity(client.getClient_id(), d.getBalance(), new java.util.Date(System.currentTimeMillis()), chargeAmount, ActivityType.REMOVE_DEPOSIT, removeDepositComment );
 			activityManager.insert(deleteDepositActivity, this.getCon());
+			}
 		}
+
 	}
 	
 	public void RemoveAccount(long clientId, double commission) throws MBankException
