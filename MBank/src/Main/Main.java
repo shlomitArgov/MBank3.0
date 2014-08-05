@@ -11,6 +11,7 @@ import mbank.actions.ClientAction;
 import mbank.database.beans.Account;
 import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
+import mbank.database.beans.Deposit;
 import mbankExceptions.MBankException;
 
 public class Main {
@@ -82,8 +83,8 @@ public class Main {
 		case REMOVE_ACCCOUNT:
 			handleRemoveAccount();
 			break;
-		case CREATE_NEW_CLIENT:
-			handleCreateNewClient();
+		case ADD_NEW_CLIENT:
+			handleAddNewClient();
 			break;
 		case REMOVE_CLIENT:
 			handleRemoveClient();
@@ -117,6 +118,10 @@ public class Main {
 		try 
 		{
 			List<Client> clients = adminAction.ViewAllClientDetails();
+			if(clients.isEmpty())
+			{
+				System.out.println("No clients available");
+			}
 			for (Client client : clients) {
 				System.out.println(client.toString());
 			}
@@ -133,6 +138,10 @@ public class Main {
 		try 
 		{
 			List<Activity> activities = adminAction.viewAllActivitiesDetails();
+			if(activities.isEmpty())
+			{
+				System.out.println("No activities available");
+			}
 			for (Activity activity : activities) {
 				System.out.println(activity.toString());
 			}
@@ -149,6 +158,10 @@ public class Main {
 		try 
 		{
 			List<Account> accounts = adminAction.viewAllAccountsDetails();
+			if(accounts.isEmpty())
+			{
+				System.out.println("No accounts available");
+			}
 			for (Account account : accounts) {
 				System.out.println(account.toString());
 			}
@@ -166,8 +179,23 @@ public class Main {
 	}
 
 	private static void handleViewAllDepositsDetails() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("---Displaying all deposits---");
+		try 
+		{
+			List<Deposit> deposits = adminAction.viewAllDepositsDetails();
+			if(deposits.isEmpty())
+			{
+				System.out.println("No deposits available");
+			}
+			for (Deposit deposit : deposits) {
+				System.out.println(deposit.toString());
+			}
+		} catch (MBankException e) 
+		{
+			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.exit(1);
+		}	
+		System.out.println();		
 	}
 
 	private static void handleRemoveClient() {
@@ -175,9 +203,23 @@ public class Main {
 		
 	}
 
-	private static void handleCreateNewClient() {
-		// TODO Auto-generated method stub
-		
+	private static void handleAddNewClient() {
+		String clientName = getValidStringInput("Enter client name");
+		String clientPassword = getValidStringInput("Enter client password");
+		String clientAddress = getValidStringInput("Enter client address");
+		String clientEmail = getValidStringInput("Enter client email");
+		String clientPhone = getValidStringInput("Enter client phone#");
+		double deposit = getValidDoubleInput("Enter initial deposit amount");
+		try 
+		{
+			long clientId = adminAction.addNewClient(clientName, clientPassword.toCharArray(), clientAddress, clientEmail, clientPhone, deposit);
+			System.out.println("****\nAdded new client with ID: " + clientId + "\n****");
+		} catch (MBankException e) 
+		{
+			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.exit(1);
+		}
+		System.out.println();
 	}
 
 	private static void handleRemoveAccount() {
@@ -293,7 +335,71 @@ public class Main {
 	    	  return -1;
 	      }
 		return num; 
+	}
+	
+
+	private static String getValidStringInput(String message) 
+	{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = null;
+		
+		do
+		{
+			System.out.println(message);	 
+		      /* Read the String input entered by the user in the command-line;
+		       * need to use try/catch with the readLine() method */
+		      try {
+		         input = br.readLine();
+		      } catch (IOException ioe) 
+		      {
+		         System.out.println("IO error occured. Program will exit.");
+		         System.exit(1);
+		      }
+		    if(input != null)
+		    {
+		    	return input.trim();	
+		    }
+		    System.out.println("---Invalid value---");
 		}
+		while(input == null);
+		
+		return input.trim(); 	
+	}
+	
+	/**
+	 * 
+	 * @param message 
+	 * @return numeric value of string input (double)
+	 */
+	private static double getValidDoubleInput(String message) 
+	{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = null;
+		double num = 0;
+		do{
+			System.out.println(message);
+			/* Read the numeric input entered by the user in the command-line;
+		       * need to use try/catch with the readLine() method */
+		      try {
+		         input = br.readLine();
+		      } catch (IOException ioe) 
+		      {
+		         System.out.println("IO error occured. Program will exit.");
+		         System.exit(1);
+		      }
+		     
+		      try 
+		      {
+				num = Double.parseDouble(input.trim());
+		      } 
+		      catch (NumberFormatException e) 
+		      {
+		    	  System.out.println("---Invalid value, expected a number---\n");	  
+		      }	 
+		} while (num == 0);
+		
+		return num;
+	}
 	
 	private enum ClientActionMethods {
 
@@ -321,7 +427,7 @@ public class Main {
 	
 	
 	private enum AdminActionMethods {
-		CREATE_NEW_CLIENT("CREATE_NEW_CLIENT"), 
+		ADD_NEW_CLIENT("ADD_NEW_CLIENT"), 
 		REMOVE_CLIENT("REMOVE_CLIENT"),
 		UPDATE_CLIENT_DETAILS("UPDATE_CLIENT_DETAILS"),
 		CREATE_NEW_ACCOUNT("CREATE_NEW_ACCOUNT"),
