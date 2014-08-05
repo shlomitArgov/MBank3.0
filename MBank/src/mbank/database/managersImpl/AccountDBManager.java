@@ -188,14 +188,13 @@ public class AccountDBManager implements AccountManager
 			}
 		} catch (SQLException e)
 		{
-			System.err.println("Failed to query the Accounts table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the Accounts table");
 		} 		
 		return null;
 	}
 
 	@Override
-	public List<Account> queryAllAccounts(Connection con) {
+	public List<Account> queryAllAccounts(Connection con) throws MBankException {
 		String sql = "SELECT * FROM " + tableName;
 		try
 		{
@@ -220,8 +219,7 @@ public class AccountDBManager implements AccountManager
 			}
 		} catch (SQLException e)
 		{
-			System.err.println("Failed to query the Accounts table");
-			e.printStackTrace();
+			throw new MBankException("Failed to query the Accounts table");
 		} 		
 		return null;
 	}

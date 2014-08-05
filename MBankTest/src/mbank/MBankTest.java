@@ -46,7 +46,7 @@ public class MBankTest {
 			e1.printStackTrace();
 		}
 		try {
-			clientDBManager.insert(adminClient, con);
+			adminClient.setClient_id(clientDBManager.insert(adminClient, con));
 		} catch (MBankException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

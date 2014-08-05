@@ -114,7 +114,7 @@ public class ClientDBManager implements ClientManager
 		} 
 		catch (MBankException | SQLException e)
 		{
-			System.err.println("Failed to delete client with id: "+ clientId + " from the Clients table");
+			throw new MBankException("Failed to delete client with id: "+ clientId + " from the Clients table");
 		}
 	}
 
@@ -226,8 +226,8 @@ public class ClientDBManager implements ClientManager
 			}
 		} catch (SQLException | MBankException e)
 		{
-			System.err.println("Failed to query the Clients table");
-			e.printStackTrace();
+//			System.err.println("Failed to query the Clients table");
+//			e.printStackTrace();
 			throw new MBankException("Failed to retrieve client information from the database");
 			
 		}
