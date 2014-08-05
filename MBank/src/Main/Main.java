@@ -323,24 +323,34 @@ public class Main {
 		ClientActionMethods method = clientMethods[clientMenuChoice - 1];
 		switch (method) {
 		case CREATE_NEW_DEPOSIT:
+			handleCreateNewDeposit();
 			break;
 		case DEPOSIT_TO_ACCOUNT:
+			handleDepositToAccount();
 			break;
 		case PRE_OPEN_DEPOSIT:
+			handlePreOpenDeposit();
 			break;
 		case UPDATE_CLIENT_DETAILS:
+			handleUpdateClientDetails();
 			break;
 		case VIEW_ACCOUNT_DETAILS:
+			handleViewAccountDetails();
 			break;
 		case VIEW_CLIENT_ACTIVITIES:
+			handleViewClientActivities();
 			break;
 		case VIEW_CLIENT_DEPOSITS:
+			handleViewClientDeposits();
 			break;
 		case VIEW_CLIENT_DETAILS:
+			handleViewClientDetails();
 			break;
 		case VIEW_SYSTEM_PROPERTY:
+			handleViewSystemProperty();
 			break;
 		case WITHDRAW_FROM_ACCOUNT:
+			handleWithdrawFromAccount();
 			break;
 		case RETURN_TO_MAIN_MENU:
 			mainMenu();
@@ -350,6 +360,56 @@ public class Main {
 		}
 		clientActionMenu();
 	}
+	private static void handleWithdrawFromAccount() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleViewSystemProperty() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleViewClientDetails() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleViewClientDeposits() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleViewClientActivities() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleViewAccountDetails() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleUpdateClientDetails() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handlePreOpenDeposit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleDepositToAccount() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void handleCreateNewDeposit() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private static int getClientMenuChoice() {
 		System.out.println(CLIENT_MENU_INSTRUCTION);
 		printAClientMethods();
