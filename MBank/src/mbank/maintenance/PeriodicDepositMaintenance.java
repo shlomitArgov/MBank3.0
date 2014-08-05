@@ -66,7 +66,7 @@ public class PeriodicDepositMaintenance {
 	}
 	
 	private static void execute() {
-		System.out.println("Performing timed maintenance task, curr date: " + new Date(System.currentTimeMillis()) + ", configured date: " + date);
+//		System.out.println("Performing timed maintenance task, curr date: " + new Date(System.currentTimeMillis()) + ", configured date: " + date);
 		try {
 			// get connection
 			con = bankInstance.getConnection();
@@ -92,7 +92,7 @@ public class PeriodicDepositMaintenance {
 				e1.printStackTrace();
 			}
 		}
-		System.out.println("completed timed maintenance task");
+//		System.out.println("completed timed maintenance task");
 	}
 
 	/**
