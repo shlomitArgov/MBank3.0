@@ -289,11 +289,11 @@ public class Main {
 	}
 
 	private static void handleRemoveAccount() {
-		System.out.println("Removal of accounts is performed as part of removal of client.\nYou cannot remove an account without removing a client completely");
+		System.out.println("Removal of accounts is performed as part of removal of client.\nYou cannot remove an account without removing a client completely\n");
 	}
 
 	private static void handleCreateNewAccount() {
-		System.out.println("Creation of a new account is performed as part of adding a new client.\nYou cannot create an account without creating a new client");
+		System.out.println("Creation of a new account is performed as part of adding a new client.\nYou cannot create an account without creating a new client\n");
 		
 	}
 
