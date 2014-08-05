@@ -65,7 +65,7 @@ public class Main {
 	
 	private static void adminActionMenu() {
 		int adminMenuChoice = getAdminMenuChoice();
-		AdminActionMethods method = adminMethods[adminMenuChoice + 1];
+		AdminActionMethods method = adminMethods[adminMenuChoice - 1];
 		switch (method) {
 		case CREATE_NEW_ACCOUNT:
 			break;
@@ -75,7 +75,7 @@ public class Main {
 			break;
 		case REMOVE_CLIENT:
 			break;
-		case RETURN_TO_MAIN_MENU:
+		case VIEW_ALL_DEPOSITS_DETAILS:
 			break;
 		case UPDATE_CLIENT_DETAILS:
 			break;
@@ -85,7 +85,8 @@ public class Main {
 			break;
 		case VIEW_ALL_CLIENTS_DETAILS:
 			break;
-		case VIEW_ALL_DEPOSITS_DETAILS:
+		case RETURN_TO_MAIN_MENU:
+			mainMenu();
 			break;
 		default:
 			break;
@@ -114,9 +115,36 @@ public class Main {
 	}
 
 	private static void clientActionMenu() {
-		int clientMenuChoice = getClientMenuChoice();		
+		int clientMenuChoice = getClientMenuChoice();
+		ClientActionMethods method = clientMethods[clientMenuChoice - 1];
+		switch (method) {
+		case CREATE_NEW_DEPOSIT:
+			break;
+		case DEPOSIT_TO_ACCOUNT:
+			break;
+		case PRE_OPEN_DEPOSIT:
+			break;
+		case UPDATE_CLIENT_DETAILS:
+			break;
+		case VIEW_ACCOUNT_DETAILS:
+			break;
+		case VIEW_CLIENT_ACTIVITIES:
+			break;
+		case VIEW_CLIENT_DEPOSITS:
+			break;
+		case VIEW_CLIENT_DETAILS:
+			break;
+		case VIEW_SYSTEM_PROPERTY:
+			break;
+		case WITHDRAW_FROM_ACCOUNT:
+			break;
+		case RETURN_TO_MAIN_MENU:
+			mainMenu();
+			break;
+		default:
+			break;
+		}
 	}
-
 	private static int getClientMenuChoice() {
 		System.out.println(CLIENT_MENU_INSTRUCTION);
 		printAClientMethods();
