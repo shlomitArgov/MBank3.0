@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import mbank.MBank;
@@ -16,25 +17,29 @@ import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ClientAttributes;
+import mbank.database.beans.enums.DepositType;
 import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersInterface.ClientManager;
 import mbankExceptions.MBankException;
 
 public class Main {
 	private static final String AN_ERROR_OCCURED = "An error occured: ";
-	private static final String UNRECOGNIZED_COMMAND = "\n---Unrecognized command---";
+	private static final String UNRECOGNIZED_COMMAND = "\n---Unrecognized command---\n";
 	private static final String MAIN_MENU_DIALOG = "Enter an option number:\n1. Test AdminAction methods\n2. Test ClientAction methods\n3. exit";
 	private static final String ADMIN_MENU_INSTRUCTION = "---AdminAction methods menu---\nEnter an option number: ";
 	private static final String CLIENT_MENU_INSTRUCTION = "---ClientAction methods menu---\nEnter an option number: ";
 
 	private static Connection con;
+	private static Client client;
 	
 	private static AdminAction adminAction;
 	private static ClientAction clientAction;
 	
 	private static AdminActionMethods[] adminMethods;
 	private static ClientActionMethods[] clientMethods;
+	private static DepositType[] depositTypes;
 	//Project entry point
+	private static ClientDBManager clientManager;
 	public static void main(String[] args) throws MBankException {
 		MBank bank = MBank.getInstance();
 		
@@ -43,7 +48,14 @@ public class Main {
 		adminAction = new AdminAction(con, 1);
 		long clientId = adminAction.addNewClient("CLI Client" + System.currentTimeMillis(), new char[]{'p','w','d'}, "home", "mail@home.com", "555-555555", 1000000);
 		clientAction = new ClientAction(con, clientId);
-		
+		clientManager = new ClientDBManager();
+		try 
+		{
+			client = clientManager.query(clientAction.getClientId(), con);
+		} catch (MBankException e1) {
+			System.out.println(AN_ERROR_OCCURED + e1.getLocalizedMessage());
+			System.exit(1);
+		}		
 		System.out.println("***Welcome to MBank***\n");
 
 		mainMenu();
@@ -72,12 +84,12 @@ public class Main {
 	private static int getMainMenuActionChoice() 
 	{
 		System.out.println(MAIN_MENU_DIALOG);		
-		int input = getNumericInput();
+		int input = getIntegerInput();
 		while((input < 1) || (input > 3))
 		{
 			System.out.println(UNRECOGNIZED_COMMAND);
 			System.out.println(MAIN_MENU_DIALOG);
-			input = getNumericInput();
+			input = getIntegerInput();
 		}
 	return input;		
 	}
@@ -208,7 +220,7 @@ public class Main {
 			for (int i = 0; i < clientAttributes.length; i++) {
 				System.out.println((i+1) + ". " + clientAttributes[i].getAttribute());
 			}
-			attributeNum = getNumericInput();
+			attributeNum = getIntegerInput();
 			if (attributeNum < 1 || attributeNum > clientAttributes.length)
 			{
 				System.out.println(UNRECOGNIZED_COMMAND);
@@ -306,13 +318,13 @@ public class Main {
 	private static int getAdminMenuChoice() {
 		System.out.println(ADMIN_MENU_INSTRUCTION);	
 		printAdminMethods();
-		int input = getNumericInput();
+		int input = getIntegerInput();
 		while((input < 1) || (input > adminMethods.length))
 		{
 			System.out.println(UNRECOGNIZED_COMMAND);
 			System.out.println(ADMIN_MENU_INSTRUCTION);
 			printAdminMethods();
-			input = getNumericInput();
+			input = getIntegerInput();
 		}
 	return input;	
 	}
@@ -435,15 +447,6 @@ public class Main {
 	private static void handleViewAccountDetails() {
 		System.out.println("---Displaying account details for the client associated with this ClientAction object---\n");
 		Account clientAccount = null;
-		ClientDBManager clientManager = new ClientDBManager();
-		Client client = null;
-		try 
-		{
-			client = clientManager.query(clientAction.getClientId(), con);
-		} catch (MBankException e1) {
-			System.out.println(AN_ERROR_OCCURED + e1.getLocalizedMessage());
-			clientActionMenu();
-		}
 		try 
 		{
 			clientAccount = clientAction.viewAccountDetails(client);
@@ -478,20 +481,67 @@ public class Main {
 	}
 
 	private static void handleCreateNewDeposit() {
-		// TODO Auto-generated method stub
+		DepositType depositType = getDepositTypeFromUser("Choose deposit type: ");
+		if(depositType != null)
+		{
+			double depositAmount = getValidDoubleInput("Enter deposit amount");
+			System.out.println("Enter length of deposit in days");
+			int depositLengthInDays = getIntegerInput();
+			Deposit newDeposit = null;
+			try
+			{
+				newDeposit = clientAction.createNewDeposit(client, depositType, depositAmount, new Date(System.currentTimeMillis() + depositLengthInDays));	
+			}
+			catch (MBankException e)
+			{
+				System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+				clientActionMenu();
+			}
+			if(newDeposit != null)
+			{
+				System.out.println("\n---New deposit created successfuly with ID [" + newDeposit.getDeposit_id() + "]---\n");
+			}
+		}
+	}
+
+	private static DepositType getDepositTypeFromUser(String message) {
+		System.out.println(message);
+		printDepositTypes();
+		int depositTypeNumber = 0;
 		
+		while((depositTypeNumber < 1) || (depositTypeNumber > depositTypes.length))
+		{
+			System.out.println(UNRECOGNIZED_COMMAND);
+			System.out.println(message);
+			printDepositTypes();
+			depositTypeNumber = getIntegerInput();
+		}
+		
+		switch(depositTypeNumber)
+		{
+			case 1: return DepositType.SHORT;
+			case 2: return DepositType.LONG;
+			default: return null;
+		}
+	}
+
+	private static void printDepositTypes() {
+		depositTypes = DepositType.values();
+		for (int i = 0 ; i < depositTypes.length; i++) {
+			System.out.println((i+1) + ". " + depositTypes[i].getTypeStringValue());
+		}	
 	}
 
 	private static int getClientMenuChoice() {
 		System.out.println(CLIENT_MENU_INSTRUCTION);
 		printAClientMethods();
-		int input = getNumericInput();
+		int input = getIntegerInput();
 		while((input < 1) || (input > clientMethods.length))
 		{
 			System.out.println(UNRECOGNIZED_COMMAND);
 			System.out.println(CLIENT_MENU_INSTRUCTION);
 			printAClientMethods();
-			input = getNumericInput();
+			input = getIntegerInput();
 		}
 	return input;
 	}
@@ -507,7 +557,7 @@ public class Main {
 	 * 
 	 * @return numeric input in case of valid numeric input, -1 otherwise
 	 */
-	private static int getNumericInput() 
+	private static int getIntegerInput() 
 	{
 		 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		 
