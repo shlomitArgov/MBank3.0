@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 
 import mbank.MBank;
@@ -21,7 +20,6 @@ import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.DepositType;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ClientDBManager;
-import mbank.database.managersInterface.ClientManager;
 import mbankExceptions.MBankException;
 
 public class Main {
@@ -496,8 +494,7 @@ public class Main {
 	}
 
 	private static void handlePreOpenDeposit() {
-		// TODO Auto-generated method stub
-		
+		//TODO Auto-generated method stub
 	}
 
 	private static void handleDepositToAccount() {
