@@ -3,6 +3,8 @@ package Main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.util.Arrays;
 import java.util.List;
 
 import mbank.MBank;
@@ -15,6 +17,7 @@ import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.managersImpl.ClientDBManager;
+import mbank.database.managersInterface.ClientManager;
 import mbankExceptions.MBankException;
 
 public class Main {
@@ -24,6 +27,8 @@ public class Main {
 	private static final String ADMIN_MENU_INSTRUCTION = "---AdminAction methods menu---\nEnter an option number: ";
 	private static final String CLIENT_MENU_INSTRUCTION = "---ClientAction methods menu---\nEnter an option number: ";
 
+	private static Connection con;
+	
 	private static AdminAction adminAction;
 	private static ClientAction clientAction;
 	
@@ -34,10 +39,10 @@ public class Main {
 		MBank bank = MBank.getInstance();
 		
 		/* Create CLI action menu for testing */
-		
-		adminAction = new AdminAction(bank.getConnection(), 1);
+		con = bank.getConnection();
+		adminAction = new AdminAction(con, 1);
 		long clientId = adminAction.addNewClient("CLI Client" + System.currentTimeMillis(), new char[]{'p','w','d'}, "home", "mail@home.com", "555-555555", 1000000);
-		clientAction = new ClientAction(bank.getConnection(), clientId);
+		clientAction = new ClientAction(con, clientId);
 		
 		System.out.println("***Welcome to MBank***\n");
 
@@ -132,7 +137,7 @@ public class Main {
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
-			System.exit(1);
+			adminActionMenu();
 		}
 		System.out.println();
 	}
@@ -152,7 +157,7 @@ public class Main {
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
-			System.exit(1);
+			adminActionMenu();
 		}	
 		System.out.println();
 	}
@@ -172,7 +177,7 @@ public class Main {
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
-			System.exit(1);
+			adminActionMenu();
 		}	
 		System.out.println();		
 	}
@@ -188,7 +193,7 @@ public class Main {
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
-			System.exit(1);
+			adminActionMenu();
 		}	
 		System.out.println();		
 	}
@@ -243,7 +248,7 @@ public class Main {
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
-			System.exit(1);
+			adminActionMenu();
 		}	
 		System.out.println();		
 	}
@@ -254,18 +259,18 @@ public class Main {
 		ClientDBManager clientManager = new ClientDBManager();
 		Client tempClient = null;
 		try {
-			tempClient = clientManager.query(clientId, MBank.getInstance().getConnection());
+			tempClient = clientManager.query(clientId, con);
 		} catch (MBankException e) 
 		{
 			System.out.println("Failed to retrieve client \n" + e.getLocalizedMessage());
-			System.exit(1);
+			adminActionMenu();
 		}
 		try {
 			adminAction.removeClient(tempClient);
 			System.out.println("\n---Removed client with ID[" + clientId + "] successfuly---\n");
 		} catch (MBankException e) {
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
-			System.exit(1);
+			adminActionMenu();
 		}
 		System.out.println();
 	}
@@ -284,7 +289,7 @@ public class Main {
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
-			System.exit(1);
+			adminActionMenu();
 		}
 		System.out.println();
 	}
@@ -397,7 +402,7 @@ public class Main {
 		}
 		if(clientDeposits != null)
 		{
-			System.out.println(clientDeposits.toArray().toString());	
+			System.out.println(Arrays.toString(clientDeposits.toArray()));	
 		}
 		else
 		{
@@ -407,13 +412,54 @@ public class Main {
 	}
 
 	private static void handleViewClientActivities() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("---Displaying activities for the client associated with this ClientAction object---\n");
+		List<Activity> clientActivities = null;
+		try 
+		{
+			clientActivities = clientAction.viewClientActivities(clientAction.getClientId());
+		} catch (MBankException e) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+		}
+		if(clientActivities != null)
+		{
+			System.out.println(Arrays.toString(clientActivities.toArray()));
+		}
+		else
+		{
+			System.out.println("No activities found");
+		}
+		System.out.println();
 	}
 
 	private static void handleViewAccountDetails() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("---Displaying account details for the client associated with this ClientAction object---\n");
+		Account clientAccount = null;
+		ClientDBManager clientManager = new ClientDBManager();
+		Client client = null;
+		try 
+		{
+			client = clientManager.query(clientAction.getClientId(), con);
+		} catch (MBankException e1) {
+			System.out.println(AN_ERROR_OCCURED + e1.getLocalizedMessage());
+			clientActionMenu();
+		}
+		try 
+		{
+			clientAccount = clientAction.viewAccountDetails(client);
+		} catch (MBankException e) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+		}
+		if(clientAccount != null)
+		{
+			System.out.println(clientAccount.toString());
+		}
+		else
+		{
+			System.out.println("No account found");
+		}
+		System.out.println();
 	}
 
 	private static void handleUpdateClientDetails() {
