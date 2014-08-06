@@ -21,7 +21,7 @@ public class Activity
 		return "Activity [id=" + id + ", client_id=" + client_id + ", amount="
 				+ amount + ", activity_date=" + activity_date + ", commission="
 				+ commission + ", activityType=" + activityType
-				+ ", description=" + description + "]";
+				+ ", description=" + description + "]\n";
 	}
 
 	private long  id;

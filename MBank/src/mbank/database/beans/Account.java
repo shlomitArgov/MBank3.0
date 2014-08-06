@@ -16,7 +16,7 @@ public class Account
 	public String toString() {
 		return "Account [account_id=" + account_id + ", client_id=" + client_id
 				+ ", balance=" + balance + ", credit_limit=" + credit_limit
-				+ ", comment=" + comment + "]";
+				+ ", comment=" + comment + "]\n";
 	}
 
 	private long account_id;

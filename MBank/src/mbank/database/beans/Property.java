@@ -86,6 +86,6 @@ public class Property {
 	@Override
 	public String toString() {
 		return "Property [prop_key=" + prop_key + ", prop_value=" + prop_value
-				+ "]";
+				+ "]\n";
 	}
 }

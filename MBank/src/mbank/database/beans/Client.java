@@ -31,7 +31,7 @@ public class Client
 	public String toString() {
 		return "Client [client_id=" + client_id + ", client_name="
 				+ client_name + ", type=" + type + ", address=" + address
-				+ ", email=" + email + ", phone=" + phone + "]";
+				+ ", email=" + email + ", phone=" + phone + "]\n";
 	}
 
 	public Client(long client_id, String client_name, String password,

@@ -24,7 +24,7 @@ public class Deposit
 				+ ", balance=" + balance + ", type=" + type
 				+ ", estimated_balance=" + estimated_balance
 				+ ", opening_date=" + opening_date + ", closing_date="
-				+ closing_date + "]";
+				+ closing_date + "]\n";
 	}
 
 	private long deposit_id;
