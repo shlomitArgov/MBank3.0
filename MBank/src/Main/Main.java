@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 
 import mbank.MBank;
@@ -18,6 +19,7 @@ import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.DepositType;
+import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersInterface.ClientManager;
 import mbankExceptions.MBankException;
@@ -379,8 +381,31 @@ public class Main {
 		clientActionMenu();
 	}
 	private static void handleWithdrawFromAccount() {
-		// TODO Auto-generated method stub
-		
+		AccountDBManager accountManager = new AccountDBManager();
+		Account account = null;
+		try 
+		{
+			account = accountManager.queryAccountByClient(clientAction.getClientId(), con);
+		} catch (MBankException e) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+			clientActionMenu();
+		}
+		double withdrawAmount = 0;
+		if(account != null)
+		{
+			System.out.println("Current account balance: " + account.getBalance()+ "\nAccount limit is: " + account.getCredit_limit());
+			withdrawAmount = getValidDoubleInput("\nEnter the amount to withdraw: \n");
+			try 
+			{
+				clientAction.withdrawFromAccount(client, withdrawAmount);
+			} catch (MBankException e) 
+			{
+				System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+				clientActionMenu();
+			}
+			System.out.println("\n---Withdrawal completed successfuly---\n");
+		}
 	}
 
 	private static void handleViewSystemProperty() {
