@@ -371,8 +371,17 @@ public class Main {
 	}
 
 	private static void handleViewClientDetails() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("---Displaying client details for the client associated with this ClientAction object---");
+		Client clientDetails = null;
+		try 
+		{
+			clientDetails = clientAction.viewClientDetails(clientAction.getClientId());
+		} catch (MBankException e) 
+		{
+			System.out.println("An error occured: " + e.getLocalizedMessage());
+		}
+		System.out.println(clientDetails.toString());
+		System.out.println();
 	}
 
 	private static void handleViewClientDeposits() {
