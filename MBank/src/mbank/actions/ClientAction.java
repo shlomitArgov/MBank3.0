@@ -107,8 +107,8 @@ public class ClientAction extends Action
 		AccountManager accountManager = new AccountDBManager();
 		Account account = accountManager.queryAccountByClient(client.getClient_id(), this.getCon());
 		double accountBalance = account.getBalance();
-		//Make sure account balance is greater than the account's credit limit
-		if (accountBalance >= credit_limit)
+		//Make sure account balance after withdrawal will not exceed the account's credit limit
+		if ((accountBalance - commissionRate - withdrawAmount) >= -credit_limit)
 		{
 			account.setBalance(accountBalance - commissionRate - withdrawAmount);
 			accountManager.update(account, this.getCon());
