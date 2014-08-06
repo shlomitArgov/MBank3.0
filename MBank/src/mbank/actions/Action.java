@@ -33,19 +33,19 @@ import mbankExceptions.MBankException;
 public abstract class Action
 {
 	private Connection con;
-	private long id;
+	private long clientId;
 	private static final String TMP_STR = "tmpVal";
 	/**
-	 * @return the id
+	 * @return the clientId
 	 */
-	public long getId() {
-		return id;
+	public long getClientId() {
+		return clientId;
 	}
 
 	public Action(Connection con, long id)
 	{
 		this.con = con;
-		this.id = id;
+		this.clientId = id;
 	}
 	
 	/**

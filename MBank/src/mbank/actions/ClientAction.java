@@ -43,7 +43,7 @@ public class ClientAction extends Action
 	@Override
 	public List<Deposit> viewClientDeposits(long clientId) throws MBankException
 	{
-		if(this.getId() != clientId)
+		if(this.getClientId() != clientId)
 		{
 			return null;
 		}
@@ -56,7 +56,7 @@ public class ClientAction extends Action
 	@Override
 	public List<Activity> viewClientActivities(long clientId) throws MBankException
 	{
-		if(clientId != this.getId())
+		if(clientId != this.getClientId())
 		{
 			return null;
 		}
@@ -263,7 +263,7 @@ public class ClientAction extends Action
 	@Override
 	public Client viewClientDetails(long clientId) throws MBankException
 	{
-		if(this.getId() != clientId)
+		if(this.getClientId() != clientId)
 		{
 			return null;
 		}
@@ -276,13 +276,13 @@ public class ClientAction extends Action
 	@Override
 	public Account viewAccountDetails(Client client) throws MBankException
 	{
-		if(client.getClient_id() != this.getId())
+		if(client.getClient_id() != this.getClientId())
 		{
 			return null;
 		}
 		else
 		{
-			return queryClientAccount(this.getId());
+			return queryClientAccount(this.getClientId());
 		}
 	}
 }
