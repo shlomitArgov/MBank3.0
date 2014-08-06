@@ -18,6 +18,7 @@ import mbank.database.managersImpl.ClientDBManager;
 import mbankExceptions.MBankException;
 
 public class Main {
+	private static final String AN_ERROR_OCCURED = "An error occured: ";
 	private static final String UNRECOGNIZED_COMMAND = "\n---Unrecognized command---";
 	private static final String MAIN_MENU_DIALOG = "Enter an option number:\n1. Test AdminAction methods\n2. Test ClientAction methods\n3. exit";
 	private static final String ADMIN_MENU_INSTRUCTION = "---AdminAction methods menu---\nEnter an option number: ";
@@ -130,7 +131,7 @@ public class Main {
 			}
 		} catch (MBankException e) 
 		{
-			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
 			System.exit(1);
 		}
 		System.out.println();
@@ -150,7 +151,7 @@ public class Main {
 			}
 		} catch (MBankException e) 
 		{
-			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
 			System.exit(1);
 		}	
 		System.out.println();
@@ -170,7 +171,7 @@ public class Main {
 			}
 		} catch (MBankException e) 
 		{
-			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
 			System.exit(1);
 		}	
 		System.out.println();		
@@ -186,7 +187,7 @@ public class Main {
 			System.out.println("\n---Updated client [id = " + clientId + "] details successfully---\n");
 		} catch (MBankException e) 
 		{
-			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
 			System.exit(1);
 		}	
 		System.out.println();		
@@ -241,7 +242,7 @@ public class Main {
 			}
 		} catch (MBankException e) 
 		{
-			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
 			System.exit(1);
 		}	
 		System.out.println();		
@@ -263,7 +264,7 @@ public class Main {
 			adminAction.removeClient(tempClient);
 			System.out.println("\n---Removed client with ID[" + clientId + "] successfuly---\n");
 		} catch (MBankException e) {
-			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
 			System.exit(1);
 		}
 		System.out.println();
@@ -282,7 +283,7 @@ public class Main {
 			System.out.println("****\nAdded new client with ID: " + clientId + "\n****");
 		} catch (MBankException e) 
 		{
-			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
 			System.exit(1);
 		}
 		System.out.println();
@@ -371,22 +372,38 @@ public class Main {
 	}
 
 	private static void handleViewClientDetails() {
-		System.out.println("---Displaying client details for the client associated with this ClientAction object---");
+		System.out.println("---Displaying client details for the client associated with this ClientAction object---\n");
 		Client clientDetails = null;
 		try 
 		{
 			clientDetails = clientAction.viewClientDetails(clientAction.getClientId());
 		} catch (MBankException e) 
 		{
-			System.out.println("An error occured: " + e.getLocalizedMessage());
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
 		}
 		System.out.println(clientDetails.toString());
 		System.out.println();
 	}
 
 	private static void handleViewClientDeposits() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("---Displaying deposit details for the client associated with this ClientAction object---\n");
+		List<Deposit> clientDeposits = null;
+		try 
+		{
+			clientDeposits = clientAction.viewClientDeposits(clientAction.getClientId());
+		} catch (MBankException e) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+		}
+		if(clientDeposits != null)
+		{
+			System.out.println(clientDeposits.toArray().toString());	
+		}
+		else
+		{
+			System.out.println("No deposits found");
+		}
+		System.out.println();
 	}
 
 	private static void handleViewClientActivities() {
