@@ -476,8 +476,15 @@ public class Main {
 	}
 
 	private static void handleDepositToAccount() {
-		// TODO Auto-generated method stub
-		
+		double depositAmount = getValidDoubleInput("Enter amount to deposit: ");
+		try 
+		{
+			clientAction.depositToAccount(client, depositAmount);
+			System.out.println("\n---Deposit executed successfuly---\n");
+		} catch (MBankException e) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+		}
 	}
 
 	private static void handleCreateNewDeposit() {
