@@ -26,9 +26,9 @@ import mbankExceptions.MBankException;
 public class Main {
 	private static final String AN_ERROR_OCCURED = "An error occured: ";
 	private static final String UNRECOGNIZED_COMMAND = "\n---Unrecognized command---\n";
-	private static final String MAIN_MENU_DIALOG = "Enter an option number:\n1. Test AdminAction methods\n2. Test ClientAction methods\n3. exit";
-	private static final String ADMIN_MENU_INSTRUCTION = "---AdminAction methods menu---\nEnter an option number: ";
-	private static final String CLIENT_MENU_INSTRUCTION = "---ClientAction methods menu---\nEnter an option number: ";
+	private static final String MAIN_MENU_DIALOG = "\nEnter an option number:\n1. Test AdminAction methods\n2. Test ClientAction methods\n3. exit";
+	private static final String ADMIN_MENU_INSTRUCTION = "\n---AdminAction methods menu---\nEnter an option number: ";
+	private static final String CLIENT_MENU_INSTRUCTION = "\n---ClientAction methods menu---\nEnter an option number: ";
 
 	private static Connection con;
 	private static Client client;
@@ -36,9 +36,6 @@ public class Main {
 	private static AdminAction adminAction;
 	private static ClientAction clientAction;
 	
-	private static AdminActionMethods[] adminMethods;
-	private static ClientActionMethods[] clientMethods;
-	private static DepositType[] depositTypes;
 	//Project entry point
 	private static ClientDBManager clientManager;
 	public static void main(String[] args) throws MBankException {
@@ -96,8 +93,7 @@ public class Main {
 	}
 	
 	private static void adminActionMenu() {
-		int adminMenuChoice = getAdminMenuChoice();
-		AdminActionMethods method = adminMethods[adminMenuChoice - 1];
+		AdminActionMethods method = getAdminMenuChoice();  
 		switch (method) {
 		case CREATE_NEW_ACCOUNT:
 			handleCreateNewAccount();
@@ -316,30 +312,29 @@ public class Main {
 		
 	}
 
-	private static int getAdminMenuChoice() {
+	private static AdminActionMethods getAdminMenuChoice() {
 		System.out.println(ADMIN_MENU_INSTRUCTION);	
-		printAdminMethods();
-		int input = getIntegerInput();
-		while((input < 1) || (input > adminMethods.length))
+		printEnumValuesAsMenuOptions(AdminActionMethods.class);
+		int userChoice = getIntegerInput();
+		AdminActionMethods adminMethod = getEnumChoice(userChoice, AdminActionMethods.class);
+		while (adminMethod == null)
 		{
 			System.out.println(UNRECOGNIZED_COMMAND);
 			System.out.println(ADMIN_MENU_INSTRUCTION);
-			printAdminMethods();
-			input = getIntegerInput();
+			printEnumValuesAsMenuOptions(AdminActionMethods.class);
+			userChoice = getIntegerInput();
+			adminMethod = getEnumChoice(userChoice, AdminActionMethods.class);
 		}
-	return input;	
-	}
-
-	private static void printAdminMethods() {
-		adminMethods = AdminActionMethods.values();
-		for (int i = 0; i < adminMethods.length; i++) {
-			System.out.println((i+1) + ". " + adminMethods[i].getName());
-		}
+	return adminMethod;	
 	}
 
 	private static void clientActionMenu() {
-		int clientMenuChoice = getClientMenuChoice();
-		ClientActionMethods method = clientMethods[clientMenuChoice - 1];
+		
+		ClientActionMethods method = getClientMenuChoice();  
+
+		
+//		int clientMenuChoice = getClientMenuChoice();
+//		ClientActionMethods method = clientMethods[clientMenuChoice - 1];
 		switch (method) {
 		case CREATE_NEW_DEPOSIT:
 			handleCreateNewDeposit();
@@ -407,7 +402,8 @@ public class Main {
 		}
 	}
 
-	private static void handleViewSystemProperty() {
+	private static void handleViewSystemProperty() 
+	{
 		System.out.println("\nSelect a property to display\n");
 		printEnumValuesAsMenuOptions(SystemProperties.class);
 		
@@ -417,6 +413,10 @@ public class Main {
 		String propertyValue = null;
 		try 
 		{
+			if (propertyName == null)
+			{
+				throw new MBankException();
+			}
 			propertyValue = clientAction.viewSystemProperty(propertyName);
 		} catch (MBankException e) 
 		{
@@ -432,8 +432,11 @@ public class Main {
 
 	private static <T extends Enum<T>> T getEnumChoice(int userChoice, Class<T> enumType) {
 		T[] values = enumType.getEnumConstants();
-		return values[userChoice-1];
-		
+		if (userChoice > values.length || userChoice  < 1)
+		{
+			return null;
+		}
+		return values[userChoice - 1];
 	}
 
 	private static void handleViewClientDetails() {
@@ -535,7 +538,11 @@ public class Main {
 	}
 
 	private static void handleCreateNewDeposit() {
-		DepositType depositType = getDepositTypeFromUser("Choose deposit type: ");
+		System.out.println("Choose deposit type: ");
+		printEnumValuesAsMenuOptions(DepositType.class);
+		int userChoice = getIntegerInput();
+		DepositType depositType = getEnumChoice(userChoice, DepositType.class); 
+//				getDepositTypeFromUser("Choose deposit type: ");
 		if(depositType != null)
 		{
 			double depositAmount = getValidDoubleInput("Enter deposit amount");
@@ -558,46 +565,20 @@ public class Main {
 		}
 	}
 
-	private static DepositType getDepositTypeFromUser(String message) {
-		System.out.println(message);
-		printDepositTypes();
-		int depositTypeNumber = 0;
-		
-		while((depositTypeNumber < 1) || (depositTypeNumber > depositTypes.length))
-		{
-			System.out.println(UNRECOGNIZED_COMMAND);
-			System.out.println(message);
-			printDepositTypes();
-			depositTypeNumber = getIntegerInput();
-		}
-		
-		switch(depositTypeNumber)
-		{
-			case 1: return DepositType.SHORT;
-			case 2: return DepositType.LONG;
-			default: return null;
-		}
-	}
-
-	private static void printDepositTypes() {
-		depositTypes = DepositType.values();
-		for (int i = 0 ; i < depositTypes.length; i++) {
-			System.out.println((i+1) + ". " + depositTypes[i].getTypeStringValue());
-		}	
-	}
-
-	private static int getClientMenuChoice() {
+	private static ClientActionMethods getClientMenuChoice() {
 		System.out.println(CLIENT_MENU_INSTRUCTION);
-		printAClientMethods();
-		int input = getIntegerInput();
-		while((input < 1) || (input > clientMethods.length))
+		printEnumValuesAsMenuOptions(ClientActionMethods.class);
+		int userChoice = getIntegerInput();
+		ClientActionMethods clientMethod = getEnumChoice(userChoice, ClientActionMethods.class);
+		while(clientMethod == null)
 		{
 			System.out.println(UNRECOGNIZED_COMMAND);
 			System.out.println(CLIENT_MENU_INSTRUCTION);
-			printAClientMethods();
-			input = getIntegerInput();
+			printEnumValuesAsMenuOptions(ClientActionMethods.class);
+			userChoice = getIntegerInput();
+			clientMethod = getEnumChoice(userChoice, ClientActionMethods.class);
 		}
-	return input;
+	return clientMethod;
 	}
 
 	private static <T extends Enum<T>> void printEnumValuesAsMenuOptions(Class<T> enumType)
@@ -608,12 +589,6 @@ public class Main {
 
 			System.out.println((i+1) + ". " + values[i].name());
 		}
-	}
-	private static void printAClientMethods() {
-		clientMethods = ClientActionMethods.values();
-		for (int i = 0 ; i < clientMethods.length; i++) {
-			System.out.println((i+1) + ". " + clientMethods[i].getName());
-		}		
 	}
 
 	/**
@@ -755,13 +730,12 @@ public class Main {
 		PRE_OPEN_DEPOSIT("PRE_OPEN_DEPOSIT"),
 		RETURN_TO_MAIN_MENU("RETURN_TO_MAIN_MENU");
 		
+		//used in utility methods that handle enums
+		@SuppressWarnings("unused")
 		private String name;
 		ClientActionMethods(String name)
 		{
 			this.name = name;
-		}
-		public String getName() {
-			return name;
 		}
 	}
 	
@@ -778,15 +752,13 @@ public class Main {
 		VIEW_ALL_CLIENTS_DETAILS("VIEW_ALL_CLIENTS_DETAILS"),
 		RETURN_TO_MAIN_MENU("RETURN_TO_MAIN_MENU");
 		//UPDATE_SYSTEM_PROPERTY can be tested via the SWING UI
+		//used in utility methods that handle enums
+		@SuppressWarnings("unused")
 		private String name;
 		
 		AdminActionMethods(String name)
 		{
 			this.name = name;
-		}
-
-		public String getName() {
-			return name;
 		}
 	}
 }
