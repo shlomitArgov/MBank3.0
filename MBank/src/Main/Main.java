@@ -18,6 +18,7 @@ import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.DepositType;
+import mbank.database.beans.enums.SystemProperties;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ClientDBManager;
 import mbankExceptions.MBankException;
@@ -407,7 +408,31 @@ public class Main {
 	}
 
 	private static void handleViewSystemProperty() {
-		// TODO Auto-generated method stub
+		System.out.println("\nSelect a property to display\n");
+		printEnumValuesAsMenuOptions(SystemProperties.class);
+		
+		int userChoice = getIntegerInput();
+			
+		String propertyName = getEnumChoice(userChoice, SystemProperties.class).getPropertyName();
+		String propertyValue = null;
+		try 
+		{
+			propertyValue = clientAction.viewSystemProperty(propertyName);
+		} catch (MBankException e) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+			clientActionMenu();
+		}
+		if (propertyValue != null)
+		{
+			System.out.println(propertyName + " = " + propertyValue);
+			System.out.println();
+		}
+	}
+
+	private static <T extends Enum<T>> T getEnumChoice(int userChoice, Class<T> enumType) {
+		T[] values = enumType.getEnumConstants();
+		return values[userChoice-1];
 		
 	}
 
@@ -575,6 +600,15 @@ public class Main {
 	return input;
 	}
 
+	private static <T extends Enum<T>> void printEnumValuesAsMenuOptions(Class<T> enumType)
+	{
+		T[] values = enumType.getEnumConstants();
+		for (int i = 0 ; i < values.length; i++)
+		{
+
+			System.out.println((i+1) + ". " + values[i].name());
+		}
+	}
 	private static void printAClientMethods() {
 		clientMethods = ClientActionMethods.values();
 		for (int i = 0 ; i < clientMethods.length; i++) {

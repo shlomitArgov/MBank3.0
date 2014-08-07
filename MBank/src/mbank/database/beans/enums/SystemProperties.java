@@ -43,13 +43,13 @@ public enum SystemProperties
 
 	private String propertyName;
 
-	public static boolean validateString(String propertyName2) {
+	public static boolean validateString(String propertyName) {
 		List<SystemProperties> properties = Arrays.asList(SystemProperties.values());
 		List<String> stringProperties = new ArrayList<>();
 		for (Iterator<SystemProperties> iterator = properties.iterator(); iterator.hasNext();) {
 			stringProperties.add((iterator.next()).toString());	
 		}
-		if(stringProperties.contains(propertyName2.toUpperCase()))
+		if(stringProperties.contains(propertyName.toUpperCase()))
 		{
 			return true;
 		}
