@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -517,8 +518,7 @@ public class Main {
 	}
 
 	private static void handleUpdateClientDetails() {
-		// TODO Auto-generated method stub
-		/* Display only the attribute a ClientAction objet can update */
+		/* Display only the attribute a ClientAction object can update */
 		ClientAttributes[] availableAttributes = new ClientAttributes[]{ClientAttributes.ADDRESS, ClientAttributes.EMAIL, ClientAttributes.PHONE};
 		ClientAttributes attribute = null;
 		int userChoice = 0;
@@ -550,8 +550,62 @@ public class Main {
 	}
 
 	private static void handlePreOpenDeposit() {
-		//TODO Auto-generated method stub
+		//TODO
+		System.out.println("Enter the ID of the deposit you would like to preopen from the list below (only long-term deposits shown): \n");
+		
+		List<Deposit> clientDeposits = null;
+		try 
+		{
+			clientDeposits = clientAction.viewClientDeposits(clientAction.getClientId());
+		} catch (MBankException e) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+		}
+		if(clientDeposits != null)
+		{
+			boolean noLongTermDeposits = true;
+			ArrayList<Long> longDepositIds = new ArrayList<>();
+			for (int i = 0; i < clientDeposits.size(); i++) {
+				if (clientDeposits.get(i).getType().equals(DepositType.LONG))
+				{
+					noLongTermDeposits = false;
+					longDepositIds.add(clientDeposits.get(i).getDeposit_id());
+					System.out.println(clientDeposits.get(i).toString());		
+				}
+			}
+			if (noLongTermDeposits)
+			{
+				System.out.println("No long-term deposits found");
+			}
+			else
+			{
+				Long userChoice = getLongInput();
+				if(longDepositIds.contains(userChoice))
+				{
+					try 
+					{
+						clientAction.preOpenDeposit(userChoice);
+						System.out.println("\n---Deposit [" +  userChoice + "] pre-opened successfully---\n");
+					} catch (MBankException e) 
+					{
+						System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+						clientActionMenu();
+					}	
+				}
+				else
+				{
+					System.out.println("Invalid deposit ID");
+					clientActionMenu();
+				}
+			}
+		}
+		else
+		{
+			System.out.println("No deposits found");
+		}
+		System.out.println();
 	}
+
 
 	private static void handleDepositToAccount() {
 		double depositAmount = getValidDoubleInput("Enter amount to deposit: ");
@@ -649,6 +703,32 @@ public class Main {
 		return num; 
 	}
 	
+
+	private static Long getLongInput() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		 
+	      String input = null;
+	 
+	      /* Read the numeric input entered by the user in the command-line;
+	       * need to use try/catch with the readLine() method */
+	      try {
+	         input = br.readLine();
+	      } catch (IOException ioe) {
+	         System.out.println("IO error occured. Program will exit.");
+	         System.exit(1);
+	      }
+	      
+	      long num = 0;
+	      try 
+	      {
+			num = Long.parseLong(input.trim());
+	      } 
+	      catch (NumberFormatException e) 
+	      {
+	    	  return new Long (-1);
+	      }
+		return new Long(num); 
+	}	
 
 	private static String getValidStringInput(String message) 
 	{
