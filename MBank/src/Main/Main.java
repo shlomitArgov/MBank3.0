@@ -518,7 +518,35 @@ public class Main {
 
 	private static void handleUpdateClientDetails() {
 		// TODO Auto-generated method stub
+		/* Display only the attribute a ClientAction objet can update */
+		ClientAttributes[] availableAttributes = new ClientAttributes[]{ClientAttributes.ADDRESS, ClientAttributes.EMAIL, ClientAttributes.PHONE};
+		ClientAttributes attribute = null;
+		int userChoice = 0;
+		do
+		{
+			System.out.println("Select the client detail you wish to update: ");
+			for (int i = 0; i < availableAttributes.length; i++) {
+				System.out.println((i + 1 + ". " + availableAttributes[i].getAttribute()));
+			}
+			userChoice = getIntegerInput();
+			if (userChoice > availableAttributes.length || userChoice  < 1)
+			{
+				System.out.println(UNRECOGNIZED_COMMAND);
+			}
+		} while (userChoice > availableAttributes.length || userChoice  < 1);
 		
+		attribute =  availableAttributes[userChoice - 1];
+		
+		String updatedDetail = getValidStringInput("Enter the new value: ");
+		TableValue tableValue = new TableValue(attribute.getAttribute(), updatedDetail);
+		try 
+		{
+			clientAction.updateClientDetails(String.valueOf(clientAction.getClientId()), tableValue);
+		} catch (MBankException e) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+			clientActionMenu();
+		}
 	}
 
 	private static void handlePreOpenDeposit() {
@@ -586,7 +614,6 @@ public class Main {
 		T[] values = enumType.getEnumConstants();
 		for (int i = 0 ; i < values.length; i++)
 		{
-
 			System.out.println((i+1) + ". " + values[i].name());
 		}
 	}
@@ -739,7 +766,6 @@ public class Main {
 		}
 	}
 	
-	
 	private enum AdminActionMethods {
 		ADD_NEW_CLIENT("ADD_NEW_CLIENT"), 
 		REMOVE_CLIENT("REMOVE_CLIENT"),
@@ -759,6 +785,6 @@ public class Main {
 		AdminActionMethods(String name)
 		{
 			this.name = name;
-		}
+		}	
 	}
 }
