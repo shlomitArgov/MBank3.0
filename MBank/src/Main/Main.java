@@ -17,11 +17,13 @@ import mbank.database.beans.Account;
 import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
+import mbank.database.beans.Property;
 import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.DepositType;
 import mbank.database.beans.enums.SystemProperties;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ClientDBManager;
+import mbank.database.managersImpl.PropertyDBManager;
 import mbankExceptions.MBankException;
 
 public class Main {
@@ -123,6 +125,9 @@ public class Main {
 		case VIEW_ALL_CLIENTS_DETAILS:
 			handleViewAllClientsDetails();
 			break;
+		case UPDATE_SYSTEM_PROPERTY:
+			handleUpdateSystemProperty();
+			break;
 		case RETURN_TO_MAIN_MENU:
 			mainMenu();
 			break;
@@ -130,6 +135,62 @@ public class Main {
 			break;
 		}
 		adminActionMenu();
+	}
+
+	private static void handleUpdateSystemProperty() {
+		// TODO Auto-generated method stub
+		System.out.println("\n---System Properties---\n");
+		printEnumValuesAsMenuOptions(SystemProperties.class);
+		System.out.println("\nEnter the number of the system property you wish to update");
+		int userChoice = getIntegerInput();
+		SystemProperties selectedProperty = getEnumChoice(userChoice, SystemProperties.class);
+		PropertyDBManager propertyManager = new PropertyDBManager();
+		String selectedPropertyValue = null;
+		try 
+		{
+			selectedPropertyValue = propertyManager.query(selectedProperty.getPropertyName(), con).getProp_value();
+		} catch (MBankException e2) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e2.getLocalizedMessage());
+			adminActionMenu();
+		}
+		if (selectedPropertyValue != null)
+			
+		{
+			System.out.println("Current property value for " + selectedProperty.getPropertyName() + ": " + selectedPropertyValue);	
+		}
+		else
+		{
+			System.out.println(AN_ERROR_OCCURED + "Failed to retrieve current property value");
+		}
+		String newValue = getValidStringInput("Enter new property value");
+		Property property = null;
+		try 
+		{
+			property = new Property(selectedProperty.getPropertyName(), newValue);
+		} catch (MBankException e1) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e1.getLocalizedMessage());
+			adminActionMenu();
+		}
+		
+		try 
+		{
+			if(property != null)
+			{
+				adminAction.updateSystemProperty(property);	
+			}
+			else
+			{
+				throw new MBankException("Failed to retrieve property");
+			}
+		} catch (MBankException e) 
+		{
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
+			adminActionMenu();
+		}
+		System.out.println("\n---Property updated successfully---\n");
+		
 	}
 
 	private static void handleViewAllClientsDetails() {
@@ -550,7 +611,6 @@ public class Main {
 	}
 
 	private static void handlePreOpenDeposit() {
-		//TODO
 		System.out.println("Enter the ID of the deposit you would like to preopen from the list below (only long-term deposits shown): \n");
 		
 		List<Deposit> clientDeposits = null;
@@ -856,8 +916,9 @@ public class Main {
 		VIEW_ALL_DEPOSITS_DETAILS("VIEW_ALL_DEPOSITS_DETAILS"),
 		VIEW_ALL_ACTIVITIES_DETAILS("VIEW_ALL_ACTIVITIES_DETAILS"),
 		VIEW_ALL_CLIENTS_DETAILS("VIEW_ALL_CLIENTS_DETAILS"),
-		RETURN_TO_MAIN_MENU("RETURN_TO_MAIN_MENU");
-		//UPDATE_SYSTEM_PROPERTY can be tested via the SWING UI
+		UPDATE_SYSTEM_PROPERTY("UPDATE_SYSTEM_PROPERTY"),
+		RETURN_TO_MAIN_MENU("RETURN_TO_MAIN_MENU")
+		;// can be tested via the SWING UI
 		//used in utility methods that handle enums
 		@SuppressWarnings("unused")
 		private String name;
