@@ -43,17 +43,17 @@ Detailed specification of projects:
 -----------------------------------
 Phase 1: Building System Core
 MBank server 
-============
+............
   a. MBank project – phase 1 implementation, using Java SE.
   b. MBankTest project – unit test code for MBank classes, using JUnit 4 framework (you can run all tests by running mbank.AllTests as a JUnit).
 
 MBank database – helper project
-===============================
+...............................
   a. CreateDB – project for general creation/deletion/population of database tables.
   b. CreateMBankDB – used to create/delete/populate specific tables needed for the MBank project.
 
 Phase 2: Building Administration Desktop Application
 Mbank Admin Management Application
-==================================
+..................................
   MBankAdminConsole project – phase 2 implementation, using Java Swing framework
   
