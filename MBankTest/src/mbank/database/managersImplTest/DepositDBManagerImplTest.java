@@ -46,8 +46,8 @@ public class DepositDBManagerImplTest {
 		client2 = new Client("user_name4", "password2", ClientType.REGULAR, "address2", "email2", "phone2", "comment2");
 		
 		/* Insert the clients into the DB */
-		client1.setClient_id(clientDBManager.insert(client1, con));
-		client2.setClient_id(clientDBManager.insert(client2, con));
+		client1.setClient_id(clientDBManager.insert(client1));
+		client2.setClient_id(clientDBManager.insert(client2));
 		
 		/* create deposits for testing */
 		deposit1 = new Deposit(client1.getClient_id(), 2000.20, DepositType.SHORT, 350, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis()));
@@ -58,16 +58,16 @@ public class DepositDBManagerImplTest {
 	//cleanup
 	public void tearDownAfterClass() throws Exception {
 		/* Clean clients from DB */
-		clientDBManager.delete(client1.getClient_id(), con);
-		clientDBManager.delete(client2.getClient_id(), con);
+		clientDBManager.delete(client1.getClient_id());
+		clientDBManager.delete(client2.getClient_id());
 	}
 	@Test
 	public void testDepositsDBManager() {
 		// test insert
 		try
 		{
-			deposit1.setDeposit_id(depositDBManager.insert(deposit1, con));
-			deposit2.setDeposit_id(depositDBManager.insert(deposit2, con));
+			deposit1.setDeposit_id(depositDBManager.insert(deposit1));
+			deposit2.setDeposit_id(depositDBManager.insert(deposit2));
 		}
 		catch(MBankException e)
 		{
@@ -78,7 +78,7 @@ public class DepositDBManagerImplTest {
 		// test query
 		try
 		{
-			Deposit temp = depositDBManager.query(deposit1, con);
+			Deposit temp = depositDBManager.query(deposit1);
 			if(temp == null)
 			{
 				throw new MBankException();
@@ -93,7 +93,7 @@ public class DepositDBManagerImplTest {
 		//test queryAllAccount
 		try
 		{
-			ArrayList<Deposit> depositsList = depositDBManager.queryDepositsByClient(client1.getClient_id(), con);
+			ArrayList<Deposit> depositsList = depositDBManager.queryDepositsByClient(client1.getClient_id());
 			if (depositsList == null)
 			{
 				throw new MBankException();
@@ -109,7 +109,7 @@ public class DepositDBManagerImplTest {
 		try
 		{
 			deposit1.setBalance(50000);
-			depositDBManager.update(deposit1, con);
+			depositDBManager.update(deposit1);
 		}
 		catch (MBankException e)
 		{
@@ -122,8 +122,8 @@ public class DepositDBManagerImplTest {
 		// test delete
 		try
 		{
-			depositDBManager.delete(deposit1, con);
-			depositDBManager.delete(deposit2, con);
+			depositDBManager.delete(deposit1);
+			depositDBManager.delete(deposit2);
 		}
 		catch (MBankException e)
 		{

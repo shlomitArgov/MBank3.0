@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import mbank.MBank;
 import mbank.database.beans.Client;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.managersInterface.ClientManager;
@@ -27,8 +28,9 @@ public class ClientDBManager implements ClientManager
 	}
 
 	@Override
-	public long insert(Client client, Connection con) throws MBankException
+	public long insert(Client client) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "INSERT INTO " + tableName + " (client_name, password, client_type, address, email, phone, comment) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
@@ -59,12 +61,14 @@ public class ClientDBManager implements ClientManager
 			} catch (SQLException e) {
 				throw new MBankException("Failed to retrieve new client ID");
 			}
+			MBank.getInstance().returnConnection(con);
 		return clientId;
 	}
 
 	@Override
-	public void update(Client client, Connection con) throws MBankException
+	public void update(Client client) throws MBankException
 	 {
+		Connection con = MBank.getInstance().getConnection();
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
 			sql += "client_name = ?, ";
@@ -96,11 +100,13 @@ public class ClientDBManager implements ClientManager
 		{
 			throw new MBankException("Failed to update Clients table", e);
 		}
+		MBank.getInstance().returnConnection(con);
 	}
 
 	@Override
-	public void delete(long clientId, Connection con) throws MBankException
+	public void delete(long clientId) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		String sql = "DELETE FROM " + tableName + " WHERE client_id = ?";
 		try
 		{
@@ -116,11 +122,13 @@ public class ClientDBManager implements ClientManager
 		{
 			throw new MBankException("Failed to delete client with id: "+ clientId + " from the Clients table");
 		}
+		MBank.getInstance().returnConnection(con);
 	}
 
 	@Override
-	public Client query(Client client, Connection con) throws MBankException
+	public Client query(Client client) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE client_id = ?";
@@ -133,6 +141,7 @@ public class ClientDBManager implements ClientManager
 				if(rs.next()) //next() returns false if there are no more rows in the RS
 				{	
 					Client c = new Client(rs.getLong(1), rs.getString(2), rs.getString(3), ClientType.getEnumFromString(rs.getString(4)), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+					MBank.getInstance().returnConnection(con);
 					return c;
 				}
 			}
@@ -140,12 +149,14 @@ public class ClientDBManager implements ClientManager
 		{
 			throw new MBankException("Failed to query the Clients table");
 		}
+		MBank.getInstance().returnConnection(con);
 		return null;
 	}
 
 	@Override
-	public ArrayList<Client> queryAllClients(Connection con) throws MBankException
+	public ArrayList<Client> queryAllClients() throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		String sql = "SELECT * FROM " + tableName;
 		try
 		{
@@ -166,7 +177,7 @@ public class ClientDBManager implements ClientManager
 				Client client = new Client(client_id, client_name, password, ClientType.getEnumFromString(type), address, email, phone, comment);
 				clientList.add(client);
 			}
-			
+			MBank.getInstance().returnConnection(con);
 			return clientList;
 			
 		} catch (SQLException e)
@@ -179,7 +190,9 @@ public class ClientDBManager implements ClientManager
 	}
 
 	@Override
-	public Client query(long client_id, Connection con) throws MBankException {
+	public Client query(long client_id) throws MBankException 
+	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE client_id = ?";
@@ -187,28 +200,29 @@ public class ClientDBManager implements ClientManager
 			ps.setLong(1, client_id);
 			ps.execute();
 			ResultSet rs = ps.getResultSet();	
-				if(rs.next()) //next() returns false if there are no more rows in the RS, this query should return a single result or not result
-				{	
-					Client c = new Client(rs.getLong(1), rs.getString(2), rs.getString(3), ClientType.getEnumFromString(rs.getString(4)), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
-					return c;
-				}
-				else
-				{
-					throw new MBankException("Could not find client with id[" + client_id + "]");
-				}
-			
+			if(rs.next()) //next() returns false if there are no more rows in the RS, this query should return a single result or not result
+			{	
+				Client c = new Client(rs.getLong(1), rs.getString(2), rs.getString(3), ClientType.getEnumFromString(rs.getString(4)), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+				MBank.getInstance().returnConnection(con);
+				return c;
+			}
+			else
+			{
+				throw new MBankException("Could not find client with id[" + client_id + "]");
+			}		
 		} catch (SQLException e)
 		{
 			throw new MBankException("Could not find client with id[" + client_id + "]");
 		}
-}
+	}
 
 	/**
 	 * @throws MBankException 
 	 * 
 	 */
 	@Override
-	public Client query(String username, Connection con) throws MBankException {
+	public Client query(String username) throws MBankException {
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE client_name = ?";
@@ -221,6 +235,7 @@ public class ClientDBManager implements ClientManager
 				if(rs.next()) //next() returns false if there are no more rows in the RS
 				{	
 					Client c = new Client(rs.getLong(1), rs.getString(2), rs.getString(3), ClientType.getEnumFromString(rs.getString(4)), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+					MBank.getInstance().returnConnection(con);
 					return c;
 				}
 			}
@@ -231,6 +246,7 @@ public class ClientDBManager implements ClientManager
 			throw new MBankException("Failed to retrieve client information from the database");
 			
 		}
+		MBank.getInstance().returnConnection(con);
 		return null;
 	}
 }

@@ -3,7 +3,6 @@
  */
 package mbank.database.managersImplTest;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import mbank.Util;
@@ -23,8 +22,6 @@ import org.junit.Test;
 public class PropertyDBManagerImplTest {
 	private static PropertyDBManager propertyDBManager;
 
-	private static Connection con;
-
 	private static Property property1;
 	private static Property property2;
 	
@@ -36,7 +33,7 @@ public class PropertyDBManagerImplTest {
 	public static void setUpBeforeClass() throws SQLException, MBankException {
 		
 		String url=Util.DB_URL;
-		con = DriverManager.getConnection(url);
+		DriverManager.getConnection(url);
 
 		propertyDBManager = new PropertyDBManager();
 		
@@ -58,8 +55,8 @@ public class PropertyDBManagerImplTest {
 		// test insert
 		try
 		{
-			propertyDBManager.insert(property1, con);
-			propertyDBManager.insert(property2, con);
+			propertyDBManager.insert(property1);
+			propertyDBManager.insert(property2);
 		}
 		
 		catch(MBankException e)
@@ -71,8 +68,8 @@ public class PropertyDBManagerImplTest {
 		// test query
 		try
 		{
-			propertyDBManager.query(property1.getProp_key(), con);
-			propertyDBManager.queryAllProperties(con);
+			propertyDBManager.query(property1.getProp_key());
+			propertyDBManager.queryAllProperties();
 		}
 		catch(MBankException e)
 		{
@@ -84,7 +81,7 @@ public class PropertyDBManagerImplTest {
 		try
 		{
 			property1.setProp_value("updatePropValue");
-			propertyDBManager.update(property1, con);
+			propertyDBManager.update(property1);
 		}
 		catch(MBankException e)
 		{
@@ -95,8 +92,8 @@ public class PropertyDBManagerImplTest {
 		// test delete
 		try
 		{
-			propertyDBManager.delete(property1, con);
-			propertyDBManager.delete(property2, con);
+			propertyDBManager.delete(property1);
+			propertyDBManager.delete(property2);
 		}
 		catch(MBankException e)
 		{

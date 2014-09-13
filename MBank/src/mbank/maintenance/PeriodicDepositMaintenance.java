@@ -72,7 +72,7 @@ public class PeriodicDepositMaintenance {
 			con = bankInstance.getConnection();
 			//Get all deposits and attempt to close them using the maintenance action (the closeDeposit method checks if the deposit has expired)
 			DepositManager depositManager = new DepositDBManager();
-			List<Deposit> depositsList = depositManager.queryAllDeposits(con);
+			List<Deposit> depositsList = depositManager.queryAllDeposits();
 			if (depositsList != null) {
 				Iterator<Deposit> it = depositsList.iterator();
 				while (it.hasNext()) {
@@ -107,16 +107,16 @@ public class PeriodicDepositMaintenance {
 		// close deposit if close date has passed
 		if (currDate.after(deposit.getClosing_date())) {
 			ClientManager clientManager = new ClientDBManager();
-			Client client = clientManager.query(deposit.getClient_id(), con);
+			Client client = clientManager.query(deposit.getClient_id());
 			// update client account with deposit balance
 			AccountManager accountManager = new AccountDBManager();
 			Account account = accountManager.queryAccountByClient(
-					client.getClient_id(), con);
+					client.getClient_id());
 			account.setBalance(account.getBalance()
 					+ deposit.getEstimated_balance());
-			accountManager.update(account, con);
+			accountManager.update(account);
 			// remove deposit
-			depositManager.delete(deposit, con);
+			depositManager.delete(deposit);
 		}
 		return false;
 	}

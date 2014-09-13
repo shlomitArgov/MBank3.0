@@ -3,7 +3,6 @@ package Main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -33,7 +32,6 @@ public class Main {
 	private static final String ADMIN_MENU_INSTRUCTION = "\n---AdminAction methods menu---\nEnter an option number: ";
 	private static final String CLIENT_MENU_INSTRUCTION = "\n---ClientAction methods menu---\nEnter an option number: ";
 
-	private static Connection con;
 	private static Client client;
 	
 	private static AdminAction adminAction;
@@ -44,15 +42,14 @@ public class Main {
 	public static void main(String[] args) throws MBankException {
 		MBank bank = MBank.getInstance();
 		
-		/* Create CLI action menu for testing */
-		con = bank.getConnection();
-		adminAction = new AdminAction(con, 1);
+		bank.getConnection();
+		adminAction = new AdminAction(1);
 		long clientId = adminAction.addNewClient("CLI Client" + System.currentTimeMillis(), new char[]{'p','w','d'}, "home", "mail@home.com", "555-555555", 1000000);
-		clientAction = new ClientAction(con, clientId);
+		clientAction = new ClientAction(clientId);
 		clientManager = new ClientDBManager();
 		try 
 		{
-			client = clientManager.query(clientAction.getClientId(), con);
+			client = clientManager.query(clientAction.getClientId());
 		} catch (MBankException e1) {
 			System.out.println(AN_ERROR_OCCURED + e1.getLocalizedMessage());
 			System.exit(1);
@@ -138,7 +135,6 @@ public class Main {
 	}
 
 	private static void handleUpdateSystemProperty() {
-		// TODO Auto-generated method stub
 		System.out.println("\n---System Properties---\n");
 		printEnumValuesAsMenuOptions(SystemProperties.class);
 		System.out.println("\nEnter the number of the system property you wish to update");
@@ -148,7 +144,7 @@ public class Main {
 		String selectedPropertyValue = null;
 		try 
 		{
-			selectedPropertyValue = propertyManager.query(selectedProperty.getPropertyName(), con).getProp_value();
+			selectedPropertyValue = propertyManager.query(selectedProperty.getPropertyName()).getProp_value();
 		} catch (MBankException e2) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e2.getLocalizedMessage());
@@ -330,7 +326,7 @@ public class Main {
 		ClientDBManager clientManager = new ClientDBManager();
 		Client tempClient = null;
 		try {
-			tempClient = clientManager.query(clientId, con);
+			tempClient = clientManager.query(clientId);
 		} catch (MBankException e) 
 		{
 			System.out.println("Failed to retrieve client \n" + e.getLocalizedMessage());
@@ -441,7 +437,7 @@ public class Main {
 		Account account = null;
 		try 
 		{
-			account = accountManager.queryAccountByClient(clientAction.getClientId(), con);
+			account = accountManager.queryAccountByClient(clientAction.getClientId());
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());

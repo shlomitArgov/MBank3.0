@@ -3,7 +3,6 @@
  */
 package mbank.actions;
 
-import java.sql.Connection;
 import java.util.List;
 
 import mbank.database.beans.Account;
@@ -32,7 +31,7 @@ import mbankExceptions.MBankException;
  */
 public abstract class Action
 {
-	private Connection con;
+//	private Connection con;
 	private long clientId;
 	private static final String TMP_STR = "tmpVal";
 	/**
@@ -42,9 +41,9 @@ public abstract class Action
 		return clientId;
 	}
 
-	public Action(Connection con, long id)
+	public Action(long id)
 	{
-		this.con = con;
+//		this.con = con;
 		this.clientId = id;
 	}
 	
@@ -60,7 +59,8 @@ public abstract class Action
 		ClientManager clientManager = new ClientDBManager();
 		/* get client from DB */
 		Client c = new Client(Long.parseLong(clientId), TMP_STR, TMP_STR, null, null, null, null, null);
-		c = clientManager.query(c, this.getCon());
+//		c = clientManager.query(c, this.getCon());
+		c = clientManager.query(c);
 		
 		/* update values */
 		updateValues(c, details);
@@ -71,7 +71,8 @@ public abstract class Action
 		/* execute update (commit to DB) */
 		try
 		{
-			clientManager.update(c, this.getCon());
+//			clientManager.update(c, this.getCon());
+			clientManager.update(c);
 		} catch (MBankException e)
 		{
 			throw e;
@@ -107,14 +108,16 @@ public abstract class Action
 			double regularDepositRate = 0;
 			try
 			{
-				regularDepositRate = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DEPOSIT_RATE.getPropertyName(), con).getProp_value());
+//				regularDepositRate = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DEPOSIT_RATE.getPropertyName(), con).getProp_value());
+				regularDepositRate = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DEPOSIT_RATE.getPropertyName()).getProp_value());
 
 			}catch (NumberFormatException e)
 			{
 				throw new MBankException("System property format error (expected double)\n" + e.getLocalizedMessage());
 			}
 			
-			double goldDepositRate = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DEPOSIT_RATE.getPropertyName(), con).getProp_value());
+//			double goldDepositRate = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DEPOSIT_RATE.getPropertyName(), con).getProp_value());
+			double goldDepositRate = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DEPOSIT_RATE.getPropertyName()).getProp_value());
 			
 			if (deposit > 0 && deposit <= regularDepositRate)
 			{
@@ -142,7 +145,8 @@ public abstract class Action
 		Client client = null;
 		try
 		{
-			client = clientManager.query(clientId, con);	
+//			client = clientManager.query(clientId, con);
+			client = clientManager.query(clientId);
 		}
 		catch(MBankException e)
 		{
@@ -165,7 +169,8 @@ public abstract class Action
 	protected Account queryClientAccount(long clientId) throws MBankException 
 	{
 		AccountManager accountManager = new AccountDBManager();
-		Account account = accountManager.queryAccountByClient(clientId, this.getCon());
+//		Account account = accountManager.queryAccountByClient(clientId, this.getCon());
+		Account account = accountManager.queryAccountByClient(clientId);
 		return account;
 	}
 
@@ -176,7 +181,8 @@ public abstract class Action
 
 	protected List<Deposit> queryClientDeposits(long clientId) throws MBankException {
 		DepositManager depositManager = new DepositDBManager();
-		List<Deposit> deposits = depositManager.queryDepositsByClient(clientId, this.getCon());
+//		List<Deposit> deposits = depositManager.queryDepositsByClient(clientId, this.getCon());
+		List<Deposit> deposits = depositManager.queryDepositsByClient(clientId);
 		return deposits;
 	}
 	
@@ -187,7 +193,8 @@ public abstract class Action
 
 	protected List<Activity> queryClientActivities(long clientId) throws MBankException {
 		ActivityManager activityManager = new ActivityDBManager();
-		List<Activity> clientActivities = activityManager.queryByClientId(clientId, this.getCon());
+//		List<Activity> clientActivities = activityManager.queryByClientId(clientId, this.getCon());
+		List<Activity> clientActivities = activityManager.queryByClientId(clientId);
 		return clientActivities;
 	}
 	public String viewSystemProperty(String propertyName) throws MBankException
@@ -195,7 +202,9 @@ public abstract class Action
 		if(SystemProperties.validateString(propertyName))
 		{
 			PropertyManager propertyManager = new PropertyDBManager();
-			Property prop = propertyManager.query(propertyName, this.getCon());	
+//			Property prop = propertyManager.query(propertyName, this.getCon());
+			Property prop = propertyManager.query(propertyName);	
+
 			return prop.getProp_value();
 		}
 		else
@@ -205,8 +214,8 @@ public abstract class Action
 	}
 	public abstract boolean logout();
 
-	public Connection getCon()
-	{
-		return con;
-	}
+//	public Connection getCon()
+//	{
+//		return con;
+//	}
 }

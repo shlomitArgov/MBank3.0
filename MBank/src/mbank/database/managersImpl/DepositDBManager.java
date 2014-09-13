@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mbank.MBank;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.DepositType;
 import mbank.database.managersInterface.DepositManager;
@@ -28,8 +29,9 @@ public class DepositDBManager implements DepositManager
 	}
 
 	@Override
-	public long insert(Deposit deposit, Connection con) throws MBankException
+	public long insert(Deposit deposit) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "INSERT INTO " + tableName
@@ -61,12 +63,14 @@ public class DepositDBManager implements DepositManager
 		} catch (SQLException e) {
 			throw new MBankException("Failed to retrieve new deposit ID");
 		}
+	MBank.getInstance().returnConnection(con);
 	return depositId;
 	}
 
 	@Override
-	public void update(Deposit deposit, Connection con) throws MBankException
+	public void update(Deposit deposit) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "UPDATE " + tableName + " SET ";
@@ -97,11 +101,13 @@ public class DepositDBManager implements DepositManager
 		{
 			throw new MBankException("Failed to update Deposit table");
 		}
+		MBank.getInstance().returnConnection(con);
 	}
 
 	@Override
-	public void delete(Deposit deposit, Connection con) throws MBankException
+	public void delete(Deposit deposit) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		String sql = "DELETE FROM " + tableName + " WHERE deposit_id = ?";
 		try
 		{
@@ -117,11 +123,13 @@ public class DepositDBManager implements DepositManager
 			throw new MBankException("Failed to delete deposit with id: "
 					+ deposit.getDeposit_id() + " from the Activity table");
 		}
+		MBank.getInstance().returnConnection(con);
 	}
 
 	@Override
-	public Deposit query(Deposit deposit, Connection con) throws MBankException
+	public Deposit query(Deposit deposit) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE deposit_id = ?";
@@ -141,6 +149,7 @@ public class DepositDBManager implements DepositManager
 							new java.util.Date(rs.getDate(6).getTime()),
 							new java.util.Date(rs.getDate(7).getTime()));
 				}
+				MBank.getInstance().returnConnection(con);
 				return d;
 			}
 			else
@@ -154,8 +163,9 @@ public class DepositDBManager implements DepositManager
 	}
 
 	@Override
-	public ArrayList<Deposit> queryDepositsByClient(long clientId, Connection con) throws MBankException
+	public ArrayList<Deposit> queryDepositsByClient(long clientId) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		String sql = "SELECT * FROM " + tableName + " Where client_id = ?";
 		try
 		{
@@ -178,18 +188,21 @@ public class DepositDBManager implements DepositManager
 			}
 			if(!(depositsList.isEmpty()))
 			{
+				MBank.getInstance().returnConnection(con);
 				return depositsList;	
 			}
 		} catch (SQLException | MBankException e)
 		{
 			throw new MBankException("Failed to query the " + tableName + " table");
 		} 		
+		MBank.getInstance().returnConnection(con);
 		return null;
 	}
 
 	@Override
-	public Deposit query(long depositId, Connection con) throws MBankException
+	public Deposit query(long depositId) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE deposit_id = ?";
@@ -207,6 +220,7 @@ public class DepositDBManager implements DepositManager
 									.getString(4)), rs.getDouble(5),
 							new java.util.Date(rs.getDate(6).getTime()),
 							new java.util.Date(rs.getDate(7).getTime()));
+					MBank.getInstance().returnConnection(con);
 					return d;
 				}
 			}
@@ -214,13 +228,15 @@ public class DepositDBManager implements DepositManager
 		{
 			throw new MBankException("Failed to query the " + tableName + " table");
 		}
+		MBank.getInstance().returnConnection(con);
 		return null;
 	
 	}
 
 	@Override
-	public List<Deposit> queryAllDeposits(Connection con) throws MBankException
+	public List<Deposit> queryAllDeposits() throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName;
@@ -242,6 +258,7 @@ public class DepositDBManager implements DepositManager
 					
 				}
 			}
+			MBank.getInstance().returnConnection(con);
 			return depositsList;
 		} catch (SQLException | MBankException e)
 		{

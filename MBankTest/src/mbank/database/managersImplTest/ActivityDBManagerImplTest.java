@@ -44,16 +44,16 @@ public class ActivityDBManagerImplTest {
 		client2 = new Client("user_name4", "password2", ClientType.REGULAR, "address2", "email2", "phone2", "comment2");
 		
 		/* Insert the clients into the DB */
-		client1.setClient_id(clientDBManager.insert(client1, con));
-		client2.setClient_id(clientDBManager.insert(client2, con));
+		client1.setClient_id(clientDBManager.insert(client1));
+		client2.setClient_id(clientDBManager.insert(client2));
 	}
 	
 	@After
 	//cleanup
 	public void tearDownAfterClass() throws Exception {
 		/* Clean clients from DB */
-		clientDBManager.delete(client1.getClient_id(), con);
-		clientDBManager.delete(client2.getClient_id(), con);
+		clientDBManager.delete(client1.getClient_id());
+		clientDBManager.delete(client2.getClient_id());
 	}
 	@Test
 	public void testActivityDBManager() {
@@ -62,8 +62,8 @@ public class ActivityDBManagerImplTest {
 		Activity activity2 = new Activity(client2.getClient_id(), 2000, new java.util.Date(System.currentTimeMillis()) , 0.3, ActivityType.REMOVE_CLIENT, "activity 2 description");
 		try
 		{
-			activity1.setActivityId(activityDBManager.insert(activity1, con));
-			activity2.setActivityId(activityDBManager.insert(activity2, con));
+			activity1.setActivityId(activityDBManager.insert(activity1));
+			activity2.setActivityId(activityDBManager.insert(activity2));
 		}
 		catch(MBankException e)
 		{
@@ -74,7 +74,7 @@ public class ActivityDBManagerImplTest {
 		// test query
 		try
 		{
-			activityDBManager.query(activity1.getActivityType(), activity1.getClient_id(), con);
+			activityDBManager.query(activity1.getActivityType(), activity1.getClient_id());
 		}
 		catch (MBankException e)
 		{
@@ -87,7 +87,7 @@ public class ActivityDBManagerImplTest {
 		ArrayList<Activity> activityList = null;
 		try
 		{
-			activityList = activityDBManager.queryAllActivities(con);
+			activityList = activityDBManager.queryAllActivities();
 		}
 		catch (MBankException e)
 		{
@@ -101,7 +101,7 @@ public class ActivityDBManagerImplTest {
 		activity1.setDescription(s);
 		try
 		{
-			activityDBManager.update(activity1, con);	
+			activityDBManager.update(activity1);	
 		}
 		catch(MBankException e)
 		{
@@ -112,8 +112,8 @@ public class ActivityDBManagerImplTest {
 		// test delete
 		try
 		{
-			activityDBManager.delete(activity1, con);
-			activityDBManager.delete(activity2, con);
+			activityDBManager.delete(activity1);
+			activityDBManager.delete(activity2);
 			
 		}
 		catch(MBankException e)

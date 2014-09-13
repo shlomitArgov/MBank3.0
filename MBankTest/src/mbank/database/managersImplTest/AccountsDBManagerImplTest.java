@@ -42,8 +42,8 @@ public class AccountsDBManagerImplTest {
 		client2 = new Client("user_name4", "password2", ClientType.REGULAR, "address2", "email2", "phone2", "comment2");
 		
 		/* Insert the clients into the DB */
-		client1.setClient_id(clientDBManager.insert(client1, con));
-		client2.setClient_id(clientDBManager.insert(client2, con));
+		client1.setClient_id(clientDBManager.insert(client1));
+		client2.setClient_id(clientDBManager.insert(client2));
 		
 		/* Create accounts that are associated with the test clients */
 		account1 = new Account(client1.getClient_id(), 5520.14, 10000, "account 1 comment");
@@ -54,8 +54,8 @@ public class AccountsDBManagerImplTest {
 	//cleanup
 	public void tearDownAfterClass() throws Exception {
 		/* Clean clients from DB */
-		clientDBManager.delete(client1.getClient_id(), con);
-		clientDBManager.delete(client2.getClient_id(), con);
+		clientDBManager.delete(client1.getClient_id());
+		clientDBManager.delete(client2.getClient_id());
 	}
 
 	@Test
@@ -64,8 +64,8 @@ public class AccountsDBManagerImplTest {
 		// test insert
 		try
 		{
-			accountDBManager.insert(account1, con);
-			accountDBManager.insert(account2, con);
+			accountDBManager.insert(account1);
+			accountDBManager.insert(account2);
 		}
 		catch (MBankException e)
 		{
@@ -76,8 +76,8 @@ public class AccountsDBManagerImplTest {
 		//test queryAccountByClient
 		try
 		{
-			account1 = accountDBManager.queryAccountByClient(client1.getClient_id(), con);
-			account2 = accountDBManager.queryAccountByClient(client2.getClient_id(), con);
+			account1 = accountDBManager.queryAccountByClient(client1.getClient_id());
+			account2 = accountDBManager.queryAccountByClient(client2.getClient_id());
 		}
 		
 		catch(MBankException e)
@@ -90,7 +90,7 @@ public class AccountsDBManagerImplTest {
 		Account temp = null;
 		try
 		{
-			temp = accountDBManager.query(account1, con);
+			temp = accountDBManager.query(account1);
 		}
 		catch(MBankException e)
 		{
@@ -105,7 +105,7 @@ public class AccountsDBManagerImplTest {
 	
 		try
 		{
-			accountDBManager.update(account1, con);
+			accountDBManager.update(account1);
 		}
 		catch(MBankException e)
 		{
@@ -116,8 +116,8 @@ public class AccountsDBManagerImplTest {
 		// test delete
 		try
 		{
-			accountDBManager.delete(account1, con);
-			accountDBManager.delete(account2, con);
+			accountDBManager.delete(account1);
+			accountDBManager.delete(account2);
 		}
 		catch(MBankException e)
 		{

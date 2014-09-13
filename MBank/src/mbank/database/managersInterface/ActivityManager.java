@@ -3,7 +3,6 @@
  */
 package mbank.database.managersInterface;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,15 +16,26 @@ import mbankExceptions.MBankException;
  */
 public interface ActivityManager
 {
-	long insert(Activity activity, Connection con) throws MBankException;
+//	long insert(Activity activity) throws MBankException;
+//
+//	void update(Activity activity) throws MBankException;
+//
+//	void delete(Activity activity) throws MBankException;
+//
+//	Activity query(ActivityType activityType,long clientId) throws MBankException;
+//	
+//	ArrayList<Activity> queryAllActivities(Connection con) throws MBankException;
+//
+//	List<Activity> queryByClientId(long clientId) throws MBankException;
+	long insert(Activity activity) throws MBankException;
 
-	void update(Activity activity, Connection con) throws MBankException;
+	void update(Activity activity) throws MBankException;
 
-	void delete(Activity activity, Connection con) throws MBankException;
+	void delete(Activity activity) throws MBankException;
 
-	Activity query(ActivityType activityType,long clientId, Connection con) throws MBankException;
+	Activity query(ActivityType activityType,long clientId) throws MBankException;
 	
-	ArrayList<Activity> queryAllActivities(Connection con) throws MBankException;
+	ArrayList<Activity> queryAllActivities() throws MBankException;
 
-	List<Activity> queryByClientId(long clientId, Connection con) throws MBankException;
+	List<Activity> queryByClientId(long clientId) throws MBankException;
 }

@@ -70,9 +70,8 @@ public class MBank
 	 */
 	public Action login(String username, String password) throws MBankException
 	{
-		Connection con = getInstance().getConnection();
 		ClientDBManager clientManager = new ClientDBManager();
-		Client client = clientManager.query(username, con);
+		Client client = clientManager.query(username);
 		if (client == null)
 		{
 			throw new MBankException("Unknown username-password combination");
@@ -82,15 +81,15 @@ public class MBank
 		{
 			//check if the user is an admin
 			PropertyManager propertyManager = new PropertyDBManager();
-			String adminPwd = propertyManager.query(SystemProperties.ADMIN_PASSWORD.getPropertyName(), con).getProp_value();
-			String adminUsername = propertyManager.query(SystemProperties.ADMIN_USERNAME.getPropertyName(), con).getProp_value();
+			String adminPwd = propertyManager.query(SystemProperties.ADMIN_PASSWORD.getPropertyName()).getProp_value();
+			String adminUsername = propertyManager.query(SystemProperties.ADMIN_USERNAME.getPropertyName()).getProp_value();
 			if (client.getPassword().equals(adminPwd) && client.getClient_name().equals(adminUsername))
 			{
-				return new AdminAction(con, client.getClient_id());
+				return new AdminAction(client.getClient_id());
 			}
 			else 
 			{
-				return new ClientAction(con, client.getClient_id());
+				return new ClientAction(client.getClient_id());
 			}
 
 		}

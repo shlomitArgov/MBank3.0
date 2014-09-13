@@ -3,7 +3,6 @@
  */
 package mbank.database.managersImplTest;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import org.junit.Test;
 public class ClientDBManagerImplTest {
 	private static ClientDBManager clientDBManager;
 
-	private static Connection con;
 	private static Client client1;
 	private static Client client2;
 	/**
@@ -37,7 +35,7 @@ public class ClientDBManagerImplTest {
 	public static void setUpBeforeClass() throws SQLException, MBankException {
 		
 		String url=Util.DB_URL;
-		con = DriverManager.getConnection(url);
+		DriverManager.getConnection(url);
 		
 		clientDBManager = new ClientDBManager();
 		
@@ -58,8 +56,8 @@ public class ClientDBManagerImplTest {
 		// test insert 
 		try
 		{
-			client1.setClient_id(clientDBManager.insert(client1, con));
-			client2.setClient_id(clientDBManager.insert(client2, con));
+			client1.setClient_id(clientDBManager.insert(client1));
+			client2.setClient_id(clientDBManager.insert(client2));
 			 
 		}
 		catch (MBankException e)
@@ -72,7 +70,7 @@ public class ClientDBManagerImplTest {
 		ArrayList<Client> clientsList = null ;
 		try
 		{
-		clientsList = clientDBManager.queryAllClients(con);
+		clientsList = clientDBManager.queryAllClients();
 		} catch(MBankException e){
 			e.printStackTrace();
 			Assert.fail("Failed to query all rows from Clients table\n" + e.getLocalizedMessage());
@@ -93,7 +91,7 @@ public class ClientDBManagerImplTest {
 		client1.setPassword("updatedPassword");
 		
 		try {
-			clientDBManager.update(client1, con);
+			clientDBManager.update(client1);
 		} catch (MBankException e) {
 			e.printStackTrace();
 			Assert.fail("Failed to update client\n" + e.getLocalizedMessage());
@@ -102,8 +100,8 @@ public class ClientDBManagerImplTest {
 		// test delete
 		try
 		{
-			clientDBManager.delete(client1.getClient_id(), con);
-			clientDBManager.delete(client2.getClient_id(), con);
+			clientDBManager.delete(client1.getClient_id());
+			clientDBManager.delete(client2.getClient_id());
 		}
 		catch(MBankException e)
 		{

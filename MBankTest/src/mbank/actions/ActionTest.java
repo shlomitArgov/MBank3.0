@@ -2,7 +2,6 @@ package mbank.actions;
 
 import static org.junit.Assert.fail;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +38,6 @@ import org.junit.Test;
  */
 public class ActionTest 
 {
-	private static Connection con;
 	private static ClientManager clientManager;
 	private static AccountManager accountManager;
 	private static Client client;
@@ -51,7 +49,7 @@ public class ActionTest
 	public static void setUpBeforeClass() throws Exception 
 	{
 		String url = Util.DB_URL;
-		con = DriverManager.getConnection(url);
+		DriverManager.getConnection(url);
 		
 		client = new Client("moshe1", "pass1", ClientType.REGULAR, "address1", "email1", "phone1", "comment1");
 		clientManager = new ClientDBManager();		
@@ -60,7 +58,7 @@ public class ActionTest
 		/* Insert the client into the DB */
 		try
 		{
-			client.setClient_id(clientManager.insert(client, con));	
+			client.setClient_id(clientManager.insert(client));	
 		}
 		catch(MBankException e)
 		{
@@ -75,7 +73,7 @@ public class ActionTest
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception 
 	{
-		clientManager.delete(client.getClient_id(), con);
+		clientManager.delete(client.getClient_id());
 	}
 
 	/**
@@ -89,7 +87,7 @@ public class ActionTest
 		
 		/* test that update succeeds */
 		TableValue[] details = new TableValue[]{new TableValue(ClientAttributes.ADDRESS.getAttribute(), "updated address"),new TableValue(ClientAttributes.PHONE.getAttribute(),"updated phone"),new TableValue(ClientAttributes.EMAIL.getAttribute(), "updated email")};
-		ClientAction clientAction = new ClientAction(con, client.getClient_id());
+		ClientAction clientAction = new ClientAction(client.getClient_id());
 		
 		try
 		{
@@ -122,7 +120,7 @@ public class ActionTest
 		Client tempClient = createAndInsertTempClient("testViewClientDetailsWithClientAction", ClientType.REGULAR);
 		
 		/* Create a clientAction for testing the viewClientDetails method */
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		Client clientDetails = null;
 		try
 		{
@@ -137,7 +135,7 @@ public class ActionTest
 		Assert.assertTrue("View client details action returned details that differ from the test client's details", tempClient.equals(clientDetails));
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
+		clientManager.delete(tempClient.getClient_id());
 	}
 	
 	/* Test view account details action */
@@ -151,7 +149,7 @@ public class ActionTest
 		Account tempAccount = createAndInsertTempAccount("testing viewAccountDetails", tempClient, 5000);
 				
 		/* Create a clientAction for testing the viewAccountDetails method */
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		Account accountDetails = null;
 		
 		try
@@ -167,8 +165,8 @@ public class ActionTest
 		Assert.assertTrue("View account details action returned details that differ from the test account's details", tempAccount.equals(accountDetails));
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
-		accountManager.delete(tempAccount, con);
+		clientManager.delete(tempClient.getClient_id());
+		accountManager.delete(tempAccount);
 	}
 	
 	/* Test view client deposits action */
@@ -188,8 +186,8 @@ public class ActionTest
 		Deposit tempDeposit2 = new Deposit(tempClient.getClient_id(), 100000, DepositType.LONG, 2000000, startDate, endDate);
 		try
 		{
-			tempDeposit1.setDeposit_id(depositManager.insert(tempDeposit1, con));
-			tempDeposit2.setDeposit_id(depositManager.insert(tempDeposit2, con));
+			tempDeposit1.setDeposit_id(depositManager.insert(tempDeposit1));
+			tempDeposit2.setDeposit_id(depositManager.insert(tempDeposit2));
 		} catch (MBankException e)
 		{
 			e.printStackTrace();
@@ -197,7 +195,7 @@ public class ActionTest
 		}
 		
 		/* Create a clientAction for testing the viewAccountDetails method */
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		
 		ArrayList<Deposit> deposits = (ArrayList<Deposit>) clientAction.viewClientDeposits(tempClient.getClient_id());
 		
@@ -209,9 +207,9 @@ public class ActionTest
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
-		depositManager.delete(tempDeposit1, con);
-		depositManager.delete(tempDeposit2, con);
+		clientManager.delete(tempClient.getClient_id());
+		depositManager.delete(tempDeposit1);
+		depositManager.delete(tempDeposit2);
 	}
 	
 	/* Test view client activities action */
@@ -222,7 +220,7 @@ public class ActionTest
 		Client tempClient = createAndInsertTempClient("tempClientForTestingViewClientActivities", ClientType.REGULAR);
 		
 		/* Create a clientAction for testing the viewAccountDetails method */
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		
 		Activity tempActivity1 = new Activity(tempClient.getClient_id(), 500, new Date(), 200, ActivityType.UPDATE_CLIENT_DETAILS, "TestingViewClientActivities");
 		Activity tempActivity2 = new Activity(tempClient.getClient_id(), 500, new Date(), 200, ActivityType.UPDATE_CLIENT_DETAILS, "TestingViewClientActivities");
@@ -231,8 +229,8 @@ public class ActionTest
 		ActivityDBManager activityManager =  new ActivityDBManager();
 		try
 		{
-			tempActivity1.setActivityId(activityManager.insert(tempActivity1, con));
-			tempActivity2.setActivityId(activityManager.insert(tempActivity2, con));	
+			tempActivity1.setActivityId(activityManager.insert(tempActivity1));
+			tempActivity2.setActivityId(activityManager.insert(tempActivity2));	
 		} catch (MBankException e)
 		{
 			e.printStackTrace();
@@ -249,9 +247,9 @@ public class ActionTest
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
-		activityManager.delete(tempActivity1, con);
-		activityManager.delete(tempActivity2, con);
+		clientManager.delete(tempClient.getClient_id());
+		activityManager.delete(tempActivity1);
+		activityManager.delete(tempActivity2);
 	}
 
 	/* Test view system property activities action */
@@ -259,7 +257,7 @@ public class ActionTest
 	public void testViewSystemProperty() throws MBankException 
 	{
 		/* Create a clientAction for testing the viewSystemProperty method */
-		ClientAction clientAction = new ClientAction(con, client.getClient_id());
+		ClientAction clientAction = new ClientAction(client.getClient_id());
 		String systemProperty = null;
 		try
 		{
@@ -288,7 +286,7 @@ public class ActionTest
 		/* Insert the temp client into the DB */
 		try
 		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+			tempClient.setClient_id(clientManager.insert(tempClient));	
 		}
 		catch(MBankException e)
 		{
@@ -308,7 +306,7 @@ public class ActionTest
 		/* Insert the temp account into the DB */
 		try
 		{
-			tempAccount.setAccount_id(accountManager.insert(tempAccount, con));	
+			tempAccount.setAccount_id(accountManager.insert(tempAccount));	
 		}
 		catch(MBankException e)
 		{

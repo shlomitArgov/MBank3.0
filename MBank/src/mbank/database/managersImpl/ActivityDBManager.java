@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mbank.MBank;
 import mbank.database.beans.Activity;
 import mbank.database.beans.enums.ActivityType;
 import mbank.database.managersInterface.ActivityManager;
@@ -28,8 +29,9 @@ public class ActivityDBManager implements ActivityManager
 	}
 	
 	@Override
-	public long insert(Activity activity, Connection con) throws MBankException
+	public long insert(Activity activity) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "INSERT INTO " + tableName
@@ -59,12 +61,14 @@ public class ActivityDBManager implements ActivityManager
 		} catch (SQLException e) {
 			throw new MBankException("Failed to retrieve new activity ID");
 		}
+	MBank.getInstance().returnConnection(con);
 	return activityId;
 	}
 
 	@Override
-	public void update(Activity activity, Connection con) throws MBankException
-	{
+	public void update(Activity activity) throws MBankException
+	{		
+		Connection con = MBank.getInstance().getConnection();
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
 			sql += "client_id = ?, ";
@@ -86,6 +90,7 @@ public class ActivityDBManager implements ActivityManager
 			ps.setString(6, activity.getDescription());
 			ps.setLong(7, activity.getId());
 			ps.execute();
+			MBank.getInstance().returnConnection(con);
 			if (!(ps.getUpdateCount() > 0))
 			{
 				throw new MBankException();
@@ -98,14 +103,16 @@ public class ActivityDBManager implements ActivityManager
 	}
 
 	@Override
-	public void delete(Activity activity, Connection con) throws MBankException
+	public void delete(Activity activity) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		String sql = "DELETE FROM " + tableName + " WHERE activity_id = ?";
 		try
 		{
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setLong(1, activity.getId());
 			ps.execute();
+			MBank.getInstance().returnConnection(con);
 			if(!(ps.getUpdateCount() > 0))
 			{
 				throw new MBankException();
@@ -118,8 +125,9 @@ public class ActivityDBManager implements ActivityManager
 	}
 	
 	@Override
-	public Activity query(ActivityType activityType, long clientId, Connection con) throws MBankException
+	public Activity query(ActivityType activityType, long clientId) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE client_id = ? AND  activity_type = ?";
@@ -136,6 +144,7 @@ public class ActivityDBManager implements ActivityManager
 					a = new Activity(rs.getLong(1), rs.getInt(2), rs.getDouble(3), new java.util.Date(rs.getDate(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
 					
 				}
+				MBank.getInstance().returnConnection(con);
 				return a;
 			}
 			else
@@ -152,8 +161,9 @@ public class ActivityDBManager implements ActivityManager
 	 * @see mbank.database.managersInterface.ActivityManager#queryAllActivities(java.sql.Connection)
 	 */
 	@Override
-	public ArrayList<Activity> queryAllActivities(Connection con) throws MBankException
+	public ArrayList<Activity> queryAllActivities() throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		String sql = "SELECT * FROM " + tableName;
 		try
 		{
@@ -173,7 +183,7 @@ public class ActivityDBManager implements ActivityManager
 				Activity activity = new Activity(id, client_id, amount, activity_date, commission, activityType, description);
 				activitiesList.add(activity);
 			}
-			
+			MBank.getInstance().returnConnection(con);
 			return activitiesList;
 			
 		} catch (SQLException e)
@@ -183,7 +193,9 @@ public class ActivityDBManager implements ActivityManager
 	}
 
 	@Override
-	public List<Activity> queryByClientId(long clientId, Connection con) throws MBankException{
+	public List<Activity> queryByClientId(long clientId) throws MBankException
+	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE client_id = ?";
@@ -199,6 +211,7 @@ public class ActivityDBManager implements ActivityManager
 					Activity a = new Activity(rs.getLong(1), rs.getLong(2), rs.getDouble(3), new java.util.Date(rs.getDate(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
 					clientActivities.add(a);
 				}
+				MBank.getInstance().returnConnection(con);
 				return clientActivities;
 			}
 			else

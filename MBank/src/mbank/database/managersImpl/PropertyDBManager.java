@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import mbank.MBank;
 import mbank.database.beans.Property;
 import mbank.database.managersInterface.PropertyManager;
 import mbankExceptions.MBankException;
@@ -26,8 +27,9 @@ public class PropertyDBManager implements PropertyManager
 	}
 
 	@Override
-	public void insert(Property property, Connection con) throws MBankException
+	public void insert(Property property) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "INSERT INTO " + tableName + " (prop_key, prop_value) VALUES (?, ?)";
@@ -43,12 +45,13 @@ public class PropertyDBManager implements PropertyManager
 		{
 			throw new MBankException("Failed to insert into " + tableName + " table");
 		}
+		MBank.getInstance().returnConnection(con);
 	}
 
 	@Override
-	public void update(Property property, Connection con) throws MBankException
+	public void update(Property property) throws MBankException
 	{
-
+		Connection con = MBank.getInstance().getConnection();
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
 			sql += "prop_value = ? ";
@@ -64,12 +67,14 @@ public class PropertyDBManager implements PropertyManager
 		{
 			throw new MBankException("Failed to update '" + tableName + "' table\n" + e.getLocalizedMessage());
 		}
+		MBank.getInstance().returnConnection(con);
 	}
 
 
 	@Override
-	public void delete(Property property, Connection con) throws MBankException
+	public void delete(Property property) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		String sql = "DELETE FROM " + tableName + " WHERE prop_key = ?";
 		try
 		{
@@ -85,11 +90,13 @@ public class PropertyDBManager implements PropertyManager
 		{
 			throw new MBankException("Failed to delete property: "+ property.getProp_key() + " from the " + tableName + "table");
 		}
+		MBank.getInstance().returnConnection(con);
 	}
 
 	@Override
-	public Property query(String propertyName, Connection con) throws MBankException
+	public Property query(String propertyName) throws MBankException
 	{
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName + " WHERE prop_key = ?";
@@ -102,6 +109,7 @@ public class PropertyDBManager implements PropertyManager
 				if(rs.next()) //next() returns false if there are no more rows in the RS
 				{	
 					Property p = new Property(rs.getString(1), rs.getString(2));
+					MBank.getInstance().returnConnection(con);
 					return p;
 				}
 			}
@@ -110,11 +118,13 @@ public class PropertyDBManager implements PropertyManager
 			System.err.println("Failed to query the "  + tableName + "table");
 			e.printStackTrace();
 		}
+		MBank.getInstance().returnConnection(con);
 		return null;
 	}
 
 	@Override
-	public ArrayList<Property> queryAllProperties(Connection con) throws MBankException {
+	public ArrayList<Property> queryAllProperties() throws MBankException {
+		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "SELECT * FROM " + tableName;
@@ -130,6 +140,7 @@ public class PropertyDBManager implements PropertyManager
 					Property p = new Property(rs.getString(1), rs.getString(2));
 					propertiesList.add(p);
 				}
+				MBank.getInstance().returnConnection(con);
 				return propertiesList;
 			}			
 		} catch (SQLException e)
@@ -137,6 +148,7 @@ public class PropertyDBManager implements PropertyManager
 			System.err.println("Failed to query the " + tableName + " table");
 			e.printStackTrace();
 		}
+		MBank.getInstance().returnConnection(con);
 		return null;
 	}
 }

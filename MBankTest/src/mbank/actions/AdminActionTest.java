@@ -51,7 +51,7 @@ public class AdminActionTest {
 	public static void setUpBeforeClass() throws Exception {
 		String url = Util.DB_URL;
 		con = DriverManager.getConnection(url);
-		adminAction = new AdminAction(con, 1);
+		adminAction = new AdminAction(1);
 		clientManager = new ClientDBManager();
 		activityManager = new ActivityDBManager();
 		accountManager = new AccountDBManager();
@@ -60,7 +60,7 @@ public class AdminActionTest {
 		
 		try
 		{
-			client.setClient_id(clientManager.insert(client, con));	
+			client.setClient_id(clientManager.insert(client));	
 		}
 		catch(MBankException e)
 		{
@@ -72,7 +72,7 @@ public class AdminActionTest {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		clientManager.delete(client.getClient_id(), con);
+		clientManager.delete(client.getClient_id());
 	}
 	
 	@Test 
@@ -98,7 +98,7 @@ public class AdminActionTest {
 		/* Check that the client details have been updated */
 		Client c = null;
 		try {
-			c = clientManager.query(tempClient.getClient_id(), con);
+			c = clientManager.query(tempClient.getClient_id());
 		} catch (MBankException e) {
 			e.printStackTrace();
 		}
@@ -108,7 +108,7 @@ public class AdminActionTest {
 		&& c.getType().getTypeStringValue().equalsIgnoreCase(details[3].getColumnValue()));
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
+		clientManager.delete(tempClient.getClient_id());
 	}
 	
 
@@ -150,8 +150,8 @@ public class AdminActionTest {
 		
 		/* cleanup */
 		try {
-			clientManager.delete(client1.getClient_id(), con);
-			clientManager.delete(client2.getClient_id(), con);
+			clientManager.delete(client1.getClient_id());
+			clientManager.delete(client2.getClient_id());
 		} catch (MBankException e) {
 			e.printStackTrace();
 		}
@@ -170,11 +170,11 @@ public class AdminActionTest {
 		Deposit testDeposit2 = new Deposit(tempClient.getClient_id(), 800.0, DepositType.LONG, 5000L, new java.util.Date(System.currentTimeMillis()), new java.util.Date(System.currentTimeMillis() + 999999));
 
 		AccountManager accountManager = new AccountDBManager();
-		testAccount.setAccount_id(accountManager.insert(testAccount, con));
+		testAccount.setAccount_id(accountManager.insert(testAccount));
 	
 		DepositManager depositManager = new DepositDBManager();
-		testDeposit1.setDeposit_id(depositManager.insert(testDeposit1, con));
-		testDeposit2.setDeposit_id(depositManager.insert(testDeposit2, con));
+		testDeposit1.setDeposit_id(depositManager.insert(testDeposit1));
+		testDeposit2.setDeposit_id(depositManager.insert(testDeposit2));
 
 		try
 		{
@@ -186,14 +186,14 @@ public class AdminActionTest {
 			Assert.fail("Failed to remove client from MBank database");
 		}
 		/* Make sure the client was removed from the clients table */
-		Assert.assertTrue("Client was not removed from Clients table", clientManager.query(tempClient, con) == null);
+		Assert.assertTrue("Client was not removed from Clients table", clientManager.query(tempClient) == null);
 		/* Make sure the activity table was updated */
-		Activity activity = activityManager.query(ActivityType.REMOVE_CLIENT, tempClient.getClient_id(), con);
+		Activity activity = activityManager.query(ActivityType.REMOVE_CLIENT, tempClient.getClient_id());
 		Assert.assertTrue("Activity table was not updated regarding removal of a client", activity.getActivityType().equals(ActivityType.REMOVE_CLIENT));
 		/* Make sure the client's account was removed along with the client */
-		Assert.assertTrue("Client accounts were not removed", accountManager.queryAccountByClient(tempClient.getClient_id(), con) == null);
+		Assert.assertTrue("Client accounts were not removed", accountManager.queryAccountByClient(tempClient.getClient_id()) == null);
 		/* Make sure the client's deposits were removed along with the client */
-		Assert.assertTrue("Client deposits were not removed", depositManager.queryDepositsByClient(tempClient.getClient_id(), con) == null);
+		Assert.assertTrue("Client deposits were not removed", depositManager.queryDepositsByClient(tempClient.getClient_id()) == null);
 	
 	}
 	
@@ -216,8 +216,8 @@ public class AdminActionTest {
 		
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
-		accountManager.delete(account, con);
+		clientManager.delete(tempClient.getClient_id());
+		accountManager.delete(account);
 	}
 	
 	@Test
@@ -240,10 +240,10 @@ public class AdminActionTest {
 			Assert.fail("Failed to remove account");
 		}
 		
-		Assert.assertNull("Failed to remove account", accountManager.queryAccountByClient(tempClient.getClient_id(), con));
+		Assert.assertNull("Failed to remove account", accountManager.queryAccountByClient(tempClient.getClient_id()));
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
+		clientManager.delete(tempClient.getClient_id());
 	}
 	
 
@@ -401,7 +401,7 @@ public class AdminActionTest {
 		String OriginalPropVal = null;
 		try
 		{
-			OriginalPropVal = propertyManager.query(SystemProperties.GOLD_CREDIT_LIMIT.getPropertyName(), con).getProp_value();	
+			OriginalPropVal = propertyManager.query(SystemProperties.GOLD_CREDIT_LIMIT.getPropertyName()).getProp_value();	
 		}
 		catch (MBankException e)
 		{
@@ -445,7 +445,7 @@ public class AdminActionTest {
 		/* Insert the temp client into the DB */
 		try
 		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+			tempClient.setClient_id(clientManager.insert(tempClient));	
 		}
 		catch(MBankException e)
 		{
@@ -466,7 +466,7 @@ public class AdminActionTest {
 		/* Insert the temp account into the DB */
 		try
 		{
-			tempAccount.setAccount_id(accountManager.insert(tempAccount, con));	
+			tempAccount.setAccount_id(accountManager.insert(tempAccount));	
 		}
 		catch(MBankException e)
 		{

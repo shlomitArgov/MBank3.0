@@ -2,7 +2,6 @@ package mbank.actions;
 
 import static org.junit.Assert.*;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ClientActionTest {
-	private static Connection con;
 	private static Client client;
 	private static ClientDBManager clientManager;
 	private static AccountDBManager accountManager;
@@ -38,7 +36,7 @@ public class ClientActionTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		String url = Util.DB_URL;
-		con = DriverManager.getConnection(url);
+		DriverManager.getConnection(url);
 		
 		clientManager = new ClientDBManager();
 		activityManager = new ActivityDBManager();
@@ -57,7 +55,7 @@ public class ClientActionTest {
 	public void testViewClientDetails() throws MBankException 
 	{
 		Client tempClient = createAndInsertTempClient("testViewClientDetails", ClientType.REGULAR);
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		
 		try 
 		{
@@ -79,7 +77,7 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
+		clientManager.delete(tempClient.getClient_id());
 	}
 
 	@Test
@@ -88,7 +86,7 @@ public class ClientActionTest {
 		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
 		Account tempAccount = createAndInsertTempAccount("testViewAccountDetailsAccount", tempClient, 1000);
 		
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 
 		try 
 		{
@@ -109,8 +107,8 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
-		accountManager.delete(tempAccount, con);
+		clientManager.delete(tempClient.getClient_id());
+		accountManager.delete(tempAccount);
 	}
 
 	@Test
@@ -121,7 +119,7 @@ public class ClientActionTest {
 		List<Deposit> tempDeposits =  CreateTempDeposits(tempClient.getClient_id(), "testViewClientDeposits", DepositType.SHORT);
 
 		List<Deposit> deposits = null;
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		try
 		{
 			deposits = clientAction.viewClientDeposits(tempClient.getClient_id());
@@ -145,7 +143,7 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
+		clientManager.delete(tempClient.getClient_id());
 		for (int i = 0; i < deposits.size() ; i++)
 		{
 			deposits.remove(i);
@@ -158,7 +156,7 @@ public class ClientActionTest {
 		/* Populate the Activity table with several activities */
 		List<Activity> tempActivities =  CreateTempActivities(tempClient.getClient_id(), "testViewClientActivities");
 
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 
 		List<Activity> activities = null;
 		try
@@ -184,7 +182,7 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
+		clientManager.delete(tempClient.getClient_id());
 		for (int i = 0; i < activities.size() ; i++)
 		{
 			activities.remove(i);
@@ -196,7 +194,7 @@ public class ClientActionTest {
 		/* Create a client and an account for this test and associate the account with the client */
 		Client tempClient = createAndInsertTempClient("testWithdrowFromAccountClient", ClientType.REGULAR);
 		Account tempAccount = createAndInsertTempAccount("testWithdrowFromAccount", tempClient, 50000);
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 
 		try
 		{
@@ -229,8 +227,8 @@ public class ClientActionTest {
 		}
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
-		accountManager.delete(tempAccount, con);
+		clientManager.delete(tempClient.getClient_id());
+		accountManager.delete(tempAccount);
 	}
 
 	@Test
@@ -238,7 +236,7 @@ public class ClientActionTest {
 		/* Create a client and an account for this test and associate the account with the client */
 		Client tempClient = createAndInsertTempClient("testDepositToAccountClient", ClientType.REGULAR);
 		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		
 		/* deposit amount that will not change the client type */
 		try 
@@ -274,8 +272,8 @@ public class ClientActionTest {
 		}		
 		
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
-		accountManager.delete(tempAccount, con);
+		clientManager.delete(tempClient.getClient_id());
+		accountManager.delete(tempAccount);
 	}
 
 	@Test
@@ -283,7 +281,7 @@ public class ClientActionTest {
 	{
 		/* Create a client this test */
 		Client tempClient = createAndInsertTempClient("testCreateNewDepositClient", ClientType.REGULAR);
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		ArrayList<Deposit> deposits = new ArrayList<>();
 		/* create short term deposit */
 		try 
@@ -334,7 +332,7 @@ public class ClientActionTest {
 		/* cleanup */
 		while (deposits.size() > 0)
 		{
-			depositManager.delete(deposits.get(deposits.size() -1), con);
+			depositManager.delete(deposits.get(deposits.size() -1));
 			deposits.remove(deposits.size() -1);
 		}
 	}
@@ -345,10 +343,10 @@ public class ClientActionTest {
 		Client tempClient = createAndInsertTempClient("testCreateNewDepositClient", ClientType.REGULAR);
 		@SuppressWarnings("unused") // need to add account for the deposit money to be transfered to
 		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
-		ClientAction clientAction = new ClientAction(con, tempClient.getClient_id());
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		
 		Deposit tempDeposit = new Deposit(tempClient.getClient_id(), 10000, DepositType.LONG, 11000, new Date(), new Date(System.currentTimeMillis() + 1000*3600*24*380));
-		tempDeposit.setDeposit_id(depositManager.insert(tempDeposit, con));
+		tempDeposit.setDeposit_id(depositManager.insert(tempDeposit));
 		
 		try 
 		{
@@ -358,7 +356,7 @@ public class ClientActionTest {
 			Assert.fail("Failed to pre-open long-term deposit");
 		}
 		/* cleanup */
-		clientManager.delete(tempClient.getClient_id(), con);
+		clientManager.delete(tempClient.getClient_id());
 	}
 
 	private static Client createAndInsertTempClient(String name, ClientType type)
@@ -375,7 +373,7 @@ public class ClientActionTest {
 		/* Insert the temp client into the DB */
 		try
 		{
-			tempClient.setClient_id(clientManager.insert(tempClient, con));	
+			tempClient.setClient_id(clientManager.insert(tempClient));	
 		}
 		catch(MBankException e)
 		{
@@ -395,7 +393,7 @@ public class ClientActionTest {
 		/* Insert the temp account into the DB */
 		try
 		{
-			tempAccount.setAccount_id(accountManager.insert(tempAccount, con));	
+			tempAccount.setAccount_id(accountManager.insert(tempAccount));	
 		}
 		catch(MBankException e)
 		{
@@ -414,7 +412,7 @@ public class ClientActionTest {
 			activity = new Activity(client_id, i*100, new Date(), i*0.2, ActivityType.UPDATE_CLIENT_DETAILS, description + i);
 			try
 			{
-				activity.setActivityId(activityManager.insert(activity, con));
+				activity.setActivityId(activityManager.insert(activity));
 			} catch (MBankException e)
 			{
 				e.printStackTrace();
@@ -431,7 +429,7 @@ public class ClientActionTest {
 			deposit = new Deposit(client_id, 100*i, type, i*1000, new Date(), new Date(System.currentTimeMillis() + 1000*3600*24*2));
 			try
 			{
-				deposit.setDeposit_id(depositManager.insert(deposit, con));
+				deposit.setDeposit_id(depositManager.insert(deposit));
 			} catch (MBankException e)
 			{
 				e.printStackTrace();

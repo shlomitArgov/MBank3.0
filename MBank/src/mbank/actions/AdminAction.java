@@ -3,7 +3,6 @@
  */
 package mbank.actions;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -40,9 +39,9 @@ import mbankExceptions.MBankException;
  */
 public class AdminAction extends Action
 {
-	public AdminAction(Connection con, long adminId)
+	public AdminAction(long adminId)
 	{
-		super(con, adminId);
+		super(adminId);
 	}
 
 	/* (non-Javadoc)
@@ -126,12 +125,12 @@ public class AdminAction extends Action
 		boolean addClientSucceeded = false;
 		try
 		{
-			client.setClient_id(clientManager.insert(client, this.getCon()));
+			client.setClient_id(clientManager.insert(client));
 			/* If we reached this point then the client was added successfully */
 			addClientSucceeded = true;
 			ActivityDBManager activityManager = new ActivityDBManager();
 			Activity createNewClientActivity = new Activity(client.getClient_id(), deposit, new Date(), 0, ActivityType.ADD_NEW_CLIENT, "Added new client with id [" + client.getClient_id() + "]");
-			activityManager.insert(createNewClientActivity, this.getCon());
+			activityManager.insert(createNewClientActivity);
 		}
 		catch(MBankException e)
 		{	/* Failed to add new client */
@@ -146,7 +145,7 @@ public class AdminAction extends Action
 			catch(MBankException e)
 			{
 				/* Delete the client since an account could not be created for it */
-				clientManager.delete(client.getClient_id(), this.getCon());
+				clientManager.delete(client.getClient_id());
 				throw new MBankException("\nFailed to add an for the new client\nClient has not been added");
 			}
 		}
@@ -163,7 +162,7 @@ private void testUniqueClientnamePasswordCombination(
 			ClientManager clientManager, String clientName,
 			String clientPassword) throws MBankException
 	{
-		ArrayList<Client> clientsList = clientManager.queryAllClients(this.getCon());
+		ArrayList<Client> clientsList = clientManager.queryAllClients();
 		Iterator<Client> clientIterator = clientsList.iterator();
 		while (clientIterator.hasNext())
 		{
@@ -186,7 +185,7 @@ private void testUniqueClientnamePasswordCombination(
 		//insert account into DB
 		AccountManager accountManager = new AccountDBManager();
 		try{
-			account.setAccount_id(accountManager.insert(account, this.getCon()));
+			account.setAccount_id(accountManager.insert(account));
 		}
 		catch(MBankException e)
 		{
@@ -200,9 +199,9 @@ private void testUniqueClientnamePasswordCombination(
 	private double getCreditLimit(ClientType clientType) throws MBankException
 	{
 		PropertyManager propertyManager = new PropertyDBManager();
-		double regularCreditLimit = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_CREDIT_LIMIT.getPropertyName(), this.getCon()).getProp_value());
-		double goldCreditLimit = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_CREDIT_LIMIT.getPropertyName(), this.getCon()).getProp_value());
-		double platinumCreditLimit = Double.parseDouble(propertyManager.query(SystemProperties.PLATINUM_CREDIT_LIMIT.getPropertyName(), this.getCon()).getProp_value());
+		double regularCreditLimit = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_CREDIT_LIMIT.getPropertyName()).getProp_value());
+		double goldCreditLimit = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_CREDIT_LIMIT.getPropertyName()).getProp_value());
+		double platinumCreditLimit = Double.parseDouble(propertyManager.query(SystemProperties.PLATINUM_CREDIT_LIMIT.getPropertyName()).getProp_value());
 		switch (clientType)
 		{
 		case REGULAR:
@@ -231,7 +230,7 @@ private void testUniqueClientnamePasswordCombination(
 		//remove client
 		try
 		{
-			clientManager.delete(client.getClient_id(), this.getCon());			
+			clientManager.delete(client.getClient_id());			
 		}
 		catch (MBankException e)
 		{
@@ -241,12 +240,12 @@ private void testUniqueClientnamePasswordCombination(
 		/* If removal was successful - update the activity table */
 		ActivityManager activityManager = new ActivityDBManager();
 		Activity deleteClientActivity = new Activity(client.getClient_id(), 0, new java.util.Date(System.currentTimeMillis()), 0, ActivityType.REMOVE_CLIENT, removeClientComment);
-		activityManager.insert(deleteClientActivity, this.getCon());
+		activityManager.insert(deleteClientActivity);
 		
 		// remove the client's account
 		AccountDBManager accountManager = new AccountDBManager();
 		double accountCommission = 0;
-		Account clientAccount = accountManager.queryAccountByClient(client.getClient_id(), this.getCon());
+		Account clientAccount = accountManager.queryAccountByClient(client.getClient_id());
 		if(clientAccount.getBalance() < 0) // commission in case the client owes the bank money is equal to the amount the user owes
 		{
 			accountCommission = clientAccount.getBalance();
@@ -262,7 +261,7 @@ private void testUniqueClientnamePasswordCombination(
 		double depositCommission = 0;
 		
 		//remove client deposits if any exist
-		ArrayList<Deposit> clientDeposits = depositManager.queryDepositsByClient(client.getClient_id(), this.getCon());
+		ArrayList<Deposit> clientDeposits = depositManager.queryDepositsByClient(client.getClient_id());
 		if (clientDeposits != null)
 		{
 			for (Iterator<Deposit> depositIterator = clientDeposits.iterator(); depositIterator.hasNext();)
@@ -275,17 +274,17 @@ private void testUniqueClientnamePasswordCombination(
 					{
 					case REGULAR: 
 					{
-						depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
+						depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.REGULAR_DEPOSIT_COMMISSION.getPropertyName()).getProp_value());
 						break;
 					}
 					case GOLD: 
 					{
-						depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
+						depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.GOLD_DEPOSIT_COMMISSION.getPropertyName()).getProp_value());
 						break;
 					}	
 					case PLATINUM: 
 					{
-						depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.PLATINUM_DEPOSIT_COMMISSION.getPropertyName(), this.getCon()).getProp_value());
+						depositCommission = Double.parseDouble(propertyManager.query(SystemProperties.PLATINUM_DEPOSIT_COMMISSION.getPropertyName()).getProp_value());
 						break;
 					}
 					}
@@ -305,7 +304,7 @@ private void testUniqueClientnamePasswordCombination(
 			// remove deposit
 			try
 			{
-				depositManager.delete(d, this.getCon());
+				depositManager.delete(d);
 			
 			} catch (MBankException e)
 			{
@@ -313,7 +312,7 @@ private void testUniqueClientnamePasswordCombination(
 			}
 			/* If removal was successful - update the activity table */
 			Activity deleteDepositActivity = new Activity(client.getClient_id(), d.getBalance(), new java.util.Date(System.currentTimeMillis()), chargeAmount, ActivityType.REMOVE_DEPOSIT, removeDepositComment );
-			activityManager.insert(deleteDepositActivity, this.getCon());
+			activityManager.insert(deleteDepositActivity);
 			}
 		}
 
@@ -322,7 +321,7 @@ private void testUniqueClientnamePasswordCombination(
 	public void RemoveAccount(long clientId, double commission) throws MBankException
 	{
 		AccountManager accountManager = new AccountDBManager();
-		Account account = accountManager.queryAccountByClient(clientId, this.getCon());
+		Account account = accountManager.queryAccountByClient(clientId);
 		double accountBalance = account.getBalance();
 		if(accountBalance < 0)//the client owes the bank money
 		{
@@ -330,13 +329,13 @@ private void testUniqueClientnamePasswordCombination(
 			Activity activity = new Activity(clientId, accountBalance, new java.util.Date(System.currentTimeMillis()), commission * accountBalance * (-1), ActivityType.REMOVE_CLIENT,"Commission charged due to negative balance account upon client removal(client ID: " + clientId + ")");
 			try
 			{
-				activityManager.insert(activity, this.getCon());
+				activityManager.insert(activity);
 			}catch (MBankException e)
 			{
 				throw new MBankException("Failed to insert activity for account[" + account.getAccount_id() + "]  removal");
 			}
 		}
-		accountManager.delete(account.getAccount_id(), this.getCon());
+		accountManager.delete(account.getAccount_id());
 	}
 	/**
 	 *
@@ -346,7 +345,7 @@ private void testUniqueClientnamePasswordCombination(
 	public List<Client> ViewAllClientDetails() throws MBankException
 	{
 		ClientManager clientManager = new ClientDBManager();
-		List<Client> clients = clientManager.queryAllClients(this.getCon());
+		List<Client> clients = clientManager.queryAllClients();
 //		Iterator<Client> clientsIt = clients.iterator();
 //		String string = "";
 //		while(clientsIt.hasNext())
@@ -361,7 +360,7 @@ private void testUniqueClientnamePasswordCombination(
 	public List<Account> viewAllAccountsDetails() throws MBankException
 	{
 		AccountManager accountManager = new AccountDBManager();
-		List<Account> accounts = accountManager.queryAllAccounts(this.getCon());
+		List<Account> accounts = accountManager.queryAllAccounts();
 //		return Arrays.toString(accounts.toArray());
 		return accounts;
 	}
@@ -369,7 +368,7 @@ private void testUniqueClientnamePasswordCombination(
 	public List<Deposit> viewAllDepositsDetails() throws MBankException
 	{
 		DepositManager depositManager = new DepositDBManager();
-		List<Deposit> deposits = depositManager.queryAllDeposits(this.getCon());
+		List<Deposit> deposits = depositManager.queryAllDeposits();
 //		return Arrays.toString(deposits.toArray());
 		return deposits;
 	}
@@ -377,7 +376,7 @@ private void testUniqueClientnamePasswordCombination(
 	public List<Activity> viewAllActivitiesDetails() throws MBankException
 	{
 		ActivityManager activityManager = new ActivityDBManager();
-		List<Activity> activities = activityManager.queryAllActivities(this.getCon());
+		List<Activity> activities = activityManager.queryAllActivities();
 //		return Arrays.toString(activities.toArray());
 		return activities;
 	}
@@ -385,12 +384,12 @@ private void testUniqueClientnamePasswordCombination(
 	public ArrayList<Property> viewSystemProperties() throws MBankException
 	{
 		PropertyManager propertyManager = new PropertyDBManager();
-		return propertyManager.queryAllProperties(this.getCon());
+		return propertyManager.queryAllProperties();
 	}
 	
 	public void updateSystemProperty(Property property) throws MBankException
 	{
 		PropertyManager propertyManager = new PropertyDBManager();
-		propertyManager.update(property, this.getCon());
+		propertyManager.update(property);
 	}
 }

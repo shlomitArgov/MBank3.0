@@ -1,8 +1,6 @@
 package mbank;
 import static org.junit.Assert.*;
 
-import java.sql.Connection;
-
 import mbank.MBank;
 import mbank.actions.Action;
 import mbank.actions.AdminAction;
@@ -30,14 +28,6 @@ public class MBankTest {
 		String adminPassword = "admin";
 		Action adminAction = null;
 		ClientDBManager clientDBManager = new ClientDBManager();
-		Connection con = null;
-		try {
-			con = myBank.getConnection();
-		} catch (MBankException e1) {
-			fail("Failed to connect to MBank DB");
-			e1.printStackTrace();
-		}
-		
 		Client adminClient = null;
 		try {
 			adminClient = new Client("system", "admin", ClientType.PLATINUM, "Ahad Ha'am 51, TLV", "mail@gmail.com", "555-5555555", "admin user comment");
@@ -46,7 +36,7 @@ public class MBankTest {
 			e1.printStackTrace();
 		}
 		try {
-			adminClient.setClient_id(clientDBManager.insert(adminClient, con));
+			adminClient.setClient_id(clientDBManager.insert(adminClient));
 		} catch (MBankException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -60,7 +50,7 @@ public class MBankTest {
 		assertTrue("Failed to retrieve AdminAction by logging in to MBank with admin credentials", adminAction instanceof AdminAction);
 		//cleanup
 		try {
-			clientDBManager.delete(adminClient.getClient_id(), con);
+			clientDBManager.delete(adminClient.getClient_id());
 		} catch (MBankException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
