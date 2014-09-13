@@ -14,19 +14,6 @@ import mbank.exceptions.MBankException;
  */
 public interface ClientManager
 {
-//	long insert(Client client) throws MBankException;
-//
-//	void update(Client client) throws MBankException;
-//
-//	void delete(long clientId) throws MBankException;
-//
-//	Client query(Client client) throws MBankException;
-//	
-//	ArrayList<Client> queryAllClients(Connection con) throws MBankException;
-//
-//	Client query(long client_id) throws MBankException;
-//	
-//	Client query(String username) throws MBankException;
 	long insert(Client client) throws MBankException;
 
 	void update(Client client) throws MBankException;

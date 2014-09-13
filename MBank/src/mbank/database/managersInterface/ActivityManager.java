@@ -16,17 +16,6 @@ import mbank.exceptions.MBankException;
  */
 public interface ActivityManager
 {
-//	long insert(Activity activity) throws MBankException;
-//
-//	void update(Activity activity) throws MBankException;
-//
-//	void delete(Activity activity) throws MBankException;
-//
-//	Activity query(ActivityType activityType,long clientId) throws MBankException;
-//	
-//	ArrayList<Activity> queryAllActivities(Connection con) throws MBankException;
-//
-//	List<Activity> queryByClientId(long clientId) throws MBankException;
 	long insert(Activity activity) throws MBankException;
 
 	void update(Activity activity) throws MBankException;

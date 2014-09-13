@@ -52,17 +52,6 @@ public class AccountDBManager implements AccountManager
 		{
 			throw new MBankException("Database error:\n" + e.getLocalizedMessage());
 		}
-//		String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
-//		PreparedStatement ps2;
-//		long accountId = 0;
-//		try {
-//			ResultSet rs = ps.
-//			accountId = 
-//			ps2 = con.prepareStatement(sql2);
-//			ps2.execute();
-//			ResultSet rs = ps2.getResultSet();
-//			rs.next();
-//			accountId = rs.getLong(1);
 	MBank.getInstance().returnConnection(con);
 	return accountId;
 	}
@@ -73,7 +62,6 @@ public class AccountDBManager implements AccountManager
 		Connection con = MBank.getInstance().getConnection();
 		try{
 			String sql = "UPDATE " + tableName + " SET ";
-//			sql += "account_id = ?, ";
 			sql += "client_id = ?, ";
 			sql += "balance = ?, ";
 			sql += "credit_limit = ?, ";

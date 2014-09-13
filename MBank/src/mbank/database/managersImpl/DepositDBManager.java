@@ -38,7 +38,6 @@ public class DepositDBManager implements DepositManager
 			String sql = "INSERT INTO " + tableName
 					+ " (client_id, balance, deposit_type, estimated_balance, opening_date, closing_date) VALUES (?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-//			ps.setLong(1, deposit.getDeposit_id());
 			ps.setLong(1, deposit.getClient_id());
 			ps.setDouble(2, deposit.getBalance());
 			ps.setString(3, deposit.getType().getTypeStringValue());
@@ -57,18 +56,6 @@ public class DepositDBManager implements DepositManager
 		{
 			throw new MBankException("Failed to insert into Deposits table");
 		}
-//		String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
-//		PreparedStatement ps2;
-//		long depositId = 0;
-//		try {
-//			ps2 = con.prepareStatement(sql2);
-//			ps2.execute();
-//			ResultSet rs = ps2.getResultSet();
-//			rs.next();
-//			depositId = rs.getLong(1);
-//		} catch (SQLException e) {
-//			throw new MBankException("Failed to retrieve new deposit ID");
-//		}
 	MBank.getInstance().returnConnection(con);
 	return depositId;
 	}

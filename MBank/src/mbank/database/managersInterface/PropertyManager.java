@@ -6,17 +6,7 @@ import mbank.database.beans.Property;
 import mbank.exceptions.MBankException;
 
 public interface PropertyManager
-{
-//	void insert(Property property, Connection con) throws MBankException;
-//
-//	void update(Property property, Connection con) throws MBankException;
-//
-//	void delete(Property property, Connection con) throws MBankException;
-//
-//	Property query(String propertyName, Connection con) throws MBankException;
-//	
-//	ArrayList<Property> queryAllProperties(Connection con) throws MBankException;
-//	
+{	
 	void insert(Property property) throws MBankException;
 
 	void update(Property property) throws MBankException;
