@@ -64,8 +64,9 @@ public class ClientAction extends Action
 	 * @return true: if withdrawal executed successfully, false if withdrawal failed
 	 * @throws MBankException
 	 */
-	public void withdrawFromAccount(Client client, double withdrawAmount) throws MBankException
+	public void withdrawFromAccount(double withdrawAmount) throws MBankException
 	{
+		Client client = getClientFromDB();
 		//make sure withdrawal amount is positive
 		if(withdrawAmount < 0)
 		{
@@ -108,8 +109,9 @@ public class ClientAction extends Action
 		}
 	}
 
-	public void depositToAccount(Client client, double depositAmount) throws MBankException
+	public void depositToAccount(double depositAmount) throws MBankException
 	{
+		Client client = getClientFromDB(); 
 		//make sure withdrawal amount is positive
 		if (depositAmount < 0)
 		{
@@ -136,9 +138,9 @@ public class ClientAction extends Action
 		}				
 	}
 	
-	public Deposit createNewDeposit(Client client, DepositType depositType, double depositAmount, java.util.Date closeDate) throws  MBankException
+	public Deposit createNewDeposit(DepositType depositType, double depositAmount, java.util.Date closeDate) throws  MBankException
 	{
-		
+		Client client = getClientFromDB();
 		long depositDurationInDays = (closeDate.getTime() - System.currentTimeMillis())/(60*60*24*1000);
 		
 		//make sure deposit amount and duration are positive
