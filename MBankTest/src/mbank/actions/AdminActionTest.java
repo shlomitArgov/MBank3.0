@@ -87,7 +87,7 @@ public class AdminActionTest {
 		/* Attempt to update the client's details */
 		try
 		{
-			adminAction.updateClientDetails(Long.toString(tempClient.getClient_id()), details);
+			adminAction.updateClientDetails(tempClient.getClient_id(), details);
 		}
 		catch(MBankException e)
 		{

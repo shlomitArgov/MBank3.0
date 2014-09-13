@@ -48,10 +48,7 @@ public class AdminAction extends Action
 	 * @see mbank.actions.Action#updateClientDetails(java.lang.String, mbank.actions.tableValue[][])
 	 */
 	
-
-	
 	//Admins can also update client type
-	@Override
 	protected void updateValues(Client c, TableValue[] details) throws MBankException
 	{
 		for (int i = 0; i < details.length; i++)
@@ -84,8 +81,28 @@ public class AdminAction extends Action
 		}		
 	}
 
+	private Client getClientFromDBById(long clientId) throws MBankException {
+		ClientManager clientManager = new ClientDBManager();
+		/* get client from DB by clientId*/
+		Client c = new Client(clientId, TMP_STR, TMP_STR, null, null, null, null, null);
+		c = clientManager.query(c);
+		return c;
+	}
+
+	public void updateClientDetails(long clientId, TableValue... details) throws MBankException {
+		Client c = getClientFromDBById(clientId);
+		updateValues(c, details);
+		if(c.getPassword().equalsIgnoreCase(TMP_STR) || c.getClient_name().equalsIgnoreCase(TMP_STR))
+		{
+			throw new MBankException("Client name and password fields must not be empty");
+		}
+		/* execute update (commit to DB) */
+		ClientManager clientManager = new ClientDBManager();
+		clientManager.update(c);
+	}
+	
 	@Override
-	public Account viewAccountDetails(Client client)
+	public Account viewAccountDetails()
 	{
 		// TODO Auto-generated method stub
 		return null;

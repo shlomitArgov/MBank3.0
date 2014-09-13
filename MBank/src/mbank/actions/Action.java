@@ -32,8 +32,8 @@ import mbank.exceptions.MBankException;
 public abstract class Action
 {
 //	private Connection con;
-	private long clientId;
-	private static final String TMP_STR = "tmpVal";
+	protected long clientId;
+	protected static final String TMP_STR = "tmpVal";
 	/**
 	 * @return the clientId
 	 */
@@ -47,40 +47,10 @@ public abstract class Action
 		this.clientId = id;
 	}
 	
-	/**
-	 * Updates one or more of the client attributes: Address, Email, Phone.
-	 * @param clientId
-	 * @param details
-	 * @return true upon success, false otherwise
-	 * @throws MBankException 
-	 */
-	public void updateClientDetails(String clientId, TableValue... details) throws MBankException 
+	
+	protected void updateValues(TableValue[] details) throws MBankException
 	{
-		ClientManager clientManager = new ClientDBManager();
-		/* get client from DB */
-		Client c = new Client(Long.parseLong(clientId), TMP_STR, TMP_STR, null, null, null, null, null);
-//		c = clientManager.query(c, this.getCon());
-		c = clientManager.query(c);
-		
-		/* update values */
-		updateValues(c, details);
-		if(c.getPassword().equalsIgnoreCase(TMP_STR) || c.getClient_name().equalsIgnoreCase(TMP_STR))
-		{
-			throw new MBankException("Client and password fields must not be empty");
-		}
-		/* execute update (commit to DB) */
-		try
-		{
-//			clientManager.update(c, this.getCon());
-			clientManager.update(c);
-		} catch (MBankException e)
-		{
-			throw e;
-		}
-	}
- 
-	protected void updateValues(Client c, TableValue[] details) throws MBankException
-	{
+		Client c = getClientFromDB();
 		for (int i = 0; i < details.length; i++)
 		{
 			if(details[i].getColumnName().equals(ClientAttributes.ADDRESS.getAttribute()))
@@ -100,6 +70,16 @@ public abstract class Action
 				throw new MBankException("Cannot update client attribute '" + details[i].getColumnName() + "' - Unauthorized action") ;
 			}
 		}				
+	}
+	
+	 
+	protected Client getClientFromDB() throws MBankException 
+	{
+		ClientManager clientManager = new ClientDBManager();
+		/* get client from DB */
+		Client c = new Client(this.clientId, TMP_STR, TMP_STR, null, null, null, null, null);
+		c = clientManager.query(c);
+		return c;
 	}
 	//helper method: get client type according to initial deposit size
 		protected ClientType getClientType(double deposit) throws MBankException
@@ -132,25 +112,25 @@ public abstract class Action
 			}
 		}
 
-	public Client viewClientDetails(long clientId) throws MBankException
+	public Client viewClientDetails() throws MBankException
 	{
 		//Clients can only view their own details - this method is overridden in ClientAction to validate this requirement
-		return queryClientDetails(clientId);
+		return queryClientDetails();
 		
 	}
 	
 
-	protected Client queryClientDetails(long clientId) throws MBankException {
+	protected Client queryClientDetails() throws MBankException {
 		ClientManager clientManager = new ClientDBManager();
 		Client client = null;
 		try
 		{
 //			client = clientManager.query(clientId, con);
-			client = clientManager.query(clientId);
+			client = clientManager.query(this.clientId);
 		}
 		catch(MBankException e)
 		{
-			throw new MBankException("Failed to retrieve client with ID [" + clientId + "]\nPlease consult a system administrator to see if a client with this ID exists");
+			throw new MBankException("Failed to retrieve client with ID [" + this.clientId + "]\nPlease consult a system administrator to see if a client with this ID exists");
 		}
 		return client;		
 		}
@@ -161,40 +141,39 @@ public abstract class Action
 	 * @return account details (String) or null if retrieval of details from DB failed
 	 * @throws MBankException 
 	 */
-	public Account viewAccountDetails(Client client) throws MBankException
+	public Account viewAccountDetails() throws MBankException
 	{
-		return queryClientAccount(client.getClient_id());
+		return queryClientAccount();
 		
 	}
-	protected Account queryClientAccount(long clientId) throws MBankException 
+	protected Account queryClientAccount() throws MBankException 
 	{
 		AccountManager accountManager = new AccountDBManager();
-//		Account account = accountManager.queryAccountByClient(clientId, this.getCon());
-		Account account = accountManager.queryAccountByClient(clientId);
+		Account account = accountManager.queryAccountByClient(this.clientId);
 		return account;
 	}
 
-	public List<Deposit> viewClientDeposits(long clientId) throws MBankException
+	public List<Deposit> viewClientDeposits() throws MBankException
 	{
-		return queryClientDeposits(clientId);
+		return queryClientDeposits();
 	}
 
-	protected List<Deposit> queryClientDeposits(long clientId) throws MBankException {
+	protected List<Deposit> queryClientDeposits() throws MBankException {
 		DepositManager depositManager = new DepositDBManager();
 //		List<Deposit> deposits = depositManager.queryDepositsByClient(clientId, this.getCon());
-		List<Deposit> deposits = depositManager.queryDepositsByClient(clientId);
+		List<Deposit> deposits = depositManager.queryDepositsByClient(this.clientId);
 		return deposits;
 	}
 	
-	public List<Activity> viewClientActivities(long clientId) throws MBankException
+	public List<Activity> viewClientActivities() throws MBankException
 	{
-		return queryClientActivities(clientId);
+		return queryClientActivities();
 	}
 
-	protected List<Activity> queryClientActivities(long clientId) throws MBankException {
+	protected List<Activity> queryClientActivities() throws MBankException {
 		ActivityManager activityManager = new ActivityDBManager();
 //		List<Activity> clientActivities = activityManager.queryByClientId(clientId, this.getCon());
-		List<Activity> clientActivities = activityManager.queryByClientId(clientId);
+		List<Activity> clientActivities = activityManager.queryByClientId(this.clientId);
 		return clientActivities;
 	}
 	public String viewSystemProperty(String propertyName) throws MBankException

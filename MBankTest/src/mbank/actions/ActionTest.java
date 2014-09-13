@@ -91,7 +91,7 @@ public class ActionTest
 		
 		try
 		{
-			clientAction.updateClientDetails(Long.toString(client.getClient_id()), details);
+			clientAction.updateClientDetails(details);
 		}
 		catch(MBankException e)
 		{
@@ -103,7 +103,7 @@ public class ActionTest
 		TableValue[] details2 = new TableValue[]{new TableValue(ClientAttributes.ADDRESS.getAttribute(), "updated address"),new TableValue(ClientAttributes.PHONE.getAttribute(),"updated phone"),new TableValue(ClientAttributes.EMAIL.getAttribute(), "updated email"), new TableValue(ClientAttributes.CLIENT_TYPE.getAttribute(), ClientType.PLATINUM.getTypeStringValue())};//, new TableValue(ClientAttributes.COMMENT.getAttribute(), "Comment text")};
 		try
 		{
-			clientAction.updateClientDetails(Long.toString(client.getClient_id()), details2);
+			clientAction.updateClientDetails(details2);
 			fail("Updated client type with clientAction - permission violation");
 		}
 		catch(MBankException e)
@@ -124,7 +124,7 @@ public class ActionTest
 		Client clientDetails = null;
 		try
 		{
-			clientDetails = clientAction.viewClientDetails(tempClient.getClient_id());	
+			clientDetails = clientAction.viewClientDetails();	
 		}
 		catch (MBankException e)
 		{
@@ -154,7 +154,7 @@ public class ActionTest
 		
 		try
 		{
-			accountDetails = clientAction.viewAccountDetails(tempClient);	
+			accountDetails = clientAction.viewAccountDetails();	
 		}
 		catch (MBankException e)
 		{
@@ -197,7 +197,7 @@ public class ActionTest
 		/* Create a clientAction for testing the viewAccountDetails method */
 		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		
-		ArrayList<Deposit> deposits = (ArrayList<Deposit>) clientAction.viewClientDeposits(tempClient.getClient_id());
+		ArrayList<Deposit> deposits = (ArrayList<Deposit>) clientAction.viewClientDeposits();
 		
 		if((deposits.size() == 2))
 		{
@@ -237,7 +237,7 @@ public class ActionTest
 			Assert.fail();
 		}
 		
-		ArrayList<Activity> activities = (ArrayList<Activity>) clientAction.viewClientActivities(tempClient.getClient_id());
+		ArrayList<Activity> activities = (ArrayList<Activity>) clientAction.viewClientActivities();
 		
 		if((activities.size() == 2))
 		{

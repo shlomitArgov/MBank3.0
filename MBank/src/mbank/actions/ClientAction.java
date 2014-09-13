@@ -40,29 +40,15 @@ public class ClientAction extends Action
 	}
 
 	@Override
-	public List<Deposit> viewClientDeposits(long clientId) throws MBankException
+	public List<Deposit> viewClientDeposits() throws MBankException
 	{
-		if(this.getClientId() != clientId)
-		{
-			return null;
-		}
-		else
-		{
-			return queryClientDeposits(clientId);
-		}
+		return queryClientDeposits();
 	}
 
 	@Override
-	public List<Activity> viewClientActivities(long clientId) throws MBankException
+	public List<Activity> viewClientActivities() throws MBankException
 	{
-		if(clientId != this.getClientId())
-		{
-			return null;
-		}
-		else
-		{
-			return queryClientActivities(clientId);
-		}
+		return queryClientActivities();
 	}
 
 	@Override
@@ -146,7 +132,7 @@ public class ClientAction extends Action
 		{
 				AdminAction adminAction = new AdminAction(1);
 				TableValue clientTypeUpdate = new TableValue(ClientAttributes.CLIENT_TYPE.getAttribute(), newType.getTypeStringValue());
-				adminAction.updateClientDetails(String.valueOf(client.getClient_id()), clientTypeUpdate);
+				adminAction.updateClientDetails(this.clientId, clientTypeUpdate);
 		}				
 	}
 	
@@ -259,28 +245,36 @@ public class ClientAction extends Action
 	}
 	
 	@Override
-	public Client viewClientDetails(long clientId) throws MBankException
+	public Client viewClientDetails() throws MBankException
 	{
-		if(this.getClientId() != clientId)
-		{
-			return null;
-		}
-		else
-		{
-			return queryClientDetails(clientId);
-		}
+		return queryClientDetails();
 	}
 	
 	@Override
-	public Account viewAccountDetails(Client client) throws MBankException
+	public Account viewAccountDetails() throws MBankException
 	{
-		if(client.getClient_id() != this.getClientId())
-		{
-			return null;
-		}
-		else
-		{
-			return queryClientAccount(this.getClientId());
-		}
+		return queryClientAccount();
 	}
+	
+	/**
+	 * Updates one or more of the client attributes: Address, Email, Phone.
+	 * @param clientId
+	 * @param details
+	 * @return true upon success, false otherwise
+	 * @throws MBankException 
+	 */
+	public void updateClientDetails(TableValue... details) throws MBankException 
+	{
+		Client c = getClientFromDB();
+		/* update values */
+		updateValues(details);
+		if(c.getPassword().equalsIgnoreCase(TMP_STR) || c.getClient_name().equalsIgnoreCase(TMP_STR))
+		{
+			throw new MBankException("Client and password fields must not be empty");
+		}
+		/* execute update (commit to DB) */
+		ClientManager clientManager = new ClientDBManager();
+		clientManager.update(c);
+	}
+
 }

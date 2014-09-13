@@ -27,7 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ClientActionTest {
-	private static Client client;
 	private static ClientDBManager clientManager;
 	private static AccountDBManager accountManager;
 	private static DepositDBManager depositManager;
@@ -43,7 +42,7 @@ public class ClientActionTest {
 		accountManager = new AccountDBManager();
 		depositManager = new DepositDBManager();
 		
-		client = createAndInsertTempClient("ClientActionTestClient", ClientType.REGULAR);
+		createAndInsertTempClient("ClientActionTestClient", ClientType.REGULAR);
 	}
 
 	
@@ -59,7 +58,7 @@ public class ClientActionTest {
 		
 		try 
 		{
-			clientAction.viewClientDetails(tempClient.getClient_id());
+			clientAction.viewClientDetails();
 		} catch (MBankException e) 
 		{
 			e.printStackTrace();
@@ -69,7 +68,7 @@ public class ClientActionTest {
 		Client clientDetails = null;
 		try
 		{
-			clientDetails = clientAction.viewClientDetails(client.getClient_id());
+			clientDetails = clientAction.viewClientDetails();
 		}
 		catch (MBankException e)
 		{
@@ -90,7 +89,7 @@ public class ClientActionTest {
 
 		try 
 		{
-			clientAction.viewAccountDetails(tempClient);
+			clientAction.viewAccountDetails();
 		} catch (MBankException e) 
 		{
 			e.printStackTrace();
@@ -99,7 +98,7 @@ public class ClientActionTest {
 		Account accountDetails = null;
 		try
 		{
-			accountDetails = clientAction.viewAccountDetails(client);
+			accountDetails = clientAction.viewAccountDetails();
 		}
 		catch (MBankException e)
 		{
@@ -122,7 +121,7 @@ public class ClientActionTest {
 		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		try
 		{
-			deposits = clientAction.viewClientDeposits(tempClient.getClient_id());
+			deposits = clientAction.viewClientDeposits();
 		}
 		catch (MBankException e)
 		{
@@ -135,7 +134,7 @@ public class ClientActionTest {
 		List<Deposit> deposits2 = null;
 		try
 		{
-			deposits2 = clientAction.viewClientDeposits(client.getClient_id());
+			deposits2 = clientAction.viewClientDeposits();
 		}
 		catch (MBankException e)
 		{
@@ -161,7 +160,7 @@ public class ClientActionTest {
 		List<Activity> activities = null;
 		try
 		{
-			activities = clientAction.viewClientActivities(tempClient.getClient_id());
+			activities = clientAction.viewClientActivities();
 		}
 		catch (MBankException e)
 		{
@@ -174,7 +173,7 @@ public class ClientActionTest {
 		List<Activity> activities2 = null;
 		try
 		{
-			activities2 = clientAction.viewClientActivities(client.getClient_id());
+			activities2 = clientAction.viewClientActivities();
 		}
 		catch (MBankException e)
 		{

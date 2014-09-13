@@ -255,7 +255,7 @@ public class Main {
 		String columnValue = getValidStringInput("Enter new value for the chosen client detail: ");
 		TableValue details = new TableValue(columnName, columnValue);
 		try {
-			this.adminAction.updateClientDetails(clientId, details);
+			this.adminAction.updateClientDetails(Integer.parseInt(clientId), details);
 			System.out.println("\n---Updated client [id = " + clientId + "] details successfully---\n");
 		} catch (MBankException e) 
 		{
@@ -499,7 +499,7 @@ public class Main {
 		Client clientDetails = null;
 		try 
 		{
-			clientDetails = this.clientAction.viewClientDetails(this.clientAction.getClientId());
+			clientDetails = this.clientAction.viewClientDetails();
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -513,7 +513,7 @@ public class Main {
 		List<Deposit> clientDeposits = null;
 		try 
 		{
-			clientDeposits = this.clientAction.viewClientDeposits(this.clientAction.getClientId());
+			clientDeposits = this.clientAction.viewClientDeposits();
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -534,7 +534,7 @@ public class Main {
 		List<Activity> clientActivities = null;
 		try 
 		{
-			clientActivities = this.clientAction.viewClientActivities(this.clientAction.getClientId());
+			clientActivities = this.clientAction.viewClientActivities();
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -555,7 +555,7 @@ public class Main {
 		Account clientAccount = null;
 		try 
 		{
-			clientAccount = this.clientAction.viewAccountDetails(this.client);
+			clientAccount = this.clientAction.viewAccountDetails();
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -595,7 +595,7 @@ public class Main {
 		TableValue tableValue = new TableValue(attribute.getAttribute(), updatedDetail);
 		try 
 		{
-			this.clientAction.updateClientDetails(String.valueOf(this.clientAction.getClientId()), tableValue);
+			this.clientAction.updateClientDetails(tableValue);
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -609,7 +609,7 @@ public class Main {
 		List<Deposit> clientDeposits = null;
 		try 
 		{
-			clientDeposits = this.clientAction.viewClientDeposits(this.clientAction.getClientId());
+			clientDeposits = this.clientAction.viewClientDeposits();
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
