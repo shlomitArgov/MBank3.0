@@ -36,11 +36,17 @@ public class MBank
 		depositMaintenance.launch();
 	}
 
-	public static MBank getInstance() throws MBankException
+	public static MBank getInstance()
 	{
 		if (instance == null)
 		{
-			instance = new MBank(10); 
+			try 
+			{
+				instance = new MBank(10);
+			} catch (MBankException e) 
+			{
+				System.exit(1);
+			} 
 			return instance;
 		}
 		return instance;

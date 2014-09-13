@@ -17,13 +17,7 @@ public class MBankTest {
 	@Test
 	public void test() {
 		MBank myBank = null;
-		try {
-			myBank = MBank.getInstance();	
-			
-		} catch (MBankException e) {
-			fail("Failed to get instance of MBank class");
-			e.printStackTrace();
-		}
+		myBank = MBank.getInstance();	
 		String adminUserName = "system";
 		String adminPassword = "admin";
 		Action adminAction = null;
