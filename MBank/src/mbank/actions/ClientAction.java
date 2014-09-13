@@ -68,7 +68,6 @@ public class ClientAction extends Action
 	@Override
 	public boolean logout()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

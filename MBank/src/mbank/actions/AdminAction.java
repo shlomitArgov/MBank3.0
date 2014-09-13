@@ -104,13 +104,8 @@ public class AdminAction extends Action
 	{
 		// Make sure that the client-name-password combination is unique
 		ClientManager clientManager = new ClientDBManager();
-		try{
-			testUniqueClientnamePasswordCombination(clientManager, clientName, String.valueOf(clientPassword));
-		}
-		catch(MBankException e)
-		{
-			throw e;
-		}
+		
+		testUniqueClientnamePasswordCombination(clientManager, clientName, String.valueOf(clientPassword));
 		
 		// add the new client
 		ClientType clientType = getClientType(deposit); 
@@ -118,28 +113,21 @@ public class AdminAction extends Action
 		if (deposit < 0)
 //		if (deposit < creditLimit) //this makes no sense since for Platinum clients - the limit is infinity
 		{
-//			throw new MBankException("Initial deposit must be greater than credit limit (" + creditLimit + ")"); //
 			throw new MBankException("Initial deposit must be non-negative");
 		}
 		Client client = new Client(clientName, String.valueOf(clientPassword),clientType, clientAddress, clientEmail, clientPhone, "Created client with name [" + clientName + "]"); // refactor to use properties file
 		boolean addClientSucceeded = false;
-		try
-		{
-			client.setClient_id(clientManager.insert(client));
-			/* If we reached this point then the client was added successfully */
-			addClientSucceeded = true;
-			ActivityDBManager activityManager = new ActivityDBManager();
-			Activity createNewClientActivity = new Activity(client.getClient_id(), deposit, new Date(), 0, ActivityType.ADD_NEW_CLIENT, "Added new client with id [" + client.getClient_id() + "]");
-			activityManager.insert(createNewClientActivity);
-		}
-		catch(MBankException e)
-		{	/* Failed to add new client */
-			throw new MBankException(e.getLocalizedMessage());
-		}
+		client.setClient_id(clientManager.insert(client));
+		/* If we reached this point then the client was added successfully */
+		addClientSucceeded = true;
+		ActivityDBManager activityManager = new ActivityDBManager();
+		Activity createNewClientActivity = new Activity(client.getClient_id(), deposit, new Date(), 0, ActivityType.ADD_NEW_CLIENT, "Added new client with id [" + client.getClient_id() + "]");
+		activityManager.insert(createNewClientActivity);
 		if(addClientSucceeded)
 		{
 			//Add new account for the client
-			try{
+			try
+			{
 			CreateNewAccount(client.getClient_id(), deposit, creditLimit);
 			}
 			catch(MBankException e)
@@ -184,14 +172,7 @@ private void testUniqueClientnamePasswordCombination(
 		Account account = new Account(clientID, deposit, creditLimit, "Created account for client[" + clientID + "]");// refactor to use properties file
 		//insert account into DB
 		AccountManager accountManager = new AccountDBManager();
-		try{
-			account.setAccount_id(accountManager.insert(account));
-		}
-		catch(MBankException e)
-		{
-			throw new MBankException(e.getLocalizedMessage());
-		}
-		
+		account.setAccount_id(accountManager.insert(account));
 		return account;
 	}
 	
@@ -228,14 +209,7 @@ private void testUniqueClientnamePasswordCombination(
 		PropertyManager propertyManager = new PropertyDBManager();
 		
 		//remove client
-		try
-		{
-			clientManager.delete(client.getClient_id());			
-		}
-		catch (MBankException e)
-		{
-			throw e;
-		}
+		clientManager.delete(client.getClient_id());			
 		String removeClientComment = "removed client with id "+ client.getClient_id();			
 		/* If removal was successful - update the activity table */
 		ActivityManager activityManager = new ActivityDBManager();
@@ -250,13 +224,7 @@ private void testUniqueClientnamePasswordCombination(
 		{
 			accountCommission = clientAccount.getBalance();
 		}
-		try
-		{
-			RemoveAccount(client.getClient_id(), accountCommission);
-		} catch (MBankException e)
-		{
-			throw e;
-		}
+		RemoveAccount(client.getClient_id(), accountCommission);
 		
 		double depositCommission = 0;
 		
@@ -302,14 +270,7 @@ private void testUniqueClientnamePasswordCombination(
 				removeDepositComment= "removed deposit with id "+ d.getClient_id();
 			}
 			// remove deposit
-			try
-			{
-				depositManager.delete(d);
-			
-			} catch (MBankException e)
-			{
-				throw e;
-			}
+			depositManager.delete(d);
 			/* If removal was successful - update the activity table */
 			Activity deleteDepositActivity = new Activity(client.getClient_id(), d.getBalance(), new java.util.Date(System.currentTimeMillis()), chargeAmount, ActivityType.REMOVE_DEPOSIT, removeDepositComment );
 			activityManager.insert(deleteDepositActivity);
@@ -346,14 +307,6 @@ private void testUniqueClientnamePasswordCombination(
 	{
 		ClientManager clientManager = new ClientDBManager();
 		List<Client> clients = clientManager.queryAllClients();
-//		Iterator<Client> clientsIt = clients.iterator();
-//		String string = "";
-//		while(clientsIt.hasNext())
-//		{
-//			Client c = clientsIt.next();
-//			string += c.toString() + "\n";
-//		}
-//		return string;
 		return clients;
 	}
 	
@@ -361,7 +314,6 @@ private void testUniqueClientnamePasswordCombination(
 	{
 		AccountManager accountManager = new AccountDBManager();
 		List<Account> accounts = accountManager.queryAllAccounts();
-//		return Arrays.toString(accounts.toArray());
 		return accounts;
 	}
 	
@@ -369,7 +321,6 @@ private void testUniqueClientnamePasswordCombination(
 	{
 		DepositManager depositManager = new DepositDBManager();
 		List<Deposit> deposits = depositManager.queryAllDeposits();
-//		return Arrays.toString(deposits.toArray());
 		return deposits;
 	}
 	
@@ -377,7 +328,6 @@ private void testUniqueClientnamePasswordCombination(
 	{
 		ActivityManager activityManager = new ActivityDBManager();
 		List<Activity> activities = activityManager.queryAllActivities();
-//		return Arrays.toString(activities.toArray());
 		return activities;
 	}
 	
