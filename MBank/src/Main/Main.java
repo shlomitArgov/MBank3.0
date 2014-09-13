@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import mbank.MBank;
 import mbank.actions.AdminAction;
 import mbank.actions.ClientAction;
 import mbank.actions.TableValue;
@@ -32,34 +31,35 @@ public class Main {
 	private static final String ADMIN_MENU_INSTRUCTION = "\n---AdminAction methods menu---\nEnter an option number: ";
 	private static final String CLIENT_MENU_INSTRUCTION = "\n---ClientAction methods menu---\nEnter an option number: ";
 
-	private static Client client;
+	private Client client;
 	
-	private static AdminAction adminAction;
-	private static ClientAction clientAction;
+	private AdminAction adminAction;
+	private ClientAction clientAction;
 	
 	//Project entry point
-	private static ClientDBManager clientManager;
+	private ClientDBManager clientManager;
+
 	public static void main(String[] args) throws MBankException {
-		MBank bank = MBank.getInstance();
+//		MBank bank = MBank.getInstance();
+		Main main = new Main();
 		
-		bank.getConnection();
-		adminAction = new AdminAction(1);
-		long clientId = adminAction.addNewClient("CLI Client" + System.currentTimeMillis(), new char[]{'p','w','d'}, "home", "mail@home.com", "555-555555", 1000000);
-		clientAction = new ClientAction(clientId);
-		clientManager = new ClientDBManager();
+		main.setAdminAction(new AdminAction(1));
+		long clientId = main.getAdminAction().addNewClient("CLI Client" + System.currentTimeMillis(), new char[]{'p','w','d'}, "home", "mail@home.com", "555-555555", 1000000);
+		main.setClientAction(new ClientAction(clientId));
+		main.setClientManager(new ClientDBManager());
 		try 
 		{
-			client = clientManager.query(clientAction.getClientId());
-		} catch (MBankException e1) {
-			System.out.println(AN_ERROR_OCCURED + e1.getLocalizedMessage());
+			main.setClient(main.getClientManager().query(main.getClientAction().getClientId()));
+		} catch (MBankException e) {
+			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
 			System.exit(1);
 		}		
 		System.out.println("***Welcome to MBank***\n");
 
-		mainMenu();
+		main.mainMenu();
 	}
 
-	private static void mainMenu() 
+	private void mainMenu() 
 	{
 	int mainMenuChoice = getMainMenuActionChoice();
 		
@@ -79,7 +79,7 @@ public class Main {
 		}	
 	}
 
-	private static int getMainMenuActionChoice() 
+	private int getMainMenuActionChoice() 
 	{
 		System.out.println(MAIN_MENU_DIALOG);		
 		int input = getIntegerInput();
@@ -92,7 +92,7 @@ public class Main {
 	return input;		
 	}
 	
-	private static void adminActionMenu() {
+	private void adminActionMenu() {
 		AdminActionMethods method = getAdminMenuChoice();  
 		switch (method) {
 		case CREATE_NEW_ACCOUNT:
@@ -134,7 +134,7 @@ public class Main {
 		adminActionMenu();
 	}
 
-	private static void handleUpdateSystemProperty() {
+	private void handleUpdateSystemProperty() {
 		System.out.println("\n---System Properties---\n");
 		printEnumValuesAsMenuOptions(SystemProperties.class);
 		System.out.println("\nEnter the number of the system property you wish to update");
@@ -174,7 +174,7 @@ public class Main {
 		{
 			if(property != null)
 			{
-				adminAction.updateSystemProperty(property);	
+				this.adminAction.updateSystemProperty(property);	
 			}
 			else
 			{
@@ -189,11 +189,11 @@ public class Main {
 		
 	}
 
-	private static void handleViewAllClientsDetails() {
+	private void handleViewAllClientsDetails() {
 		System.out.println("---Displaying all client details---");
 		try 
 		{
-			List<Client> clients = adminAction.ViewAllClientDetails();
+			List<Client> clients = this.adminAction.ViewAllClientDetails();
 			if(clients.isEmpty())
 			{
 				System.out.println("No clients available");
@@ -209,11 +209,11 @@ public class Main {
 		System.out.println();
 	}
 
-	private static void handleViewAllActivitiesDetails() {
+	private void handleViewAllActivitiesDetails() {
 		System.out.println("---Displaying all activities---");
 		try 
 		{
-			List<Activity> activities = adminAction.viewAllActivitiesDetails();
+			List<Activity> activities = this.adminAction.viewAllActivitiesDetails();
 			if(activities.isEmpty())
 			{
 				System.out.println("No activities available");
@@ -229,11 +229,11 @@ public class Main {
 		System.out.println();
 	}
 
-	private static void handleViewAllAccountsDetails() {
+	private void handleViewAllAccountsDetails() {
 		System.out.println("---Displaying all accounts---");
 		try 
 		{
-			List<Account> accounts = adminAction.viewAllAccountsDetails();
+			List<Account> accounts = this.adminAction.viewAllAccountsDetails();
 			if(accounts.isEmpty())
 			{
 				System.out.println("No accounts available");
@@ -249,13 +249,13 @@ public class Main {
 		System.out.println();		
 	}
 
-	private static void handleUpdateclientDetails() {
+	private void handleUpdateclientDetails() {
 		String clientId = getValidStringInput("Enter the ID of the client whose details you wish to edit: ");
 		String columnName = selectClientAttributeToEdit();
 		String columnValue = getValidStringInput("Enter new value for the chosen client detail: ");
 		TableValue details = new TableValue(columnName, columnValue);
 		try {
-			adminAction.updateClientDetails(clientId, details);
+			this.adminAction.updateClientDetails(clientId, details);
 			System.out.println("\n---Updated client [id = " + clientId + "] details successfully---\n");
 		} catch (MBankException e) 
 		{
@@ -265,7 +265,7 @@ public class Main {
 		System.out.println();		
 	}
 
-	private static String selectClientAttributeToEdit() {
+	private String selectClientAttributeToEdit() {
 		int attributeNum = 0;
 		ClientAttributes[] clientAttributes;
 		do
@@ -300,11 +300,11 @@ public class Main {
 		return clientAttributes[0].getAttribute(); //default
 	}
 
-	private static void handleViewAllDepositsDetails() {
+	private void handleViewAllDepositsDetails() {
 		System.out.println("---Displaying all deposits---");
 		try 
 		{
-			List<Deposit> deposits = adminAction.viewAllDepositsDetails();
+			List<Deposit> deposits = this.adminAction.viewAllDepositsDetails();
 			if(deposits.isEmpty())
 			{
 				System.out.println("No deposits available");
@@ -320,7 +320,7 @@ public class Main {
 		System.out.println();		
 	}
 
-	private static void handleRemoveClient() {
+	private void handleRemoveClient() {
 		long clientId = getValidLongInput("Enter the ID of the client you wish to remove");
 		/* Get the client bean from the DB */
 		ClientDBManager clientManager = new ClientDBManager();
@@ -333,7 +333,7 @@ public class Main {
 			adminActionMenu();
 		}
 		try {
-			adminAction.removeClient(tempClient);
+			this.adminAction.removeClient(tempClient);
 			System.out.println("\n---Removed client with ID[" + clientId + "] successfuly---\n");
 		} catch (MBankException e) {
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -342,7 +342,7 @@ public class Main {
 		System.out.println();
 	}
 
-	private static void handleAddNewClient() {
+	private void handleAddNewClient() {
 		String clientName = getValidStringInput("Enter client name: ");
 		String clientPassword = getValidStringInput("Enter client password: ");
 		String clientAddress = getValidStringInput("Enter client address: ");
@@ -351,7 +351,7 @@ public class Main {
 		double deposit = getValidDoubleInput("Enter initial deposit amount: ");
 		try 
 		{
-			long clientId = adminAction.addNewClient(clientName, clientPassword.toCharArray(), clientAddress, clientEmail, clientPhone, deposit);
+			long clientId = this.adminAction.addNewClient(clientName, clientPassword.toCharArray(), clientAddress, clientEmail, clientPhone, deposit);
 			System.out.println("****\nAdded new client with ID: " + clientId + "\n****");
 		} catch (MBankException e) 
 		{
@@ -361,16 +361,16 @@ public class Main {
 		System.out.println();
 	}
 
-	private static void handleRemoveAccount() {
+	private void handleRemoveAccount() {
 		System.out.println("Removal of accounts is performed as part of removal of client.\nYou cannot remove an account without removing a client completely\n");
 	}
 
-	private static void handleCreateNewAccount() {
+	private void handleCreateNewAccount() {
 		System.out.println("Creation of a new account is performed as part of adding a new client.\nYou cannot create an account without creating a new client\n");
 		
 	}
 
-	private static AdminActionMethods getAdminMenuChoice() {
+	private AdminActionMethods getAdminMenuChoice() {
 		System.out.println(ADMIN_MENU_INSTRUCTION);	
 		printEnumValuesAsMenuOptions(AdminActionMethods.class);
 		int userChoice = getIntegerInput();
@@ -386,13 +386,10 @@ public class Main {
 	return adminMethod;	
 	}
 
-	private static void clientActionMenu() {
+	private void clientActionMenu() {
 		
 		ClientActionMethods method = getClientMenuChoice();  
 
-		
-//		int clientMenuChoice = getClientMenuChoice();
-//		ClientActionMethods method = clientMethods[clientMenuChoice - 1];
 		switch (method) {
 		case CREATE_NEW_DEPOSIT:
 			handleCreateNewDeposit();
@@ -432,12 +429,12 @@ public class Main {
 		}
 		clientActionMenu();
 	}
-	private static void handleWithdrawFromAccount() {
+	private void handleWithdrawFromAccount() {
 		AccountDBManager accountManager = new AccountDBManager();
 		Account account = null;
 		try 
 		{
-			account = accountManager.queryAccountByClient(clientAction.getClientId());
+			account = accountManager.queryAccountByClient(this.clientAction.getClientId());
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -450,7 +447,7 @@ public class Main {
 			withdrawAmount = getValidDoubleInput("\nEnter the amount to withdraw: \n");
 			try 
 			{
-				clientAction.withdrawFromAccount(client, withdrawAmount);
+				this.clientAction.withdrawFromAccount(this.client, withdrawAmount);
 			} catch (MBankException e) 
 			{
 				System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -460,7 +457,7 @@ public class Main {
 		}
 	}
 
-	private static void handleViewSystemProperty() 
+	private void handleViewSystemProperty() 
 	{
 		System.out.println("\nSelect a property to display\n");
 		printEnumValuesAsMenuOptions(SystemProperties.class);
@@ -475,7 +472,7 @@ public class Main {
 			{
 				throw new MBankException();
 			}
-			propertyValue = clientAction.viewSystemProperty(propertyName);
+			propertyValue = this.clientAction.viewSystemProperty(propertyName);
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -488,7 +485,7 @@ public class Main {
 		}
 	}
 
-	private static <T extends Enum<T>> T getEnumChoice(int userChoice, Class<T> enumType) {
+	private <T extends Enum<T>> T getEnumChoice(int userChoice, Class<T> enumType) {
 		T[] values = enumType.getEnumConstants();
 		if (userChoice > values.length || userChoice  < 1)
 		{
@@ -497,12 +494,12 @@ public class Main {
 		return values[userChoice - 1];
 	}
 
-	private static void handleViewClientDetails() {
+	private void handleViewClientDetails() {
 		System.out.println("---Displaying client details for the client associated with this ClientAction object---\n");
 		Client clientDetails = null;
 		try 
 		{
-			clientDetails = clientAction.viewClientDetails(clientAction.getClientId());
+			clientDetails = this.clientAction.viewClientDetails(this.clientAction.getClientId());
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -511,12 +508,12 @@ public class Main {
 		System.out.println();
 	}
 
-	private static void handleViewClientDeposits() {
+	private void handleViewClientDeposits() {
 		System.out.println("---Displaying deposit details for the client associated with this ClientAction object---\n");
 		List<Deposit> clientDeposits = null;
 		try 
 		{
-			clientDeposits = clientAction.viewClientDeposits(clientAction.getClientId());
+			clientDeposits = this.clientAction.viewClientDeposits(this.clientAction.getClientId());
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -532,12 +529,12 @@ public class Main {
 		System.out.println();
 	}
 
-	private static void handleViewClientActivities() {
+	private void handleViewClientActivities() {
 		System.out.println("---Displaying activities for the client associated with this ClientAction object---\n");
 		List<Activity> clientActivities = null;
 		try 
 		{
-			clientActivities = clientAction.viewClientActivities(clientAction.getClientId());
+			clientActivities = this.clientAction.viewClientActivities(this.clientAction.getClientId());
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -553,12 +550,12 @@ public class Main {
 		System.out.println();
 	}
 
-	private static void handleViewAccountDetails() {
+	private void handleViewAccountDetails() {
 		System.out.println("---Displaying account details for the client associated with this ClientAction object---\n");
 		Account clientAccount = null;
 		try 
 		{
-			clientAccount = clientAction.viewAccountDetails(client);
+			clientAccount = this.clientAction.viewAccountDetails(this.client);
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -574,7 +571,7 @@ public class Main {
 		System.out.println();
 	}
 
-	private static void handleUpdateClientDetails() {
+	private void handleUpdateClientDetails() {
 		/* Display only the attribute a ClientAction object can update */
 		ClientAttributes[] availableAttributes = new ClientAttributes[]{ClientAttributes.ADDRESS, ClientAttributes.EMAIL, ClientAttributes.PHONE};
 		ClientAttributes attribute = null;
@@ -598,7 +595,7 @@ public class Main {
 		TableValue tableValue = new TableValue(attribute.getAttribute(), updatedDetail);
 		try 
 		{
-			clientAction.updateClientDetails(String.valueOf(clientAction.getClientId()), tableValue);
+			this.clientAction.updateClientDetails(String.valueOf(this.clientAction.getClientId()), tableValue);
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -606,13 +603,13 @@ public class Main {
 		}
 	}
 
-	private static void handlePreOpenDeposit() {
+	private void handlePreOpenDeposit() {
 		System.out.println("Enter the ID of the deposit you would like to preopen from the list below (only long-term deposits shown): \n");
 		
 		List<Deposit> clientDeposits = null;
 		try 
 		{
-			clientDeposits = clientAction.viewClientDeposits(clientAction.getClientId());
+			clientDeposits = this.clientAction.viewClientDeposits(this.clientAction.getClientId());
 		} catch (MBankException e) 
 		{
 			System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -640,7 +637,7 @@ public class Main {
 				{
 					try 
 					{
-						clientAction.preOpenDeposit(userChoice);
+						this.clientAction.preOpenDeposit(userChoice);
 						System.out.println("\n---Deposit [" +  userChoice + "] pre-opened successfully---\n");
 					} catch (MBankException e) 
 					{
@@ -663,11 +660,11 @@ public class Main {
 	}
 
 
-	private static void handleDepositToAccount() {
+	private void handleDepositToAccount() {
 		double depositAmount = getValidDoubleInput("Enter amount to deposit: ");
 		try 
 		{
-			clientAction.depositToAccount(client, depositAmount);
+			this.clientAction.depositToAccount(this.client, depositAmount);
 			System.out.println("\n---Deposit executed successfuly---\n");
 		} catch (MBankException e) 
 		{
@@ -675,7 +672,7 @@ public class Main {
 		}
 	}
 
-	private static void handleCreateNewDeposit() {
+	private void handleCreateNewDeposit() {
 		System.out.println("Choose deposit type: ");
 		printEnumValuesAsMenuOptions(DepositType.class);
 		int userChoice = getIntegerInput();
@@ -689,7 +686,7 @@ public class Main {
 			Deposit newDeposit = null;
 			try
 			{
-				newDeposit = clientAction.createNewDeposit(client, depositType, depositAmount, new Date(System.currentTimeMillis() + depositLengthInDays));	
+				newDeposit = this.clientAction.createNewDeposit(this.client, depositType, depositAmount, new Date(System.currentTimeMillis() + depositLengthInDays));	
 			}
 			catch (MBankException e)
 			{
@@ -703,7 +700,7 @@ public class Main {
 		}
 	}
 
-	private static ClientActionMethods getClientMenuChoice() {
+	private ClientActionMethods getClientMenuChoice() {
 		System.out.println(CLIENT_MENU_INSTRUCTION);
 		printEnumValuesAsMenuOptions(ClientActionMethods.class);
 		int userChoice = getIntegerInput();
@@ -719,7 +716,7 @@ public class Main {
 	return clientMethod;
 	}
 
-	private static <T extends Enum<T>> void printEnumValuesAsMenuOptions(Class<T> enumType)
+	private <T extends Enum<T>> void printEnumValuesAsMenuOptions(Class<T> enumType)
 	{
 		T[] values = enumType.getEnumConstants();
 		for (int i = 0 ; i < values.length; i++)
@@ -732,7 +729,7 @@ public class Main {
 	 * 
 	 * @return numeric input in case of valid numeric input, -1 otherwise
 	 */
-	private static int getIntegerInput() 
+	private int getIntegerInput() 
 	{
 		 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		 
@@ -760,7 +757,7 @@ public class Main {
 	}
 	
 
-	private static Long getLongInput() {
+	private Long getLongInput() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		 
 	      String input = null;
@@ -786,7 +783,7 @@ public class Main {
 		return new Long(num); 
 	}	
 
-	private static String getValidStringInput(String message) 
+	private String getValidStringInput(String message) 
 	{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input = null;
@@ -819,7 +816,7 @@ public class Main {
 	 * @param message 
 	 * @return numeric value of string input (double)
 	 */
-	private static double getValidDoubleInput(String message) 
+	private double getValidDoubleInput(String message) 
 	{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input = null;
@@ -849,7 +846,7 @@ public class Main {
 		return num;
 	}
 	
-	private static long getValidLongInput(String message) 
+	private long getValidLongInput(String message) 
 	{
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -923,5 +920,36 @@ public class Main {
 		{
 			this.name = name;
 		}	
+	}
+	
+	public ClientDBManager getClientManager() {
+		return this.clientManager;
+	}
+
+	public void setClientManager(ClientDBManager clientManager) {
+		this.clientManager = clientManager;
+	}
+	public Client getClient() {
+		return this.client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	public AdminAction getAdminAction() {
+		return this.adminAction;
+	}
+
+	public void setAdminAction(AdminAction adminAction) {
+		this.adminAction = adminAction;
+	}
+
+	public ClientAction getClientAction() {
+		return this.clientAction;
+	}
+
+	public void setClientAction(ClientAction clientAction) {
+		this.clientAction = clientAction;
 	}
 }
