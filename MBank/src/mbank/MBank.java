@@ -25,10 +25,12 @@ import mbankExceptions.MBankException;
 public class MBank
 {	//MBank Singleton class
 	private static MBank instance = null;
-	private static String url="jdbc:derby://localhost:1527/MBankDB;";
-	private static ConnectionPool connectionPool;
-	private MBank(int initialConnectionNum) throws MBankException
-	{
+	private static final String url="jdbc:derby://localhost:1527/MBankDB;"; //jdbc URL
+	private static final int initialConnectionNum = 10;	//initial size of connection pool
+	private ConnectionPool connectionPool;
+	
+	private MBank() throws MBankException
+	{	
 		//Generate connection pool
 		connectionPool = new ConnectionPool(url, initialConnectionNum);
 		//launch daily maintenance daemon thread responsible for closing expired deposits
@@ -42,7 +44,7 @@ public class MBank
 		{
 			try 
 			{
-				instance = new MBank(10);
+				instance = new MBank();
 			} catch (MBankException e) 
 			{
 				System.exit(1);
