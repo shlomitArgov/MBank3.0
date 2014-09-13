@@ -25,7 +25,7 @@ import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersImpl.DepositDBManager;
 import mbank.database.managersInterface.AccountManager;
 import mbank.database.managersInterface.ClientManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 import org.junit.AfterClass;
 import org.junit.Assert;

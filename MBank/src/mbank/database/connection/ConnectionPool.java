@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 /**
  * @author Shlomit
  * Connection pool, initialized by connection number (initial number of connection, also used as the number of new 

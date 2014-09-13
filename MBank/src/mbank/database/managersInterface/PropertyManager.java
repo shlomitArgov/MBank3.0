@@ -3,7 +3,7 @@ package mbank.database.managersInterface;
 import java.util.ArrayList;
 
 import mbank.database.beans.Property;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 public interface PropertyManager
 {

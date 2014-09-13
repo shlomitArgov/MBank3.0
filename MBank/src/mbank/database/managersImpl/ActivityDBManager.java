@@ -14,7 +14,7 @@ import mbank.MBank;
 import mbank.database.beans.Activity;
 import mbank.database.beans.enums.ActivityType;
 import mbank.database.managersInterface.ActivityManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit Argov

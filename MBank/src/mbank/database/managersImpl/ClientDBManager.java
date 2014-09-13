@@ -13,7 +13,7 @@ import mbank.MBank;
 import mbank.database.beans.Client;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.managersInterface.ClientManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit Argov

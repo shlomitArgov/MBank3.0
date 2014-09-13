@@ -23,7 +23,7 @@ import mbank.database.managersInterface.ActivityManager;
 import mbank.database.managersInterface.ClientManager;
 import mbank.database.managersInterface.DepositManager;
 import mbank.database.managersInterface.PropertyManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit Argov

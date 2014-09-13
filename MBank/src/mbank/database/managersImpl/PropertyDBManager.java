@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import mbank.MBank;
 import mbank.database.beans.Property;
 import mbank.database.managersInterface.PropertyManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit Argov

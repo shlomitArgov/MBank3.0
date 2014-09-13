@@ -13,7 +13,7 @@ import java.util.List;
 import mbank.MBank;
 import mbank.database.beans.Account;
 import mbank.database.managersInterface.AccountManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit Argov

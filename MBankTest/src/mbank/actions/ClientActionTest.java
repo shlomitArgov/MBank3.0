@@ -19,7 +19,7 @@ import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ActivityDBManager;
 import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersImpl.DepositDBManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 import org.junit.AfterClass;
 import org.junit.Assert;

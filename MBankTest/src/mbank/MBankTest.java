@@ -1,13 +1,12 @@
 package mbank;
 import static org.junit.Assert.*;
-
 import mbank.MBank;
 import mbank.actions.Action;
 import mbank.actions.AdminAction;
 import mbank.database.beans.Client;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.managersImpl.ClientDBManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 import org.junit.Test;
 

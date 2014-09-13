@@ -1,6 +1,6 @@
 package mbank.database.beans.enums;
 
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 public enum DepositType
 {

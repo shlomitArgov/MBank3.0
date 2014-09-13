@@ -8,7 +8,7 @@ import java.util.List;
 
 import mbank.database.beans.Activity;
 import mbank.database.beans.enums.ActivityType;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit

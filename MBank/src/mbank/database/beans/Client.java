@@ -4,7 +4,7 @@
 package mbank.database.beans;
 
 import mbank.database.beans.enums.ClientType;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit Argov

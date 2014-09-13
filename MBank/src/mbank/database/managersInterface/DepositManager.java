@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mbank.database.beans.Deposit;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit

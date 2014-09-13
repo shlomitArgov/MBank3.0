@@ -6,7 +6,7 @@ package mbank.database.managersInterface;
 import java.util.List;
 
 import mbank.database.beans.Account;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit

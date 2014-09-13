@@ -7,7 +7,7 @@ import java.sql.Connection;
 
 import mbank.Util;
 import mbank.database.connection.ConnectionPool;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;

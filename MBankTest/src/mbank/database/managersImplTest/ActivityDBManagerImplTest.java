@@ -12,7 +12,7 @@ import mbank.database.beans.enums.ActivityType;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.managersImpl.ActivityDBManager;
 import mbank.database.managersImpl.ClientDBManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 import org.junit.After;
 import org.junit.Assert;

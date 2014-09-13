@@ -14,7 +14,7 @@ import mbank.MBank;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.DepositType;
 import mbank.database.managersInterface.DepositManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 /**
  * @author Shlomit Argov

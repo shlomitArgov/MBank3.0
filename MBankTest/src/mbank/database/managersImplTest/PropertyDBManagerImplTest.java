@@ -5,10 +5,11 @@ package mbank.database.managersImplTest;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import mbank.Util;
 import mbank.database.beans.Property;
 import mbank.database.managersImpl.PropertyDBManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 import org.junit.After;
 import org.junit.Assert;

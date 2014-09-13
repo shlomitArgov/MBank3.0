@@ -23,7 +23,7 @@ import mbank.database.beans.enums.SystemProperties;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersImpl.PropertyDBManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 public class Main {
 	private static final String AN_ERROR_OCCURED = "An error occured: ";

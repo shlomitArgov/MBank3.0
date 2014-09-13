@@ -10,7 +10,7 @@ import mbank.database.beans.Client;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ClientDBManager;
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 import org.junit.After;
 import org.junit.Assert;

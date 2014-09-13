@@ -1,6 +1,6 @@
 package mbank.database.beans;
 
-import mbankExceptions.MBankException;
+import mbank.exceptions.MBankException;
 
 public class Property {
 	private String prop_key;
