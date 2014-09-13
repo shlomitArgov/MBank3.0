@@ -31,32 +31,38 @@ public class AccountDBManager implements AccountManager
 	public long insert(Account account) throws MBankException
 	{
 		Connection con = MBank.getInstance().getConnection();
+		long accountId = 0;
 		try
 		{
 			String sql = "INSERT INTO " + tableName
 					+ " (client_id, balance, credit_limit, comment) VALUES ( ?, ?, ?, ?)";
-			PreparedStatement ps = con.prepareStatement(sql);
+			PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, account.getClient_id());
 			ps.setDouble(2, account.getBalance());
 			ps.setDouble(3, account.getCredit_limit());
 			ps.setString(4, account.getComment());
 			ps.execute();
+			
+			ResultSet rs = ps.getGeneratedKeys();
+			if(rs.next())
+			{
+				accountId = rs.getLong(1);
+			}
 		} catch (SQLException e)
 		{
 			throw new MBankException("Database error:\n" + e.getLocalizedMessage());
 		}
-		String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
-		PreparedStatement ps2;
-		long accountId = 0;
-		try {
-			ps2 = con.prepareStatement(sql2);
-			ps2.execute();
-			ResultSet rs = ps2.getResultSet();
-			rs.next();
-			accountId = rs.getLong(1);
-		} catch (SQLException e) {
-			throw new MBankException("Failed to retrieve new account ID");
-		}
+//		String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
+//		PreparedStatement ps2;
+//		long accountId = 0;
+//		try {
+//			ResultSet rs = ps.
+//			accountId = 
+//			ps2 = con.prepareStatement(sql2);
+//			ps2.execute();
+//			ResultSet rs = ps2.getResultSet();
+//			rs.next();
+//			accountId = rs.getLong(1);
 	MBank.getInstance().returnConnection(con);
 	return accountId;
 	}

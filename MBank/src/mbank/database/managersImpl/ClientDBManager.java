@@ -30,11 +30,12 @@ public class ClientDBManager implements ClientManager
 	@Override
 	public long insert(Client client) throws MBankException
 	{
+		long clientId = 0;
 		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "INSERT INTO " + tableName + " (client_name, password, client_type, address, email, phone, comment) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement ps = con.prepareStatement(sql);
+			PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 //			ps.setLong(1, client.getClient_id());
 			ps.setString(1, client.getClient_name());
 			ps.setString(2, client.getPassword());
@@ -44,23 +45,27 @@ public class ClientDBManager implements ClientManager
 			ps.setString(6, client.getPhone());
 			ps.setString(7, client.getComment());
 			ps.execute();
-			
+			ResultSet rs = ps.getGeneratedKeys();
+			if(rs.next())
+			{
+				clientId = rs.getLong(1);
+			}
 		} catch (SQLException e)
 		{
 			throw new MBankException("Failed to add new client:\n");
 		}
-			String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
-			PreparedStatement ps2;
-			long clientId = 0;
-			try {
-				ps2 = con.prepareStatement(sql2);
-				ps2.execute();
-				ResultSet rs = ps2.getResultSet();
-				rs.next();
-				clientId = rs.getLong(1);
-			} catch (SQLException e) {
-				throw new MBankException("Failed to retrieve new client ID");
-			}
+//			String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
+//			PreparedStatement ps2;
+//			long clientId = 0;
+//			try {
+//				ps2 = con.prepareStatement(sql2);
+//				ps2.execute();
+//				ResultSet rs = ps2.getResultSet();
+//				rs.next();
+//				clientId = rs.getLong(1);
+//			} catch (SQLException e) {
+//				throw new MBankException("Failed to retrieve new client ID");
+//			}
 			MBank.getInstance().returnConnection(con);
 		return clientId;
 	}

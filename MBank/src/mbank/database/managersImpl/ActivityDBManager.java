@@ -31,12 +31,13 @@ public class ActivityDBManager implements ActivityManager
 	@Override
 	public long insert(Activity activity) throws MBankException
 	{
+		long activityId = 0;
 		Connection con = MBank.getInstance().getConnection();
 		try
 		{
 			String sql = "INSERT INTO " + tableName
 					+ " (client_id, amount, activity_date, commission, ACTIVITY_TYPE, description) VALUES (?, ?, ?, ?, ?, ?)";
-			PreparedStatement ps = con.prepareStatement(sql);
+			PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 //			ps.setLong(1, activity.getId());
 			ps.setLong(1, activity.getClient_id());
 			ps.setDouble(2, activity.getAmount());
@@ -45,22 +46,28 @@ public class ActivityDBManager implements ActivityManager
 			ps.setInt(5, activity.getActivityType().getVal());
 			ps.setString(6, activity.getDescription());
 			ps.execute();
+			
+			ResultSet rs = ps.getGeneratedKeys();
+			if(rs.next())
+			{
+				activityId = rs.getLong(1);
+			}
 		} catch (SQLException e)
 		{
 			throw new MBankException("Failed to into '" + tableName + "' table");
 		}
-		String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
-		PreparedStatement ps2;
-		long activityId = 0;
-		try {
-			ps2 = con.prepareStatement(sql2);
-			ps2.execute();
-			ResultSet rs = ps2.getResultSet();
-			rs.next();
-			activityId = rs.getLong(1);
-		} catch (SQLException e) {
-			throw new MBankException("Failed to retrieve new activity ID");
-		}
+//		String sql2 = "SELECT IDENTITY_VAL_LOCAL() FROM " + tableName;
+//		PreparedStatement ps2;
+//		long activityId = 0;
+//		try {
+//			ps2 = con.prepareStatement(sql2);
+//			ps2.execute();
+//			ResultSet rs = ps2.getResultSet();
+//			rs.next();
+//			activityId = rs.getLong(1);
+//		} catch (SQLException e) {
+//			throw new MBankException("Failed to retrieve new activity ID");
+//		}
 	MBank.getInstance().returnConnection(con);
 	return activityId;
 	}
