@@ -109,6 +109,7 @@ public class Controller extends HttpServlet
 		{
 			error = e.getLocalizedMessage();
 			request.setAttribute(ERROR_ATTR, error);
+			request.getSession().invalidate();
 			return INDEX_JSP;
 		}
 		
