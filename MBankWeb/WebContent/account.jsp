@@ -8,6 +8,39 @@
 <%--<title>Insert title here</title> --%>
 </head>
 <body>
-
+<table>
+	<thead>
+		<tr>
+			<td>
+				Client ID
+			</td>
+			<td>
+				Account ID
+			</td>
+			<td>
+				Current Balance
+			</td>
+			<td>
+				Credit Limit
+			</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				${client_id}
+			</td>
+			<td>
+				${account_id}
+			</td>
+			<td>
+				${current_balance}
+			</td>
+			<td>
+				${credit_limit}
+			</td>
+		</tr>
+	</tbody>
+</table>
 </body>
 </html>

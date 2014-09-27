@@ -2,6 +2,7 @@ package mbank;
 
 import java.io.IOException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,54 +20,65 @@ public class Controller extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	
-	private static final String MBANK_PROPERTIES = "mbank_properties";
+	private static final String COMMAND_PARAM = "command";
+	private static final String USERNAME_PARAM = "username";
+	private static final String PASSWORD_PARAM = "password";
+	
+	private static final String LOGIN_COMMAND_PARAM = "Login";
+	private static final String MY_DETAILS_COMMAND_PARAM = "myDetails";
+	private static final String DEPOSITS_COMMAND_PARAM = "deposits";
+	private static final String RECENT_ACTIVITIES_COMMAND_PARAM = "recent_activities";
+	private static final String ACCOUNT_COMMAND_PARAM = "account";
+	private static final String MBANK_PROPERTIES_COMMAND_PARAM = "mbank_properties";
+	
 	private static final String MY_DETAILS_JSP = "my_details.jsp";
 	private static final String DEPOSITS_JSP = "deposits.jsp";
 	private static final String RECENT_ACTIVITIES_JSP = "recent_activities.jsp";
 	private static final String ACCOUNT_JSP = "account.jsp";
 	private static final String INDEX_JSP = "index.jsp";
-	
-	
-	private static final String COMMAND_PARAM = "command";
-	private static final String USERNAME_PARAM = "username";
-	private static final String PASSWORD_PARAM = "password";
 
 	private static final String CLIENT_ACTION_ATTR = "client_action";
-	private static final String ERROR_ATTR = "error";	
+	private static final String ERROR_ATTR = "error";
 
+
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+	}
+	
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		// handle command
 		String nextPage = null;
 		String command = request.getParameter(COMMAND_PARAM);
+		System.out.println("command = " + command);
 		switch (command) 
 		{
-			case "":
+			case LOGIN_COMMAND_PARAM:
 			{
 				nextPage = login(request);
 				break;
 			}
-			case "account": 
+			case ACCOUNT_COMMAND_PARAM: 
 			{
 				nextPage = gotoAccount();
 				break;
 			}
-			case "recent_activities": 
+			case RECENT_ACTIVITIES_COMMAND_PARAM: 
 			{
 				nextPage = gotoRecentActivities();
 				break;
 			}
-			case "deposits": 
+			case DEPOSITS_COMMAND_PARAM: 
 			{
 				nextPage = gotoDeposits();
 				break;
 			}
-			case "myDetails": 
+			case MY_DETAILS_COMMAND_PARAM: 
 			{
 				nextPage = gotoMyDetails();
 				break;
 			}
-			case MBANK_PROPERTIES: 
+			case MBANK_PROPERTIES_COMMAND_PARAM: 
 			{
 				nextPage = gotoMBankProperties();
 				break;
@@ -86,6 +98,8 @@ public class Controller extends HttpServlet
 		
 		String username = request.getParameter(USERNAME_PARAM);
 		String password = request.getParameter(PASSWORD_PARAM);
+		/*System.out.println("username = " + username);
+		System.out.println("password = " + password);*/
 		String error = null;
 		// attempt to perform login with the provided credentials
 		try 
@@ -102,6 +116,8 @@ public class Controller extends HttpServlet
 		{
 			// save the ClientAction object in the session
 			request.getSession().setAttribute(CLIENT_ACTION_ATTR, clientAction);
+			System.out.println("clientAction = " + clientAction.toString());
+			System.out.println("going to: " + ACCOUNT_JSP);
 			return ACCOUNT_JSP;
 		}
 		request.setAttribute(ERROR_ATTR, "Failed to create client action");
@@ -110,7 +126,7 @@ public class Controller extends HttpServlet
 
 	private String gotoMBankProperties() 
 	{
-		return MBANK_PROPERTIES;	//next page
+		return MBANK_PROPERTIES_COMMAND_PARAM;	//next page
 		
 	}
 

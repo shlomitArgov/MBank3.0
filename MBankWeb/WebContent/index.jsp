@@ -12,21 +12,21 @@
 <hr>
 Login:
 <br>
-<form action="Controller?login">
+<form action="Controller" method="post">
 	<table>
 		<tr>
 			<td>Username: </td>
-			<td><input name="username" id="username"></td>
+			<td><input type="text" name="username" id="username"></td>
 			<td></td>
 		</tr>
 		<tr>
 			<td>Password: </td>
-			<td><input name="password" id="password"></td>
+			<td><input type="password" name="password" id="password"></td>
 			<td></td>
 		</tr>
 		<tr>
 			<td></td>
-			<td><button type="submit">Enter</button></td>
+			<td><input type="submit" name="command" id="command" value="Login"></td>
 			<td></td>
 		</tr>
 		<tr>
