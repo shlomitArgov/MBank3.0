@@ -13,21 +13,20 @@ import mbank.exceptions.MBankException;
  * Connection pool, initialized by connection number (initial number of connection, also used as the number of new 
  * connnection allocated when all previous connections are in use) and by the DB URL. 
  */
-public class ConnectionPool implements Runnable {
+public class ConnectionPool
+{
 	
 	private static String url;
 	private List<Connection> availableConnections = new ArrayList<Connection>();
 	private List<Connection> usedConnections = new ArrayList<Connection>();
 	private int initialConnectionNum;
 
-	public ConnectionPool(String url, int initialConnectionNum)
-			throws MBankException {
+	public ConnectionPool(String url, int initialConnectionNum) throws MBankException {
 		ConnectionPool.url = url;
 		this.initialConnectionNum = initialConnectionNum;
 		for (int i = 0; i < initialConnectionNum; i++) {
 			availableConnections.add(getConnection(url));
 		}
-
 	}
 
 	private Connection getConnection(String url) throws MBankException {
@@ -110,8 +109,7 @@ public class ConnectionPool implements Runnable {
 			con.close();
 		}
 	}
-
-	@Override
+/*  @Override
 	public void run() {
 		while (true) {
 			synchronized (this) {
@@ -127,7 +125,7 @@ public class ConnectionPool implements Runnable {
 			}
 		}
 	}
-		
+*/		
 	public List<Connection> getUsedConnections() {
 		return usedConnections;
 	}
