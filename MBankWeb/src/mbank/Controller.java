@@ -7,6 +7,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mbank.actions.Action;
+import mbank.exceptions.MBankException;
 /**
  * Servlet implementation class Controller
  */
@@ -14,9 +16,28 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Controller extends HttpServlet 
 {
+	private static final String MBANK_PROPERTIES = "mbank_properties";
+
+	private static final String MY_DETAILS_JSP = "my_details.jsp";
+
+	private static final String DEPOSITS_JSP = "deposits.jsp";
+
+	private static final String RECENT_ACTIVITIES_JSP = "recent_activities.jsp";
+
+	private static final String ACCOUNT_JSP = "account.jsp";
+
+	private static final String INDEX_JSP = "index.jsp";
+
 	private static final long serialVersionUID = 1L;
 	
 	private static final String COMMAND_PARAM = "command";
+
+	private static final String USERNAME_PARAM = "username";
+
+	private static final String PASSWORD_PARAM = "password";
+
+	private static final String CLIENT_ACTION_ATTR = "client_action";
+	
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
@@ -27,7 +48,7 @@ public class Controller extends HttpServlet
 		{
 			case "":
 			{
-				nextPage = login();
+				nextPage = login(request);
 				break;
 			}
 			case "account": 
@@ -50,7 +71,7 @@ public class Controller extends HttpServlet
 				nextPage = gotoMyDetails();
 				break;
 			}
-			case "mbank_properties": 
+			case MBANK_PROPERTIES: 
 			{
 				nextPage = gotoMBankProperties();
 				break;
@@ -62,35 +83,59 @@ public class Controller extends HttpServlet
 		this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
 	}
 
-	private String login() 
+	private String login(HttpServletRequest request) 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		// When logging in it is expected that no session exists (the index.jsp is forwarded to the account
+		// page is a session already exists
+		Action clientAction = null;
+		
+		String username = request.getParameter(USERNAME_PARAM);
+		String password = request.getParameter(PASSWORD_PARAM);
+		String error = null;
+		// attempt to perform login with the provided credentials
+		try 
+		{
+			clientAction = MBank.getInstance().login(username, password);
+		} catch (MBankException e) 
+		{
+			error = e.getLocalizedMessage();
+			request.setAttribute("error", error);
+			return INDEX_JSP;
+		}
+		
+		if(clientAction != null)
+		{
+			// save the ClientAction object in the session
+			request.getSession().setAttribute(CLIENT_ACTION_ATTR, clientAction);
+			return ACCOUNT_JSP;
+		}
+		request.setAttribute("error", "Failed to create client action");
+		return INDEX_JSP;
 	}
 
 	private String gotoMBankProperties() 
 	{
-		return "mbank_properties";	//next page
+		return MBANK_PROPERTIES;	//next page
 		
 	}
 
 	private String gotoMyDetails() 
 	{
-		return "my_details.jsp";	//next page
+		return MY_DETAILS_JSP;	//next page
 	}
 
 	private String gotoDeposits() 
 	{
-		return "deposits.jsp";	//next page
+		return DEPOSITS_JSP;	//next page
 	}
 
 	private String gotoRecentActivities() 
 	{
-		return "recent_activities.jsp";	//next page
+		return RECENT_ACTIVITIES_JSP;	//next page
 	}
 
 	private String gotoAccount() 
 	{
-		return "account.jsp";	//next page
+		return ACCOUNT_JSP;	//next page
 	}
 }
