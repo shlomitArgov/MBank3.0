@@ -12,7 +12,7 @@
 <hr>
 Login:
 <br>
-<form action="login">
+<form action="Controller?login">
 	<table>
 		<tr>
 			<td>Username: </td>
@@ -27,6 +27,11 @@ Login:
 		<tr>
 			<td></td>
 			<td><button type="submit">Enter</button></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>${error}</td>
 			<td></td>
 		</tr>
 	</table>
