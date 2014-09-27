@@ -43,6 +43,8 @@ public class RequestFilter implements Filter
 		
 		if(session.isNew())
 		{
+			// make sure the only command that is passed to the controller for a new
+			// session is the login command
 			if(request.getParameter(COMMAND_PARAM).equals(LOGIN_COMMAND_PARAM))
 			{
 				System.out.println("forwarding to Controller - attempting to login");
@@ -51,7 +53,7 @@ public class RequestFilter implements Filter
 			}
 			else
 			{
-				// trying to access an internal command - redirect to  login page
+				// trying to access an internal command without a valid session - redirect to  login page
 				System.out.println("Tried to access internal command without active session");
 				session.invalidate();
 				res.sendRedirect(LOGIN_PATH);
