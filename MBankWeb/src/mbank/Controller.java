@@ -31,18 +31,21 @@ public class Controller extends HttpServlet
 	private static final String ACCOUNT_COMMAND_PARAM = "account";
 	private static final String MBANK_PROPERTIES_COMMAND_PARAM = "mbank_properties";
 	
-	private static final String MY_DETAILS_JSP = "my_details.jsp";
-	private static final String DEPOSITS_JSP = "deposits.jsp";
-	private static final String RECENT_ACTIVITIES_JSP = "recent_activities.jsp";
-	private static final String ACCOUNT_JSP = "account.jsp";
-	private static final String INDEX_JSP = "index.jsp";
+	private static final String MY_DETAILS_JSP = "/my_details.jsp";
+	private static final String DEPOSITS_JSP = "/deposits.jsp";
+	private static final String RECENT_ACTIVITIES_JSP = "/recent_activities.jsp";
+	private static final String ACCOUNT_JSP = "/account.jsp";
+	private static final String INDEX_JSP = "/index.jsp";
 
 	private static final String CLIENT_ACTION_ATTR = "client_action";
 	private static final String ERROR_ATTR = "error";
 
+	private MBank mbankInstance;
+
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		mbankInstance = MBank.getInstance();
 	}
 	
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
@@ -56,6 +59,7 @@ public class Controller extends HttpServlet
 			case LOGIN_COMMAND_PARAM:
 			{
 				nextPage = login(request);
+				System.out.println("nextPage after login command is: " + nextPage);
 				break;
 			}
 			case ACCOUNT_COMMAND_PARAM: 
@@ -104,7 +108,7 @@ public class Controller extends HttpServlet
 		// attempt to perform login with the provided credentials
 		try 
 		{
-			clientAction = MBank.getInstance().login(username, password);
+			clientAction = mbankInstance.login(username, password);
 		} catch (MBankException e) 
 		{
 			error = e.getLocalizedMessage();
