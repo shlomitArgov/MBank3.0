@@ -32,10 +32,20 @@ public class MBank
 	private MBank() throws MBankException
 	{	
 		//Generate connection pool
+		//load driver
+		try 
+		{
+			Class.forName("org.apache.derby.jdbc.ClientDriver");
+		} catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
 		connectionPool = new ConnectionPool(url, initialConnectionNum);
+		/* -- Commented out due to Tomcat limitations --
 		//launch daily maintenance daemon thread responsible for closing expired deposits
 		PeriodicDepositMaintenance depositMaintenance = new PeriodicDepositMaintenance(this);
 		depositMaintenance.launch();
+		*/
 	}
 
 	public static MBank getInstance()
@@ -57,16 +67,18 @@ public class MBank
 	public Connection getConnection() throws MBankException
 	{
 		return connectionPool.checkout();
+//		return con;
 	}
 	
 	public void returnConnection(Connection con) throws MBankException
 	{
-		connectionPool.checkin(con);		
+		connectionPool.checkin(con);
 	}
 	
 	public void exit() throws SQLException
 	{
 		connectionPool.exit();
+//		con.close();
 	}
 	
 	/**
