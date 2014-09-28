@@ -40,6 +40,8 @@ public class Controller extends HttpServlet
 	private static final String CLIENT_ACTION_ATTR = "client_action";
 	private static final String ERROR_ATTR = "error";
 
+	private static final String USERNAME_ATTR = "username";
+
 	private MBank mbankInstance;
 
 
@@ -59,6 +61,7 @@ public class Controller extends HttpServlet
 			case LOGIN_COMMAND_PARAM:
 			{
 				nextPage = login(request);
+				System.out.println("Controller.service()");
 				System.out.println("nextPage after login command is: " + nextPage);
 				break;
 			}
@@ -121,9 +124,14 @@ public class Controller extends HttpServlet
 		{
 			// save the ClientAction object in the session
 			request.getSession().setAttribute(CLIENT_ACTION_ATTR, clientAction);
+			request.getSession().setAttribute(USERNAME_ATTR, username);
 			System.out.println("clientAction = " + clientAction.toString());
 			System.out.println("going to: " + ACCOUNT_JSP);
 			return ACCOUNT_JSP;
+		}
+		else
+		{
+			request.getSession().invalidate();
 		}
 		request.setAttribute(ERROR_ATTR, "Failed to create client action");
 		return INDEX_JSP;
