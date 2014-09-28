@@ -21,6 +21,8 @@ public class RequestFilter implements Filter
 {   
 	private static final String COMMAND_PARAM = "command";
 	private static final String LOGIN_COMMAND_PARAM = "Login";
+	
+	private static final String APPLICATION_NAME = "/MBankWeb"; 
 	private static final String CONTROLLER_SERVLET ="/Controller";
 	private static final String LOGIN_PATH = "/index.jsp";
 	private static final String ACCOUNT_JSP = "/account.jsp";
@@ -56,14 +58,15 @@ public class RequestFilter implements Filter
 				// trying to access an internal command without a valid session - redirect to  login page
 				System.out.println("Tried to access internal command without active session");
 				session.invalidate();
-				res.sendRedirect(LOGIN_PATH);
+				res.sendRedirect(APPLICATION_NAME + LOGIN_PATH);
 			}
 		}
 		else
 		{
 			// a valid session already exists - redirect to the Account page
-			System.out.println("Valid session exists - redirecting to account page");
-			res.sendRedirect(ACCOUNT_JSP);
+			System.out.println("RequestFilter.doFilter()");
+			System.out.println("Valid session exists - doing nothing");
+//			res.sendRedirect(APPLICATION_NAME + ACCOUNT_JSP);
 		}
 	}
 			@Override

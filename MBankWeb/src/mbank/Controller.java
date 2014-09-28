@@ -60,8 +60,8 @@ public class Controller extends HttpServlet
 		{
 			case LOGIN_COMMAND_PARAM:
 			{
-				nextPage = login(request);
 				System.out.println("Controller.service()");
+				nextPage = login(request);
 				System.out.println("nextPage after login command is: " + nextPage);
 				break;
 			}
@@ -125,7 +125,7 @@ public class Controller extends HttpServlet
 			// save the ClientAction object in the session
 			request.getSession().setAttribute(CLIENT_ACTION_ATTR, clientAction);
 			request.getSession().setAttribute(USERNAME_ATTR, username);
-			System.out.println("clientAction = " + clientAction.toString());
+			System.out.println("Controller.login()");
 			System.out.println("going to: " + ACCOUNT_JSP);
 			return ACCOUNT_JSP;
 		}
