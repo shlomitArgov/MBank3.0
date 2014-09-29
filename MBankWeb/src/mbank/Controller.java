@@ -35,6 +35,7 @@ public class Controller extends HttpServlet
 	private static final String RECENT_ACTIVITIES_JSP = "/recent_activities.jsp";
 	private static final String ACCOUNT_JSP = "/account.jsp";
 	private static final String INDEX_JSP = "/index.jsp";
+	private static final String MBANK_PROPERTIES_JSP = "/mbank_properties.jsp";
 
 	private static final String CLIENT_ACTION_ATTR = "client_action";
 	private static final String ERROR_ATTR = "error";
@@ -142,7 +143,7 @@ public class Controller extends HttpServlet
 
 	private String gotoMBankProperties() 
 	{
-		return MBANK_PROPERTIES_COMMAND_PARAM;	//next page
+		return MBANK_PROPERTIES_JSP;	//next page
 		
 	}
 
