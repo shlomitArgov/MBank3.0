@@ -23,10 +23,8 @@ public class RequestFilter implements Filter
 	private static final String LOGIN_COMMAND_PARAM = "Login";
 	
 	private static final String APPLICATION_NAME = "/MBankWeb"; 
-	private static final String CONTROLLER_SERVLET ="/Controller";
+	private static final String CONTROLLER_PATH_ ="/Controller";
 	private static final String LOGIN_PATH = "/index.jsp";
-	private static final String ACCOUNT_JSP = "/account.jsp";
-
 	/**
      * Default constructor. 
      */
@@ -40,33 +38,30 @@ public class RequestFilter implements Filter
 	{
 		System.out.println("RequestFilter.doFilter()");
 		HttpServletRequest req = (HttpServletRequest) request;
-		HttpSession session = req.getSession(true);
+		HttpSession session = req.getSession(false);
 		HttpServletResponse res = (HttpServletResponse) response;
 		
-		if(session.isNew())
+		if(session == null)
 		{
-			// make sure the only command that is passed to the controller for a new
-			// session is the login command
-			if(request.getParameter(COMMAND_PARAM).equals(LOGIN_COMMAND_PARAM))
+			System.out.println(req.getParameter(COMMAND_PARAM));
+			if(req.getParameter(COMMAND_PARAM) != null && req.getParameter(COMMAND_PARAM).equals(LOGIN_COMMAND_PARAM))
 			{
-				System.out.println("forwarding to Controller - attempting to login");
-				// forward to Controller servlet to try and perform login
-				request.getServletContext().getRequestDispatcher(CONTROLLER_SERVLET).forward(request, response);
+				// Forward to Controller for handling login action
+				System.out.println("Forwarding to the Controller for handling login action");
+				request.getServletContext().getRequestDispatcher(CONTROLLER_PATH_).forward(request, response);
 			}
 			else
 			{
-				// trying to access an internal command without a valid session - redirect to  login page
-				System.out.println("Tried to access internal command without active session");
-				session.invalidate();
+				// No valid session exists - redirect to the login page
+				System.out.println("No valid session - redirecting to login page");
 				res.sendRedirect(APPLICATION_NAME + LOGIN_PATH);
 			}
 		}
 		else
 		{
-			// a valid session already exists - redirect to the Account page
-			System.out.println("RequestFilter.doFilter()");
-			System.out.println("Valid session exists - doing nothing");
-//			res.sendRedirect(APPLICATION_NAME + ACCOUNT_JSP);
+			// A valid session exists - forward to the Controller for handling
+			System.out.println("forwarding to Controller for handling");
+			request.getServletContext().getRequestDispatcher(CONTROLLER_PATH_).forward(request, response);
 		}
 	}
 			@Override
