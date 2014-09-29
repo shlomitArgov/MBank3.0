@@ -99,7 +99,10 @@ public class Controller extends HttpServlet
 				break;
 			}
 			default:
+			{
+				nextPage = ACCOUNT_JSP;
 				break;
+			}
 		}
 		// forward the request
 		this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
