@@ -56,7 +56,6 @@ public class Controller extends HttpServlet
 		String nextPage = null;
 		String command = request.getParameter(COMMAND_PARAM);
 		System.out.println("command = " + command);
-		System.out.println("command = " + command);
 		switch (command) 
 		{
 			case LOGIN_COMMAND_PARAM:
