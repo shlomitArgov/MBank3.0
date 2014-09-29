@@ -12,19 +12,19 @@
 <table>
 	<tr>
 		<td>
-			<a href="Controller?account">Account</a>
+			<a href="Controller?command=account">Account</a>
 		</td>
 		<td>
-			<a href="Controller?recent_activities">Recent Activities</a>
+			<a href="Controller?command=recent_activities">Recent Activities</a>
 		</td>
 		<td>
-			<a href="Controller?deposits">Deposits</a>
+			<a href="Controller?command=deposits">Deposits</a>
 		</td>
 		<td>
-			<a href="Controller?myDetails">My Details</a>
+			<a href="Controller?command=myDetails">My Details</a>
 		</td>
 		<td>
-			<a href="Controller?mbank_properties">MBank Properties</a>
+			<a href="Controller?command=mbank_properties">MBank Properties</a>
 		</td>
 	</tr>
 </table>
