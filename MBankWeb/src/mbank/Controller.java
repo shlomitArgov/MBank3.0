@@ -8,7 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import mbank.actions.Action;
 import mbank.exceptions.MBankException;
 /**
@@ -101,13 +100,16 @@ public class Controller extends HttpServlet
 	{
 		// When logging in it is expected that no session exists (the index.jsp is forwarded to the account
 		// page is a session already exists
+		
+		// Create a new session
+		request.getSession(true);
+		
 		Action clientAction = null;
 		
 		String username = request.getParameter(USERNAME_PARAM);
 		String password = request.getParameter(PASSWORD_PARAM);
-		/*System.out.println("username = " + username);
-		System.out.println("password = " + password);*/
 		String error = null;
+		
 		// attempt to perform login with the provided credentials
 		try 
 		{
