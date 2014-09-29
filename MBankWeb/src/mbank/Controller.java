@@ -53,59 +53,70 @@ public class Controller extends HttpServlet
 		mbankInstance = MBank.getInstance();
 	}
 	
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		System.out.println("Controller.service()");
-		// handle command
-		String nextPage = null;
-		String command = request.getParameter(COMMAND_PARAM);
-		System.out.println("command = " + command);
-		switch (command) 
-		{
-			case LOGIN_COMMAND_PARAM:
-			{
-				nextPage = login(request);
-				System.out.println("nextPage after login command is: " + nextPage);
-				break;
-			}
-			case ACCOUNT_COMMAND_PARAM: 
-			{
-				nextPage = gotoAccount();
-				break;
-			}
-			case RECENT_ACTIVITIES_COMMAND_PARAM: 
-			{
-				nextPage = gotoRecentActivities();
-				break;
-			}
-			case DEPOSITS_COMMAND_PARAM: 
-			{
-				nextPage = gotoDeposits();
-				break;
-			}
-			case MY_DETAILS_COMMAND_PARAM: 
-			{
-				nextPage = gotoMyDetails();
-				break;
-			}
-			case MBANK_PROPERTIES_COMMAND_PARAM: 
-			{
-				nextPage = gotoMBankProperties();
-				break;
-			}
-			case LOGOUT_COMMAND_PARAM:
-			{
-				nextPage = logout(request);
-				break;
-			}
-			default:
-			{
-				nextPage = ACCOUNT_JSP;
-				break;
-			}
-		}
-		// forward the request
-		this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
+			System.out.println("Controller.service()");
+			// handle command
+			String nextPage = null;
+			String command = request.getParameter(COMMAND_PARAM);
+			System.out.println("command = " + command);
+
+			if (command == null)
+				{
+					nextPage = ACCOUNT_JSP; // default (there should always
+											// be a valid session at this
+											// point)
+				} else
+				{
+					switch (command)
+						{
+						case LOGIN_COMMAND_PARAM:
+							{
+								nextPage = login(request);
+								System.out
+										.println("nextPage after login command is: "
+												+ nextPage);
+								break;
+							}
+						case ACCOUNT_COMMAND_PARAM:
+							{
+								nextPage = gotoAccount();
+								break;
+							}
+						case RECENT_ACTIVITIES_COMMAND_PARAM:
+							{
+								nextPage = gotoRecentActivities();
+								break;
+							}
+						case DEPOSITS_COMMAND_PARAM:
+							{
+								nextPage = gotoDeposits();
+								break;
+							}
+						case MY_DETAILS_COMMAND_PARAM:
+							{
+								nextPage = gotoMyDetails();
+								break;
+							}
+						case MBANK_PROPERTIES_COMMAND_PARAM:
+							{
+								nextPage = gotoMBankProperties();
+								break;
+							}
+						case LOGOUT_COMMAND_PARAM:
+							{
+								nextPage = logout(request);
+								break;
+							}
+						default:
+							{
+								nextPage = ACCOUNT_JSP;
+								break;
+							}
+						}
+				}
+// forward the request
+	this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
 	}
 
 	private String logout(HttpServletRequest request) {
