@@ -27,6 +27,9 @@
 		<td>
 			<a href="Controller?command=mbank_properties">MBank Properties</a>
 		</td>
+		<td>
+			<a href="Controller?command=logout">Logout</a>
+		</td>
 	</tr>
 </table>
 <hr>

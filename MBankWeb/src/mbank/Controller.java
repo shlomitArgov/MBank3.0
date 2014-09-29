@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import mbank.actions.Action;
 import mbank.exceptions.MBankException;
 /**
@@ -29,6 +30,8 @@ public class Controller extends HttpServlet
 	private static final String RECENT_ACTIVITIES_COMMAND_PARAM = "recent_activities";
 	private static final String ACCOUNT_COMMAND_PARAM = "account";
 	private static final String MBANK_PROPERTIES_COMMAND_PARAM = "mbank_properties";
+	private static final String LOGOUT_COMMAND_PARAM = "logout";
+
 	
 	private static final String MY_DETAILS_JSP = "/my_details.jsp";
 	private static final String DEPOSITS_JSP = "/deposits.jsp";
@@ -52,6 +55,7 @@ public class Controller extends HttpServlet
 	
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
+		System.out.println("Controller.service()");
 		// handle command
 		String nextPage = null;
 		String command = request.getParameter(COMMAND_PARAM);
@@ -60,7 +64,6 @@ public class Controller extends HttpServlet
 		{
 			case LOGIN_COMMAND_PARAM:
 			{
-				System.out.println("Controller.service()");
 				nextPage = login(request);
 				System.out.println("nextPage after login command is: " + nextPage);
 				break;
@@ -90,11 +93,21 @@ public class Controller extends HttpServlet
 				nextPage = gotoMBankProperties();
 				break;
 			}
+			case LOGOUT_COMMAND_PARAM:
+			{
+				nextPage = logout(request);
+				break;
+			}
 			default:
 				break;
 		}
 		// forward the request
 		this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
+	}
+
+	private String logout(HttpServletRequest request) {
+		request.getSession().invalidate();
+		return INDEX_JSP;
 	}
 
 	private String login(HttpServletRequest request) 
