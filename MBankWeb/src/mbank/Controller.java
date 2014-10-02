@@ -137,7 +137,8 @@ public class Controller extends HttpServlet
 		String username = request.getParameter(USERNAME_PARAM);
 		String password = request.getParameter(PASSWORD_PARAM);
 		String error = null;
-		
+		//TODO validations on username/password
+		request.setAttribute(USERNAME_ATTR, username);
 		// attempt to perform login with the provided credentials
 		try 
 		{
