@@ -30,7 +30,6 @@
         <li><a href="Controller?command=deposits"><span>Deposits</span></a></li>
   		<li><a href="Controller?command=myDetails"><span>My Details</span></a></li>
     	<li><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
-    	<li><a href="Controller?command=logout">Logout</a></li>
       </ul>
     </div>
     <br class="clear" />
