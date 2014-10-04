@@ -49,8 +49,9 @@
 	 </table>
  	</div>
  </div>
- 
+ <br class="clear" />
  <br/>
+ 
  <ul>
  	<li><a href="Controller?command=withdraw">Withdraw</a></li>
  	<li><a href="Controller?command=deposit">Deposit</a></li>
