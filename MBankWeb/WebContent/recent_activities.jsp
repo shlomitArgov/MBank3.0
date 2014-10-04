@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 </head>
-<body>
+<body id="top">
 
 <div class="wrapper col2">
   <div id="topbar">
@@ -43,7 +43,7 @@
 	<tbody>
 	<c:forEach items="${client_activities}" var="activity">
 		<jsp:useBean id="activity" class="mbank.database.beans.Account" scope="request"></jsp:useBean>
-		<tr>
+		<tr class="light">
 		<td>${activity.id}</td>
 		<td>${activity.amount}</td>
 		<td>${activity.activityType}</td>
