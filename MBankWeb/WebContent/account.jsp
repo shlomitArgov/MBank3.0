@@ -24,10 +24,8 @@
     </div>
     <br class="clear" />
   </div>
+
 </div>
-
-
-
   <div class="container">
     <div class="content">
   <table summary="Account Details" cellpadding="0" cellspacing="0">
@@ -48,45 +46,15 @@
             <td>${account.credit_limit}</td>
           </tr>
         </tbody>
- </table>
+	 </table>
+ 	</div>
  </div>
- </div>
-
+ 
+ <br/>
+ <ul>
+ 	<li><a href="Controller?command=withdraw">Withdraw</a></li>
+ 	<li><a href="Controller?command=deposit">Deposit</a></li>
+ </ul>
 <br class="clear" />
-
-<%--<table>
-	<thead>
-		<tr>
-			<td>
-				Client ID
-			</td>
-			<td>
-				Account ID
-			</td>
-			<td>
-				Current Balance
-			</td>
-			<td>
-				Credit Limit
-			</td>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>
-				${client_id}
-			</td>
-			<td>
-				${account_id}
-			</td>
-			<td>
-				${current_balance}
-			</td>
-			<td>
-				${credit_limit}
-			</td>
-		</tr>
-	</tbody>
-</table> --%>
 </body>
 </html>

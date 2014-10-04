@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page session="false" %>
+<jsp:useBean id="client" class="mbank.database.beans.Client" scope="session"></jsp:useBean>
 <%@ include file="clientMenu.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 </head>
-<body>
+<body id="top">
 
 <div class="wrapper col2">
   <div id="topbar">
@@ -25,6 +25,34 @@
   </div>
 </div>
 
+  <div class="container">
+    <div class="content">
+  <table summary="Client Details" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr class="light">
+            <th>Client ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Address</th>
+            <th>E-mail</th>
+            <th>Phone#</th>
+          </tr>
+        </thead>
+        
+ 		<tbody>
+          <tr class="light">
+            <td>${client.client_id}</td>
+            <td>${client.client_name}</td>
+            <td>${client.type}</td>
+            <td>${client.address}</td>
+            <td>${client.email}</td>
+            <td>${client.phone}</td>
+          </tr>
+        </tbody>
+	 </table>
+ 	</div>
+ </div>
+ 
 
 </body>
 </html>
