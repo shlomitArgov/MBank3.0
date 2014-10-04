@@ -24,6 +24,11 @@ public class Activity
 				+ ", description=" + description + "]\n";
 	}
 
+	public Activity()
+	{
+		// default constructor for JSP
+	}
+
 	private long  id;
 	private long client_id;
 	private double amount;

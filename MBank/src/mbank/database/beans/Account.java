@@ -9,6 +9,10 @@ package mbank.database.beans;
  */
 public class Account
 {
+	public Account()
+	{
+		//default constructor for JSP
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

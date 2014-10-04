@@ -3,6 +3,11 @@ package mbank.database.beans;
 import mbank.exceptions.MBankException;
 
 public class Property {
+	public Property()
+	{
+		// default constructor for JSP
+	}
+
 	private String prop_key;
 	private String prop_value;
 
