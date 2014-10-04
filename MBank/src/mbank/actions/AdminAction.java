@@ -348,12 +348,6 @@ private void testUniqueClientnamePasswordCombination(
 		return activities;
 	}
 	
-	public ArrayList<Property> viewSystemProperties() throws MBankException
-	{
-		PropertyManager propertyManager = new PropertyDBManager();
-		return propertyManager.queryAllProperties();
-	}
-	
 	public void updateSystemProperty(Property property) throws MBankException
 	{
 		PropertyManager propertyManager = new PropertyDBManager();
