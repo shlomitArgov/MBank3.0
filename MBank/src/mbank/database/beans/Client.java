@@ -13,6 +13,11 @@ import mbank.exceptions.MBankException;
 public class Client
 {
 	
+	public Client()
+	{
+		// default constructor for use in JSP
+	}
+
 	private long client_id;
 	private String client_name;
 	private String password;
