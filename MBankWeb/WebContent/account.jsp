@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<%@ page session="false" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ include file="clientMenu.jsp" %>
+<jsp:useBean id="account" class="mbank.database.beans.Account" scope="session"></jsp:useBean>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <link rel="stylesheet" href="styles/layout.css" type="text/css" />
 <html>
@@ -22,13 +21,13 @@
             <th>Credit Limit</th>
           </tr>
         </thead>
-
+        
  		<tbody>
           <tr class="light">
-            <td>${client_id}</td>
-            <td>${account_id}</td>
-            <td>${current_balance}</td>
-            <td>${credit_limit}</td>
+            <td>${account.client_id}</td>
+            <td>${account.account_id}</td>
+            <td>${account.balance}</td>
+            <td>${account.credit_limit}</td>
           </tr>
         </tbody>
  </table>

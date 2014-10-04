@@ -1,7 +1,6 @@
 package mbank;
 
 import java.io.IOException;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mbank.actions.Action;
+import mbank.actions.ClientAction;
+import mbank.database.beans.Account;
 import mbank.exceptions.MBankException;
 /**
  * Servlet implementation class Controller
@@ -42,8 +43,8 @@ public class Controller extends HttpServlet
 
 	private static final String CLIENT_ACTION_ATTR = "client_action";
 	private static final String ERROR_ATTR = "error";
-
 	private static final String USERNAME_ATTR = "username";
+	private static final String ACCOUNT_ATTR = "account";
 
 	private MBank mbankInstance;
 
@@ -72,7 +73,14 @@ public class Controller extends HttpServlet
 						{
 						case LOGIN_COMMAND_PARAM:
 							{
-								nextPage = login(request);
+								try
+								{
+									nextPage = login(request);
+								} catch (MBankException e)
+								{
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								System.out
 										.println("nextPage after login command is: "
 												+ nextPage);
@@ -80,7 +88,14 @@ public class Controller extends HttpServlet
 							}
 						case ACCOUNT_COMMAND_PARAM:
 							{
-								nextPage = gotoAccount();
+								try
+								{
+									nextPage = gotoAccount(request);
+								} catch (MBankException e)
+								{
+									// TODO Auto-generated catch block
+									
+								}
 								break;
 							}
 						case RECENT_ACTIVITIES_COMMAND_PARAM:
@@ -124,7 +139,7 @@ public class Controller extends HttpServlet
 		return INDEX_JSP;
 	}
 
-	private String login(HttpServletRequest request) 
+	private String login(HttpServletRequest request) throws MBankException 
 	{
 		// When logging in it is expected that no session exists (the index.jsp is forwarded to the account
 		// page is a session already exists
@@ -158,7 +173,8 @@ public class Controller extends HttpServlet
 			request.getSession().setAttribute(USERNAME_ATTR, username);
 			System.out.println("Controller.login()");
 			System.out.println("going to: " + ACCOUNT_JSP);
-			return ACCOUNT_JSP;
+//			return ACCOUNT_JSP;
+			return gotoAccount(request);
 		}
 		else
 		{
@@ -189,8 +205,15 @@ public class Controller extends HttpServlet
 		return RECENT_ACTIVITIES_JSP;	//next page
 	}
 
-	private String gotoAccount() 
+	private String gotoAccount(HttpServletRequest request) throws MBankException 
 	{
+		System.out.println("Controller.gotoAccount()");
+		// Get ClientAction object from the session
+		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		Account account = clientAction.viewAccountDetails();
+		System.out.println("account_id = " + account.getAccount_id());
+		request.getSession().setAttribute(ACCOUNT_ATTR, account);
+		
 		return ACCOUNT_JSP;	//next page
 	}
 }
