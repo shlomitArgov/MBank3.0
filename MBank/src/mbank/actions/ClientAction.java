@@ -287,7 +287,7 @@ public class ClientAction extends Action
 		List<Property> clientSystemProperties = propertyManager.queryAllProperties(); 
 		for (int i = 0; i < clientSystemProperties.size(); i++)
 		{
-			if(clientSystemProperties.get(i).getProp_key().equals(SystemProperties.ADMIN_PASSWORD) || clientSystemProperties.get(i).getProp_key().equals(SystemProperties.ADMIN_USERNAME))
+			if(clientSystemProperties.get(i).getProp_key().equals(SystemProperties.ADMIN_PASSWORD.getPropertyName()) || clientSystemProperties.get(i).getProp_key().equals(SystemProperties.ADMIN_USERNAME.getPropertyName()))
 			{
 				clientSystemProperties.remove(i);
 			}
