@@ -290,6 +290,7 @@ public class ClientAction extends Action
 			if(clientSystemProperties.get(i).getProp_key().equals(SystemProperties.ADMIN_PASSWORD.getPropertyName()) || clientSystemProperties.get(i).getProp_key().equals(SystemProperties.ADMIN_USERNAME.getPropertyName()))
 			{
 				clientSystemProperties.remove(i);
+				i--;
 			}
 		}
 		return (ArrayList<Property>) clientSystemProperties; 
