@@ -353,4 +353,10 @@ private void testUniqueClientnamePasswordCombination(
 		PropertyManager propertyManager = new PropertyDBManager();
 		propertyManager.update(property);
 	}
+
+	public ArrayList<Property> viewSystemProperties() throws MBankException
+	{
+		PropertyManager propertyManager = new PropertyDBManager();
+		return propertyManager.queryAllProperties();
+	}
 }

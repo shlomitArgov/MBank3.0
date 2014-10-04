@@ -3,7 +3,6 @@
  */
 package mbank.actions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mbank.database.beans.Account;
@@ -193,12 +192,6 @@ public abstract class Action
 		}
 	}
 	public abstract boolean logout();
-
-	public ArrayList<Property> viewSystemProperties() throws MBankException
-	{
-		PropertyManager propertyManager = new PropertyDBManager();
-		return propertyManager.queryAllProperties();
-	}
 
 //	public Connection getCon()
 //	{

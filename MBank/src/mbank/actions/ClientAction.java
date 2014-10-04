@@ -3,6 +3,7 @@
  */
 package mbank.actions;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import mbank.database.beans.Account;
 import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
+import mbank.database.beans.Property;
 import mbank.database.beans.enums.ActivityType;
 import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.ClientType;
@@ -277,6 +279,20 @@ public class ClientAction extends Action
 		/* execute update (commit to DB) */
 		ClientManager clientManager = new ClientDBManager();
 		clientManager.update(c);
+	}
+
+	public ArrayList<Property> viewSystemProperties() throws MBankException
+	{
+		PropertyManager propertyManager = new PropertyDBManager();
+		List<Property> clientSystemProperties = propertyManager.queryAllProperties(); 
+		for (int i = 0; i < clientSystemProperties.size(); i++)
+		{
+			if(clientSystemProperties.get(i).equals(SystemProperties.ADMIN_PASSWORD) || clientSystemProperties.get(i).equals(SystemProperties.ADMIN_USERNAME))
+			{
+				clientSystemProperties.remove(i);
+			}
+		}
+		return (ArrayList<Property>) clientSystemProperties; 
 	}
 
 }
