@@ -21,20 +21,6 @@
   </div>
 </div>
 
-<div class="wrapper col2">
-  <div id="topbar">
-    <div id="topnav">
-      <ul>
-        <li class="active"><a href="Controller?command=account">Account</a></li>
-        <li><a href="Controller?command=deposits"><span>Deposits</span></a></li>
-        <li><a href="Controller?command=recent_activities">Recent Activities</a></li>
-  		<li><a href="Controller?command=myDetails"><span>My Details</span></a></li>
-    	<li><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
-      </ul>
-    </div>
-    <br class="clear" />
-  </div>
-</div>
 
 
 
