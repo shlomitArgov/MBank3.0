@@ -50,7 +50,7 @@ public class Controller extends HttpServlet
 
 	private static final String CLIENT_ACTION_ATTR = "client_action";
 	private static final String ERROR_ATTR = "error";
-	private static final String USERNAME_ATTR = "username";
+	private static final String USERNAME_ATTR = "client_name";
 	private static final String ACCOUNT_ATTR = "account";
 	private static final String WITHDROW_AMMOUNT_PARAM = "withdraw_ammount";
 	private static final String CLIENT_ACTIVITIES_ATTR = "client_activities";

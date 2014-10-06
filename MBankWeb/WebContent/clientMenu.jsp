@@ -14,7 +14,7 @@
   <div id="header">
     <div class="fl_left">
       <h1><a href="#">MBank Corp.</a></h1>
-      <p>Welcome, ${username}</p>
+      <p>Welcome, ${client_name}</p>
     </div>
     <div class="fl_right"><a href="Controller?command=logout">Logout</div>
     <br class="clear" />
