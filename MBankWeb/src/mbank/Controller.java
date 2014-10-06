@@ -56,13 +56,13 @@ public class Controller extends HttpServlet
 	private static final String CLIENT_ACTIVITIES_ATTR = "client_activities";
 	private static final String CLIENT_ATTR = "client";
 
-	private MBank mbankInstance;
-
+	private static final String MBABK_INSTANCE_ATTR = "mbank_instance";
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		//TODO move the mbank instance to the application instance
-		mbankInstance = MBank.getInstance();
+		MBank mbankInstance = MBank.getInstance();
+		this.getServletContext().setAttribute(MBABK_INSTANCE_ATTR, mbankInstance);
 	}
 	
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -216,7 +216,8 @@ public class Controller extends HttpServlet
 		// attempt to perform login with the provided credentials
 		try 
 		{
-			clientAction = mbankInstance.login(username, password);
+			MBank mbank = (MBank) this.getServletContext().getAttribute(MBABK_INSTANCE_ATTR);
+			clientAction = mbank.login(username, password);
 		} catch (MBankException e) 
 		{
 			error = e.getLocalizedMessage();
