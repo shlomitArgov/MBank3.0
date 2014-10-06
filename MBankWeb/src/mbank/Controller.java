@@ -61,6 +61,7 @@ public class Controller extends HttpServlet
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		//TODO move the mbank instance to the application instance
 		mbankInstance = MBank.getInstance();
 	}
 	
@@ -110,11 +111,13 @@ public class Controller extends HttpServlet
 							}
 						case WITHDRAW_COMMAND_PARAM:
 						{
+							//TODO
 							nextPage = withdrawFromAccount(request);
 							break;
 						}
 						case DEPOSIT_COMMAND_PARAM:
 						{
+							//TODO
 							nextPage = depositToAccount(request);
 							break;
 						}
@@ -125,6 +128,7 @@ public class Controller extends HttpServlet
 							}
 						case DEPOSITS_COMMAND_PARAM:
 							{
+								//TODO
 								nextPage = gotoDeposits();
 								break;
 							}
@@ -208,7 +212,7 @@ public class Controller extends HttpServlet
 		String password = request.getParameter(PASSWORD_PARAM);
 		String error = null;
 		//TODO validations on username/password
-		request.setAttribute(USERNAME_ATTR, username);
+		request.getSession().setAttribute(USERNAME_ATTR, username);
 		// attempt to perform login with the provided credentials
 		try 
 		{
