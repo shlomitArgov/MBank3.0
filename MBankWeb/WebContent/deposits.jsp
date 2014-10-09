@@ -25,5 +25,37 @@
   </div>
 </div>
 
+
+<%-- display all client deposits --%>
+<div class="container">
+    <div class="content">
+  <table border="1" summary="Deposits" cellpadding="0" cellspacing="0">
+	<thead>
+	  <tr>
+		<th>Deposit ID</th>
+		<th>Balance</th>
+		<th>Type</th>
+		<th>Estimated Balance</th>
+		<th>Opening Date</th>
+		<th>Closing Date</th>
+	  </tr>
+	</thead>
+	<tbody>
+	<c:forEach items="${client_deposits}" var="property">
+		<jsp:useBean id="deposit" class="mbank.database.beans.Deposit" scope="request"></jsp:useBean>
+		<tr class="light">
+		<td>${deposit.deposit_id}</td>
+		<td>${deposit.balance}</td>
+		<td>${deposit.type}</td>
+		<td>${deposit.estimated_balance}</td>
+		<td>${deposit.opening_date}</td>
+		<td>${deposit.closing_date}</td>
+		</tr>	
+	</c:forEach>
+	</tbody>
+	</table>
+   </div>
+ </div>
+
 </body>
 </html>

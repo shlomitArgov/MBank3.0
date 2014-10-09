@@ -14,6 +14,7 @@ import mbank.actions.Action;
 import mbank.actions.ClientAction;
 import mbank.database.beans.Account;
 import mbank.database.beans.Client;
+import mbank.database.beans.Deposit;
 import mbank.database.beans.Property;
 import mbank.database.beans.enums.SystemProperties;
 import mbank.exceptions.MBankException;
@@ -36,7 +37,6 @@ public class Controller extends HttpServlet
 	private static final String RECENT_ACTIVITIES_COMMAND_PARAM = "recent_activities";
 	private static final String ACCOUNT_COMMAND_PARAM = "account";
 	private static final String WITHDRAW_COMMAND_PARAM = "withdraw";
-	private static final String SYSTEM_PROPERTIES_COMMAND_PARAM = "system_properties";
 	private static final String DEPOSIT_COMMAND_PARAM = "deposit";
 	private static final String MBANK_PROPERTIES_COMMAND_PARAM = "mbank_properties";
 	private static final String LOGOUT_COMMAND_PARAM = "logout";
@@ -55,6 +55,7 @@ public class Controller extends HttpServlet
 	private static final String ACCOUNT_ATTR = "account";
 	private static final String WITHDROW_AMMOUNT_PARAM = "withdraw_amount";
 	private static final String CLIENT_ACTIVITIES_ATTR = "client_activities";
+	private static final String DEPOSITS_LIST_ATTR = "client_deposits";
 	private static final String CLIENT_ATTR = "client";
 	private static final String MBABK_INSTANCE_ATTR = "mbank_instance";
 	private static final String WITHDRAW_ERROR_ATTR = "withdraw_error";
@@ -63,6 +64,7 @@ public class Controller extends HttpServlet
 	private static final String DEPOSIT_AMOUNT_PARAM = "deposit_amount";
 	private static final String DEPOSIT_INFO_ATTR = "deposit_info";
 	private static final String DEPOSIT_ERROR_ATTR = "deposit_error";
+	private static final String SYSTEM_PROPERTIES_ATTR = "system_properties";
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -149,7 +151,7 @@ public class Controller extends HttpServlet
 						case DEPOSITS_COMMAND_PARAM:
 							{
 								//TODO
-								nextPage = gotoDeposits();
+								nextPage = gotoDeposits(request);
 								break;
 							}
 						case MY_DETAILS_COMMAND_PARAM:
@@ -346,7 +348,7 @@ public class Controller extends HttpServlet
 		try
 		{
 			system_properties = clientAction.viewSystemProperties();
-			request.getSession().setAttribute(SYSTEM_PROPERTIES_COMMAND_PARAM, system_properties);
+			request.getSession().setAttribute(SYSTEM_PROPERTIES_ATTR, system_properties);
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block
@@ -364,8 +366,19 @@ public class Controller extends HttpServlet
 		return MY_DETAILS_JSP;	//next page
 	}
 
-	private String gotoDeposits() 
+	private String gotoDeposits(HttpServletRequest request) 
 	{
+		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		List<Deposit> deposits = null;
+		try
+		{
+			deposits = clientAction.viewClientDeposits();
+			request.getSession().setAttribute(DEPOSITS_LIST_ATTR, deposits);
+		} catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return DEPOSITS_JSP;	//next page
 	}
 
