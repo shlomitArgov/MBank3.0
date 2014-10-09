@@ -58,12 +58,9 @@
 
  <form action="Controller?command=withdraw" method="post">
  	<tr>	
- 		<td>Withdrawal amount: </td>
+ 		<td>(*)Withdrawal amount: </td>
  		<td><input type="text" id="withdraw_amount" name="withdraw_amount"></<input></td>
  		<td><span class="error">${withdraw_error}</span></td>
- 	</tr>
- 	<tr>
- 		<td class="tip">*Commission rate: ${commission} USD</td>
  	</tr>
  	<tr>
  		<td><input type="submit" value="Withdraw"></<input></td>
@@ -76,13 +73,10 @@
 
  <form action="Controller?command=deposit" method="post">
 	<tr>	
- 			<td>Deposit amount: </td> 				
+ 			<td>(*)Deposit amount: </td> 				
  			<td><input type="text" id="deposit_amount" name="deposit_amount"></input></td>
  			<td><span class="error">${deposit_error}</span></td>
  			
- 	</tr>
- 	<tr>
- 		<td class="tip">*Commission rate: ${commission} USD</td>
  	</tr>
  	<tr>
  		<td><input type="submit" value="Deposit"></<input></td>
@@ -91,6 +85,9 @@
  	<tr>
 		<td></td>
  		<td><span class="info">${deposit_info}</span></td>
+ 	</tr>
+ 	<tr>
+ 		<td class="tip">*Commission rate is ${commission}&#36;</td>
  	</tr>
  </form>
   </table>
