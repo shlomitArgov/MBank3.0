@@ -1,6 +1,7 @@
 package mbank;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -373,6 +374,7 @@ public class Controller extends HttpServlet
 		try
 		{
 			deposits = clientAction.viewClientDeposits();
+			System.out.println(Arrays.toString(deposits.toArray()));
 			request.getSession().setAttribute(DEPOSITS_LIST_ATTR, deposits);
 		} catch (Exception e)
 		{

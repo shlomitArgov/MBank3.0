@@ -6,16 +6,16 @@ public enum DepositType
 {
 	SHORT("SHORT"), LONG("LONG");
 	
-	private String type;
+	private String typeStringValue;
 	
 	public String getTypeStringValue()
 	{
-		return type;
+		return typeStringValue;
 	}
 
 	private DepositType(String type)
 	{
-		this.type = type;
+		this.typeStringValue = type;
 	}
 	
 	public static DepositType getEnumFromString(String str) throws MBankException
