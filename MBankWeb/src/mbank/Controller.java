@@ -60,6 +60,9 @@ public class Controller extends HttpServlet
 	private static final String WITHDRAW_ERROR_ATTR = "withdraw_error";
 	private static final String WITHDRAW_INFO_ATTR = "withdraw_info";
 	private static final String WITHDRAWAL_COMMISSION_ATTR = "commission";
+	private static final String DEPOSIT_AMOUNT_PARAM = "deposit_amount";
+	private static final String DEPOSIT_INFO_ATTR = "deposit_info";
+	private static final String DEPOSIT_ERROR_ATTR = "deposit_error";
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -128,7 +131,14 @@ public class Controller extends HttpServlet
 						case DEPOSIT_COMMAND_PARAM:
 						{
 							//TODO
-							nextPage = depositToAccount(request);
+							try
+							{
+								nextPage = depositToAccount(request);
+							} catch (MBankException e)
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							break;
 						}
 						case RECENT_ACTIVITIES_COMMAND_PARAM:
@@ -175,10 +185,34 @@ public class Controller extends HttpServlet
 	this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
 	}
 
-	private String depositToAccount(HttpServletRequest request)
+	private String depositToAccount(HttpServletRequest request) throws MBankException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		double depositAmount = 0;
+		try
+		{
+			depositAmount = Double.parseDouble(request.getParameter(DEPOSIT_AMOUNT_PARAM));
+		}
+		catch(NumberFormatException e)
+		{
+			request.setAttribute(DEPOSIT_ERROR_ATTR, "Invalid input, deposit amount must be a number\n");
+		}
+		if(request.getAttribute(DEPOSIT_ERROR_ATTR) == null)
+		{
+			try
+			{
+				clientAction.depositToAccount(depositAmount);
+				request.setAttribute(DEPOSIT_INFO_ATTR, "Deposit executed successfuly");
+			} catch (MBankException e)
+			{
+				request.setAttribute(DEPOSIT_ERROR_ATTR, e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+		}
+		setCommissionRateInRequest(request, clientAction);
+
+		//refresh the account.jsp page (account balance has changed)
+		return gotoAccount(request);
 	}
 
 	private String withdrawFromAccount(HttpServletRequest request) throws MBankException
@@ -193,18 +227,21 @@ public class Controller extends HttpServlet
 		{
 			request.setAttribute(WITHDRAW_ERROR_ATTR, "Invalid input, withdrawal amount must be a number\n");
 		}
-		try
+		if(request.getAttribute(WITHDRAW_ERROR_ATTR) == null)
 		{
-			clientAction.withdrawFromAccount(withdrawAmount);
-			request.setAttribute(WITHDRAW_INFO_ATTR, "Withdrawal executed successfuly");
-		} catch (MBankException e)
-		{
-			request.setAttribute(WITHDRAW_ERROR_ATTR, e.getLocalizedMessage());
-			e.printStackTrace();
+			try
+			{
+				clientAction.withdrawFromAccount(withdrawAmount);
+				request.setAttribute(WITHDRAW_INFO_ATTR, "Withdrawal executed successfuly");
+			} catch (MBankException e)
+			{
+				request.setAttribute(WITHDRAW_ERROR_ATTR, e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+				
 		}
 		setCommissionRateInRequest(request, clientAction);
 		
-
 		//refresh the account.jsp page (account balance has changed)
 		return gotoAccount(request);
 	}
