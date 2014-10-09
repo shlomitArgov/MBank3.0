@@ -51,12 +51,15 @@ public class LoginPageFilter implements Filter
 		// If a valid session already exists and reached this filter (url is index.jsp)
 		if(session != null)
 		{
-
 			System.out.println("Valid session exists - forwarding to " + APPLICATION_NAME + ACCOUNT_JSP);
-			req.getRequestDispatcher("/Controller?command=account.jsp");
+			req.getRequestDispatcher("/Controller?command=account").forward(request, response);
 		}
-		// pass the request along the filter chain
-		chain.doFilter(request, response);
+		else
+		{
+			// pass the request along the filter chain
+			chain.doFilter(request, response);
+		}
+		
 	}
 
 	/**
