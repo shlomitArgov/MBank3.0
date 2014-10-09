@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 
 @RunWith(Suite.class)
-@SuiteClasses({MBankTest.class,ConnectionPoolTest.class, DBManagersImplTests.class,AdminActionTest.class,ActionTest.class })
+@SuiteClasses({MBankTest.class,ConnectionPoolTest.class, DBManagersImplTests.class,AdminActionTest.class,ActionTest.class, PopulateSampleClientData.class})
 public class AllTests {
 
 }
