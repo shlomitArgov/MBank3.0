@@ -188,14 +188,16 @@ public class Controller extends HttpServlet
 	private String depositToAccount(HttpServletRequest request) throws MBankException
 	{
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		String inputAmount = request.getParameter(DEPOSIT_AMOUNT_PARAM);
 		double depositAmount = 0;
 		try
 		{
-			depositAmount = Double.parseDouble(request.getParameter(DEPOSIT_AMOUNT_PARAM));
+			depositAmount = validatePositiveDouble(inputAmount);
 		}
-		catch(NumberFormatException e)
+		catch(MBankException e)
 		{
-			request.setAttribute(DEPOSIT_ERROR_ATTR, "Invalid input, deposit amount must be a number\n");
+			String error = e.getLocalizedMessage();
+			request.setAttribute(DEPOSIT_ERROR_ATTR, error);
 		}
 		if(request.getAttribute(DEPOSIT_ERROR_ATTR) == null)
 		{
@@ -218,14 +220,16 @@ public class Controller extends HttpServlet
 	private String withdrawFromAccount(HttpServletRequest request) throws MBankException
 	{
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		String inputAmount = request.getParameter(WITHDROW_AMMOUNT_PARAM);
 		double withdrawAmount = 0;
 		try
 		{
-			withdrawAmount = Double.parseDouble(request.getParameter(WITHDROW_AMMOUNT_PARAM));
+			withdrawAmount = validatePositiveDouble(inputAmount);
 		}
-		catch(NumberFormatException e)
+		catch(MBankException e)
 		{
-			request.setAttribute(WITHDRAW_ERROR_ATTR, "Invalid input, withdrawal amount must be a number\n");
+			String error = e.getLocalizedMessage();
+			request.setAttribute(WITHDRAW_ERROR_ATTR, error);
 		}
 		if(request.getAttribute(WITHDRAW_ERROR_ATTR) == null)
 		{
@@ -244,6 +248,28 @@ public class Controller extends HttpServlet
 		
 		//refresh the account.jsp page (account balance has changed)
 		return gotoAccount(request);
+	}
+
+	private double validatePositiveDouble(String amount) throws MBankException
+	{
+		double amountValue = 0;
+		if(amount.trim().isEmpty())
+		{
+			throw new MBankException("Amount cannot be empty");
+		}
+		try
+		{
+			amountValue = Double.parseDouble(amount);
+		}
+		catch(NumberFormatException e)
+		{
+			throw new MBankException("Amount must be a number.\n");
+		}
+		if(amountValue < 0)
+		{
+			throw new MBankException("Amount must be non-negative\n");
+		}
+		return amountValue;
 	}
 
 	private String logout(HttpServletRequest request) {
