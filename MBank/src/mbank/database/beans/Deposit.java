@@ -15,6 +15,11 @@ public class Deposit
 {
 	
 
+	public Deposit()
+	{
+		// Default constructor for use in JSP files
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
