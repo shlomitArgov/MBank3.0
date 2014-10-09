@@ -301,10 +301,10 @@ public class Controller extends HttpServlet
 			clientAction = mbank.login(username, password);
 		} catch (MBankException e) 
 		{
+			// login failed
 			error = e.getLocalizedMessage();
 			request.setAttribute(ERROR_ATTR, error);
 			request.getSession().invalidate();
-			setCommissionRateInRequest(request, clientAction);
 			return INDEX_JSP;
 		}
 		
@@ -315,7 +315,7 @@ public class Controller extends HttpServlet
 			request.getSession().setAttribute(USERNAME_ATTR, username);
 			System.out.println("Controller.login()");
 			System.out.println("going to: " + ACCOUNT_JSP);
-//			return ACCOUNT_JSP;
+			setCommissionRateInRequest(request, clientAction);
 			return gotoAccount(request);
 		}
 		else
@@ -323,7 +323,6 @@ public class Controller extends HttpServlet
 			request.getSession().invalidate();
 		}
 		request.setAttribute(ERROR_ATTR, "Failed to create client action");
-		setCommissionRateInRequest(request, clientAction);
 		return INDEX_JSP;
 	}
 
