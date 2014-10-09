@@ -15,6 +15,7 @@ import mbank.actions.ClientAction;
 import mbank.database.beans.Account;
 import mbank.database.beans.Client;
 import mbank.database.beans.Property;
+import mbank.database.beans.enums.SystemProperties;
 import mbank.exceptions.MBankException;
 /**
  * Servlet implementation class Controller
@@ -52,11 +53,13 @@ public class Controller extends HttpServlet
 	private static final String ERROR_ATTR = "error";
 	private static final String USERNAME_ATTR = "client_name";
 	private static final String ACCOUNT_ATTR = "account";
-	private static final String WITHDROW_AMMOUNT_PARAM = "withdraw_ammount";
+	private static final String WITHDROW_AMMOUNT_PARAM = "withdraw_amount";
 	private static final String CLIENT_ACTIVITIES_ATTR = "client_activities";
 	private static final String CLIENT_ATTR = "client";
-
 	private static final String MBABK_INSTANCE_ATTR = "mbank_instance";
+	private static final String WITHDRAW_ERROR_ATTR = "withdraw_error";
+	private static final String WITHDRAW_INFO_ATTR = "withdraw_info";
+	private static final String WITHDRAWAL_COMMISSION_ATTR = "commission";
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -112,7 +115,14 @@ public class Controller extends HttpServlet
 						case WITHDRAW_COMMAND_PARAM:
 						{
 							//TODO
-							nextPage = withdrawFromAccount(request);
+							try
+							{
+								nextPage = withdrawFromAccount(request);
+							} catch (MBankException e)
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							break;
 						}
 						case DEPOSIT_COMMAND_PARAM:
@@ -171,7 +181,7 @@ public class Controller extends HttpServlet
 		return null;
 	}
 
-	private String withdrawFromAccount(HttpServletRequest request)
+	private String withdrawFromAccount(HttpServletRequest request) throws MBankException
 	{
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		double withdrawAmount = 0;
@@ -181,17 +191,22 @@ public class Controller extends HttpServlet
 		}
 		catch(NumberFormatException e)
 		{
-			request.getSession().setAttribute(ERROR_ATTR, "Invalid input, withdrawal amount must be a number");
+			request.setAttribute(WITHDRAW_ERROR_ATTR, "Invalid input, withdrawal amount must be a number\n");
 		}
 		try
 		{
 			clientAction.withdrawFromAccount(withdrawAmount);
+			request.setAttribute(WITHDRAW_INFO_ATTR, "Withdrawal executed successfuly");
 		} catch (MBankException e)
 		{
-			request.getSession().setAttribute(ERROR_ATTR, e.getLocalizedMessage());
+			request.setAttribute(WITHDRAW_ERROR_ATTR, e.getLocalizedMessage());
 			e.printStackTrace();
 		}
-		return ACCOUNT_JSP; 
+		setCommissionRateInRequest(request, clientAction);
+		
+
+		//refresh the account.jsp page (account balance has changed)
+		return gotoAccount(request);
 	}
 
 	private String logout(HttpServletRequest request) {
@@ -223,6 +238,7 @@ public class Controller extends HttpServlet
 			error = e.getLocalizedMessage();
 			request.setAttribute(ERROR_ATTR, error);
 			request.getSession().invalidate();
+			setCommissionRateInRequest(request, clientAction);
 			return INDEX_JSP;
 		}
 		
@@ -241,7 +257,23 @@ public class Controller extends HttpServlet
 			request.getSession().invalidate();
 		}
 		request.setAttribute(ERROR_ATTR, "Failed to create client action");
+		setCommissionRateInRequest(request, clientAction);
 		return INDEX_JSP;
+	}
+
+	public void setCommissionRateInRequest(HttpServletRequest request, Action clientAction)
+	{
+		try
+		{
+			String commissionRate = clientAction.viewSystemProperty(SystemProperties.COMMISSION_RATE.getPropertyName());
+			request.setAttribute(WITHDRAWAL_COMMISSION_ATTR, commissionRate);
+			System.out.println(commissionRate);
+		} catch (MBankException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
 
 	private String gotoMBankProperties(HttpServletRequest request) 
@@ -296,7 +328,7 @@ public class Controller extends HttpServlet
 		Account account = clientAction.viewAccountDetails();
 		System.out.println("account_id = " + account.getAccount_id());
 		request.getSession().setAttribute(ACCOUNT_ATTR, account);
-		
+		setCommissionRateInRequest(request, clientAction);
 		return ACCOUNT_JSP;	//next page
 	}
 }
