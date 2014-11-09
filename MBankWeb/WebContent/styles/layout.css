@@ -5,6 +5,11 @@
 	color:red;
 }
 
+.info
+{
+	color:blue;
+}
+
 td, th{
     text-align: center;
     padding: 10px;
