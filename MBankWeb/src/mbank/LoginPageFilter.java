@@ -18,7 +18,7 @@ public class LoginPageFilter implements Filter
     private static final String ACCOUNT_JSP = "/account.jsp";
 	private static final String APPLICATION_NAME = "/MBankWeb";
 	private static final String CLIENT_ACTION_ATTR = "client_action";
-	private static final String FORWARD_PATH = "/Controller?command=account"; 
+	private static final String FORWARD_PATH = "/Controller?command=my_account"; 
 
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
