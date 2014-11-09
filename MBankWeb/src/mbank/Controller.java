@@ -101,6 +101,9 @@ public class Controller extends HttpServlet
 						nextPage = login(request);
 					} catch (MBankException e)
 					{
+						// This case is not possible via intended use of the application.
+						// It can be reached if the GET request is manually edited to pass the login action while a valid session is taking place
+						nextPage = ACCOUNT_JSP;
 						// TODO remove trace message
 						e.printStackTrace();
 					}
