@@ -365,7 +365,8 @@ public class Controller extends HttpServlet
 	{
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		Client client = clientAction.viewClientDetails();
-		request.getSession().setAttribute(CLIENT_ATTR, client);
+//		request.getSession().setAttribute(CLIENT_ATTR, client);
+		request.setAttribute(CLIENT_ATTR, client);
 		return MY_DETAILS_JSP; // next page
 	}
 
