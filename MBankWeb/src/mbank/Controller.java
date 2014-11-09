@@ -115,7 +115,7 @@ public class Controller extends HttpServlet
 				{
 					try
 					{
-						nextPage = gotoAccount(request);
+						nextPage = gotoMyAccount(request);
 					} catch (MBankException e)
 					{
 						// TODO remove trace message
@@ -151,13 +151,13 @@ public class Controller extends HttpServlet
 				}
 				case RECENT_ACTIVITIES_COMMAND_PARAM:
 				{
-					nextPage = gotoRecentActivities(request);
+					nextPage = gotoMyRecentActivities(request);
 					break;
 				}
 				case DEPOSITS_COMMAND_PARAM:
 				{
 					// TODO implement
-					nextPage = gotoDeposits(request);
+					nextPage = gotoMyDeposits(request);
 					break;
 				}
 				case MY_DETAILS_COMMAND_PARAM:
@@ -221,7 +221,7 @@ public class Controller extends HttpServlet
 		setCommissionRateInRequest(request, clientAction);
 
 		// refresh the account.jsp page (account balance has changed)
-		return gotoAccount(request);
+		return gotoMyAccount(request);
 	}
 
 	private String withdrawFromAccount(HttpServletRequest request) throws MBankException
@@ -253,7 +253,7 @@ public class Controller extends HttpServlet
 		setCommissionRateInRequest(request, clientAction);
 
 		// refresh the account.jsp page (account balance has changed)
-		return gotoAccount(request);
+		return gotoMyAccount(request);
 	}
 
 	private double validatePositiveDouble(String amount) throws MBankException
@@ -320,7 +320,7 @@ public class Controller extends HttpServlet
 			System.out.println("Controller.login()");
 			System.out.println("going to: " + ACCOUNT_JSP);
 			setCommissionRateInRequest(request, clientAction);
-			return gotoAccount(request);
+			return gotoMyAccount(request);
 		} else
 		{
 			request.getSession().invalidate();
@@ -369,24 +369,25 @@ public class Controller extends HttpServlet
 		return MY_DETAILS_JSP; // next page
 	}
 
-	private String gotoDeposits(HttpServletRequest request)
+	private String gotoMyDeposits(HttpServletRequest request)
 	{
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		List<Deposit> deposits = null;
 		try
 		{
 			deposits = clientAction.viewClientDeposits();
+			// TODO remove trace message
 			System.out.println(Arrays.toString(deposits.toArray()));
-			request.getSession().setAttribute(DEPOSITS_LIST_ATTR, deposits);
+			request.setAttribute(DEPOSITS_LIST_ATTR, deposits);
 		} catch (Exception e)
 		{
-			// TODO Auto-generated catch block
+			// TODO remove trace message
 			e.printStackTrace();
 		}
 		return DEPOSITS_JSP; // next page
 	}
 
-	private String gotoRecentActivities(HttpServletRequest request)
+	private String gotoMyRecentActivities(HttpServletRequest request)
 	{
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		try
@@ -400,7 +401,7 @@ public class Controller extends HttpServlet
 		return RECENT_ACTIVITIES_JSP; // next page
 	}
 
-	private String gotoAccount(HttpServletRequest request) throws MBankException
+	private String gotoMyAccount(HttpServletRequest request) throws MBankException
 	{
 		System.out.println("Controller.gotoAccount()");
 		// Get ClientAction object from the session
