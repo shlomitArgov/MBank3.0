@@ -48,6 +48,7 @@ public class Controller extends HttpServlet
 	private static final String ACCOUNT_JSP = "/my_account.jsp";
 	private static final String INDEX_JSP = "/index.jsp";
 	private static final String MBANK_PROPERTIES_JSP = "/mbank_properties.jsp";
+	private static final String PAGE_NOT_FOUND_HTML = "/pageNotFound.html";
 
 	private static final String CLIENT_ACTION_ATTR = "client_action";
 	private static final String ERROR_ATTR = "error";
@@ -89,7 +90,7 @@ public class Controller extends HttpServlet
 
 		if (command == null)
 		{
-			nextPage = ACCOUNT_JSP; // Default landing page
+			nextPage = PAGE_NOT_FOUND_HTML; // unknown command -> forward to 404
 		} else
 		{
 			switch (command)
@@ -103,7 +104,7 @@ public class Controller extends HttpServlet
 					{
 						// This case is not possible via intended use of the application.
 						// It can be reached if the GET request is manually edited to pass the login action while a valid session is taking place
-						nextPage = ACCOUNT_JSP;
+						nextPage = PAGE_NOT_FOUND_HTML;
 						// TODO remove trace message
 						e.printStackTrace();
 					}
@@ -184,7 +185,7 @@ public class Controller extends HttpServlet
 				}
 				default:
 				{
-					nextPage = ACCOUNT_JSP;
+					nextPage = PAGE_NOT_FOUND_HTML;
 					break;
 				}
 			}
@@ -408,7 +409,8 @@ public class Controller extends HttpServlet
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		Account account = clientAction.viewAccountDetails();
 		System.out.println("account_id = " + account.getAccount_id());
-		request.getSession().setAttribute(ACCOUNT_ATTR, account); // Save account bean in the session because the account page is the default landing page and this information should remain available
+		request.getSession().setAttribute(ACCOUNT_ATTR, account); // Save account bean in the session because the account page is
+																  // the page users are returned to when 404 error occurs and both a valid session and a valid clientAction object exist
 		setCommissionRateInRequest(request, clientAction);
 		return ACCOUNT_JSP; // next page
 	}
