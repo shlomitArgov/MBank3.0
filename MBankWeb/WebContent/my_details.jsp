@@ -14,10 +14,10 @@
 
 <body>
     <ul>
-       <li><a href="Controller?command=account">Account</a></li>
-       <li><a href="Controller?command=deposits"><span>Deposits</span></a></li>
-       <li><a href="Controller?command=recent_activities">Recent Activities</a></li>
-	   <li class="active"><a href="Controller?command=myDetails"><span>My Details</span></a></li>
+       <li><a href="Controller?command=my_account">Account</a></li>
+       <li><a href="Controller?command=my_deposits"><span>Deposits</span></a></li>
+       <li><a href="Controller?command=my_recent_activities">Recent Activities</a></li>
+	   <li class="active"><a href="Controller?command=my_details"><span>My Details</span></a></li>
 	   <li><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
     </ul>
 	<br />
