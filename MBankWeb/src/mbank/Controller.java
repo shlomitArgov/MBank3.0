@@ -247,9 +247,9 @@ public class Controller extends HttpServlet
 			} catch (MBankException e)
 			{
 				request.setAttribute(WITHDRAW_ERROR_ATTR, e.getLocalizedMessage());
+				// TODO remove trace message
 				e.printStackTrace();
 			}
-
 		}
 		setCommissionRateInRequest(request, clientAction);
 

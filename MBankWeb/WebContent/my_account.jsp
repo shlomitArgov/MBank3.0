@@ -47,13 +47,10 @@
  		<td>(*)Withdrawal amount: </td>
  		<td><input type="text" id="withdraw_amount" name="withdraw_amount"></<input></td>
  		<td><span class="error">${withdraw_error}</span></td>
+ 		<td><span class="info">${withdraw_info}</span></td>
  	</tr>
  	<tr>
  		<td><input type="submit" value="Withdraw"></<input></td>
- 	</tr>
- 	<tr>
- 		<td></td>	
- 		<td><span class="info">${withdraw_info}</span></td>
  	</tr>
  </form>
 
@@ -62,15 +59,10 @@
  			<td>(*)Deposit amount: </td> 				
  			<td><input type="text" id="deposit_amount" name="deposit_amount"></input></td>
  			<td><span class="error">${deposit_error}</span></td>
- 			
+ 			 <td><span class="info">${deposit_info}</span></td>	
  	</tr>
  	<tr>
  		<td><input type="submit" value="Deposit"></<input></td>
- 		
- 	</tr>
- 	<tr>
-		<td></td>
- 		<td><span class="info">${deposit_info}</span></td>
  	</tr>
  	<tr>
  		<td class="tip">*Commission rate is ${commission}&#36;</td>
