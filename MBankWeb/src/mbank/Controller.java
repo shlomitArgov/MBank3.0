@@ -44,7 +44,7 @@ public class Controller extends HttpServlet
 
 	private static final String MY_DETAILS_JSP = "/my_details.jsp";
 	private static final String DEPOSITS_JSP = "/my_deposits.jsp";
-	private static final String RECENT_ACTIVITIES_JSP = "/my_recent_activities.jsp";
+	private static final String MY_RECENT_ACTIVITIES_JSP = "/my_recent_activities.jsp";
 	private static final String ACCOUNT_JSP = "/my_account.jsp";
 	private static final String INDEX_JSP = "/index.jsp";
 	private static final String MBANK_PROPERTIES_JSP = "/mbank_properties.jsp";
@@ -392,13 +392,13 @@ public class Controller extends HttpServlet
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		try
 		{
-			request.getSession().setAttribute(CLIENT_ACTIVITIES_ATTR, clientAction.viewClientActivities());
+			request.setAttribute(CLIENT_ACTIVITIES_ATTR, clientAction.viewClientActivities());
 		} catch (MBankException e)
 		{
-			// TODO Auto-generated catch block
+			// TODO remove trace message
 			e.printStackTrace();
 		}
-		return RECENT_ACTIVITIES_JSP; // next page
+		return MY_RECENT_ACTIVITIES_JSP; // next page
 	}
 
 	private String gotoMyAccount(HttpServletRequest request) throws MBankException
