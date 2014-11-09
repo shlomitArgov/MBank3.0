@@ -43,9 +43,9 @@ public class Controller extends HttpServlet
 	private static final String PASSWORD_PARAM = "password";
 
 	private static final String MY_DETAILS_JSP = "/my_details.jsp";
-	private static final String DEPOSITS_JSP = "/deposits.jsp";
-	private static final String RECENT_ACTIVITIES_JSP = "/recent_activities.jsp";
-	private static final String ACCOUNT_JSP = "/account.jsp";
+	private static final String DEPOSITS_JSP = "/my_deposits.jsp";
+	private static final String RECENT_ACTIVITIES_JSP = "/my_recent_activities.jsp";
+	private static final String ACCOUNT_JSP = "/my_account.jsp";
 	private static final String INDEX_JSP = "/index.jsp";
 	private static final String MBANK_PROPERTIES_JSP = "/mbank_properties.jsp";
 

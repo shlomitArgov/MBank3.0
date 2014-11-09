@@ -26,10 +26,10 @@
 
 <%-- <div id="tabs">
   <ul>
-    <li><a href="Controller?command=account"><span>Account</span></a></li>
-    <li><a href="Controller?command=recent_activities"><span>Recent Activities</span></a></li>
-    <li><a href="Controller?command=deposits"><span>Deposits</span></a></li>
-    <li><a href="Controller?command=myDetails"><span>My Details</span></a></li>
+    <li><a href="Controller?command=my_account"><span>Account</span></a></li>
+    <li><a href="Controller?command=my_recent_activities"><span>Recent Activities</span></a></li>
+    <li><a href="Controller?command=my_deposits"><span>Deposits</span></a></li>
+    <li><a href="Controller?command=my_details"><span>My Details</span></a></li>
     <li><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
     <li><a href="Controller?command=logout"><span>Logout</span></a></li>
   </ul>
