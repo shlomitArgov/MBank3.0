@@ -40,7 +40,7 @@
  <br/>
  <br/>
    
-  <table  cellpadding="0" cellspacing="0px">
+  <table>
 
  <form action="Controller?command=withdraw" method="post">
  	<tr>	
