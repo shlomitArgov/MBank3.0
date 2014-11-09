@@ -30,10 +30,10 @@ public class Controller extends HttpServlet
 
 	private static final String COMMAND_PARAM = "command";
 	private static final String LOGIN_COMMAND_PARAM = "Login";
-	private static final String MY_DETAILS_COMMAND_PARAM = "myDetails";
-	private static final String DEPOSITS_COMMAND_PARAM = "deposits";
-	private static final String RECENT_ACTIVITIES_COMMAND_PARAM = "recent_activities";
-	private static final String ACCOUNT_COMMAND_PARAM = "account";
+	private static final String MY_DETAILS_COMMAND_PARAM = "my_details";
+	private static final String DEPOSITS_COMMAND_PARAM = "my_deposits";
+	private static final String RECENT_ACTIVITIES_COMMAND_PARAM = "my_recent_activities";
+	private static final String ACCOUNT_COMMAND_PARAM = "my_account";
 	private static final String WITHDRAW_COMMAND_PARAM = "withdraw";
 	private static final String DEPOSIT_COMMAND_PARAM = "deposit";
 	private static final String MBANK_PROPERTIES_COMMAND_PARAM = "mbank_properties";
