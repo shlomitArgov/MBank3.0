@@ -71,30 +71,13 @@ public class RequestFilter implements Filter
 				res.sendRedirect(APPLICATION_NAME + LOGIN_PATH);
 			}
 		}
-			
-//			if(session == null || req.getSession().getAttribute(CLIENT_ACTION_ATTR) == null)
-//			{
-//				// No valid session or no ClientAction object saved in the session - redirect to login page
-//				System.out.println("No valid session - redirecting to login page");
-//				res.sendRedirect(APPLICATION_NAME + LOGIN_PATH);
-//			}
-//			else
-//			{
-//				
-//				// Valid session with ClientAction object saved in the session
-//				// Forward to Controller for handling login action
-//				System.out.println("Forwarding to the Controller for handling login action");
-//				request.getServletContext().getRequestDispatcher(CONTROLLER_PATH_).forward(request, response);
-//			}
-//		}
 	}
 			@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
 		
 	}
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		// TODO Auto-generated method stub
+		
 	}
 }
