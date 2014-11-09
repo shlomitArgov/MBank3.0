@@ -350,7 +350,7 @@ public class Controller extends HttpServlet
 		try
 		{
 			system_properties = clientAction.viewSystemProperties();
-			request.getSession().setAttribute(SYSTEM_PROPERTIES_ATTR, system_properties);
+			request.setAttribute(SYSTEM_PROPERTIES_ATTR, system_properties);
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block

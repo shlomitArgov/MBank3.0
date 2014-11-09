@@ -6,13 +6,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>MBank</title>
 </head>
-<body id="top">
+<body>
 
-<div class="wrapper col2">
-  <div id="topbar">
-    <div id="topnav">
       <ul>
         <li><a href="Controller?command=my_account">Account</a></li>
         <li><a href="Controller?command=my_deposits"><span>Deposits</span></a></li>
@@ -20,15 +17,9 @@
   		<li><a href="Controller?command=my_details"><span>My Details</span></a></li>
     	<li class="active"><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
       </ul>
-    </div>
-    <br class="clear" />
-  </div>
-</div>
-
+    <br />
 
 <%-- display all system properties --%>
-<div class="container">
-    <div class="content">
   <table border="1" summary="System properties" cellpadding="0" cellspacing="0">
 	<thead>
 	  <tr>
@@ -46,8 +37,5 @@
 	</c:forEach>
 	</tbody>
 	</table>
-   </div>
- </div>
-
 </body>
 </html>
