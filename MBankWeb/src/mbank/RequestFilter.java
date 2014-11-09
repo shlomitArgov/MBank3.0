@@ -13,9 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Servlet Filter implementation class RequestFiler
- */
+// Filters all requests to the servlet. All requests that do no contain valid ClientAction and session objects are redirected to the login page unless the
+// command passed in the request is the login command
 @WebFilter(urlPatterns = "/Controller")
 public class RequestFilter implements Filter 
 {   
@@ -25,10 +24,9 @@ public class RequestFilter implements Filter
 	private static final String APPLICATION_NAME = "/MBankWeb"; 
 	private static final String CONTROLLER_PATH_ ="/Controller";
 	private static final String LOGIN_PATH = "/index.jsp";
+	
 	private static final String CLIENT_ACTION_ATTR = "client_action";
-	/**
-     * Default constructor. 
-     */
+	
     public RequestFilter() {
     	super();
     }
@@ -37,67 +35,57 @@ public class RequestFilter implements Filter
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException 
 	{
+		// TODO remove trace message
 		System.out.println("RequestFilter.doFilter()");
+		
 		HttpServletRequest req = (HttpServletRequest) request;
-		HttpSession session = req.getSession(false);
+		HttpSession session = req.getSession(false); // Do not create a new session if one does not already exist
 		HttpServletResponse res = (HttpServletResponse) response;
 		
 		// login command
 		if(req.getParameter(COMMAND_PARAM) != null && req.getParameter(COMMAND_PARAM).equals(LOGIN_COMMAND_PARAM))
 		{
 			// Forward to Controller for handling login action
+			// TODO remove trace message
 			System.out.println("Forwarding to the Controller for handling login action");
 			request.getServletContext().getRequestDispatcher(CONTROLLER_PATH_).forward(request, response);
 		}
 		else
 		{
-			// no valid session or no ClientAction object saved in the session - redirect to login page
-			if(session == null || req.getSession().getAttribute(CLIENT_ACTION_ATTR) == null)
+			if(session != null)
 			{
-				System.out.println("No valid session - redirecting to login page");
-				res.sendRedirect(APPLICATION_NAME + LOGIN_PATH);
+				if(req.getSession().getAttribute(CLIENT_ACTION_ATTR) != null)
+				{
+					// Valid session with ClientAction object saved in the session
+					// Forward to Controller for handling login action
+					// TODO remove trace message
+					System.out.println("Forwarding to the Controller for handling login action");
+					request.getServletContext().getRequestDispatcher(CONTROLLER_PATH_).forward(request, response);
+				}
 			}
-			// valid session with ClientAction object saved in the session
 			else
 			{
-				// Forward to Controller for handling login action
-				System.out.println("Forwarding to the Controller for handling login action");
-				request.getServletContext().getRequestDispatcher(CONTROLLER_PATH_).forward(request, response);
+				// No valid session or no ClientAction object saved in the session - redirect to login page
+				// TODO remove trace message
+				System.out.println("No valid session/ClientAction - redirecting to login page");
+				res.sendRedirect(APPLICATION_NAME + LOGIN_PATH);
 			}
 		}
-//				{
-//					System.out.println(req.getParameter(COMMAND_PARAM));
-//					if(req.getParameter(COMMAND_PARAM) != null && req.getParameter(COMMAND_PARAM).equals(LOGIN_COMMAND_PARAM))
-//					{
-//						// Forward to Controller for handling login action
-//						System.out.println("Forwarding to the Controller for handling login action");
-//						request.getServletContext().getRequestDispatcher(CONTROLLER_PATH_).forward(request, response);
-//					}
-//		}
-		
-//		if(session == null)
-//		{
-//			System.out.println(req.getParameter(COMMAND_PARAM));
-//			if(req.getParameter(COMMAND_PARAM) != null && req.getParameter(COMMAND_PARAM).equals(LOGIN_COMMAND_PARAM))
+			
+//			if(session == null || req.getSession().getAttribute(CLIENT_ACTION_ATTR) == null)
 //			{
+//				// No valid session or no ClientAction object saved in the session - redirect to login page
+//				System.out.println("No valid session - redirecting to login page");
+//				res.sendRedirect(APPLICATION_NAME + LOGIN_PATH);
+//			}
+//			else
+//			{
+//				
+//				// Valid session with ClientAction object saved in the session
 //				// Forward to Controller for handling login action
 //				System.out.println("Forwarding to the Controller for handling login action");
 //				request.getServletContext().getRequestDispatcher(CONTROLLER_PATH_).forward(request, response);
 //			}
-//			else
-//			{
-//				// No valid session exists - redirect to the login page
-//				System.out.println("No valid session - redirecting to login page");
-//				res.sendRedirect(APPLICATION_NAME + LOGIN_PATH);
-//			}
-//		}
-//		else
-//		{
-//			// A valid session exists
-//			//TODO check that there is a Valid clientAction object in the session
-//			// Forward to the Controller for handling
-//			System.out.println("forwarding to Controller for handling");
-//			request.getServletContext().getRequestDispatcher(CONTROLLER_PATH_).forward(request, response);
 //		}
 	}
 			@Override
@@ -109,6 +97,4 @@ public class RequestFilter implements Filter
 	public void init(FilterConfig arg0) throws ServletException {
 		// TODO Auto-generated method stub
 	}
-
-
 }
