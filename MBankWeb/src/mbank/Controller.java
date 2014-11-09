@@ -338,10 +338,9 @@ public class Controller extends HttpServlet
 			System.out.println(commissionRate);
 		} catch (MBankException e1)
 		{
-			// TODO Auto-generated catch block
+			// TODO remove trace message
 			e1.printStackTrace();
 		}
-
 	}
 
 	private String gotoMBankProperties(HttpServletRequest request)
@@ -408,7 +407,7 @@ public class Controller extends HttpServlet
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		Account account = clientAction.viewAccountDetails();
 		System.out.println("account_id = " + account.getAccount_id());
-		request.getSession().setAttribute(ACCOUNT_ATTR, account);
+		request.setAttribute(ACCOUNT_ATTR, account);
 		setCommissionRateInRequest(request, clientAction);
 		return ACCOUNT_JSP; // next page
 	}
