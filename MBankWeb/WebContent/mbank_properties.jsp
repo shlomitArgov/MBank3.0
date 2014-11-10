@@ -2,6 +2,9 @@
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 <%@ include file="clientMenu.jsp" %>
+
+<link rel="stylesheet" href="styles/layout.css" type="text/css" /> 
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -20,7 +23,7 @@
     <br />
 
 <%-- display all system properties --%>
-  <table border="1" summary="System properties" cellpadding="0" cellspacing="0">
+  <table summary="System properties">
 	<thead>
 	  <tr>
 		<th>Name</th>

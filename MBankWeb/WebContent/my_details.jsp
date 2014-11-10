@@ -22,7 +22,7 @@
     </ul>
 	<br />
     
- 	<table summary="Client Details" cellpadding="0" cellspacing="0">
+ 	<table summary="Client Details">
         <thead>
           <tr>
             <th>Client ID</th>

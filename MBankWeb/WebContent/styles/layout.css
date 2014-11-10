@@ -10,7 +10,15 @@
 	color:blue;
 }
 
+table
+{
+	border:1px solid black;
+	cellpadding:0px;
+	cellspacing:0px;	
+}
+
 td, th{
+	border:1px solid black;
     text-align: center;
     padding: 10px;
 }
