@@ -16,7 +16,6 @@ import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersImpl.PropertyDBManager;
 import mbank.database.managersInterface.PropertyManager;
 import mbank.exceptions.MBankException;
-import mbank.maintenance.PeriodicDepositMaintenance;
 
 /**
  * @author Shlomit Argov
