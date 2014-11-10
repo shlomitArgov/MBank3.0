@@ -271,7 +271,7 @@ public class ClientAction extends Action
 	{
 		Client c = getClientFromDB();
 		/* update values */
-		updateValues(details);
+		c = updateValues(c, details);
 		if(c.getPassword().equalsIgnoreCase(TMP_STR) || c.getClient_name().equalsIgnoreCase(TMP_STR))
 		{
 			throw new MBankException("Client and password fields must not be empty");

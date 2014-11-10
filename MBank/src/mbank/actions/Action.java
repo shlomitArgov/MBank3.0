@@ -48,9 +48,8 @@ public abstract class Action
 	}
 	
 	
-	protected void updateValues(TableValue[] details) throws MBankException
+	protected Client updateValues(Client c, TableValue[] details) throws MBankException
 	{
-		Client c = getClientFromDB();
 		for (int i = 0; i < details.length; i++)
 		{
 			if(details[i].getColumnName().equals(ClientAttributes.ADDRESS.getAttribute()))
@@ -69,7 +68,8 @@ public abstract class Action
 			{
 				throw new MBankException("Cannot update client attribute '" + details[i].getColumnName() + "' - Unauthorized action") ;
 			}
-		}				
+		}		
+		return c;
 	}
 	
 	 

@@ -13,6 +13,7 @@ import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.enums.ActivityType;
+import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.ClientType;
 import mbank.database.beans.enums.DepositType;
 import mbank.database.managersImpl.AccountDBManager;
@@ -110,6 +111,41 @@ public class ClientActionTest {
 		accountManager.delete(tempAccount);
 	}
 
+
+	@Test
+	public void testUpdateClientDetails() throws MBankException 
+	{
+		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
+		
+		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+
+		TableValue addressDetails = new TableValue(ClientAttributes.ADDRESS.getAttribute(), "newAddress");
+		TableValue phoneDetails = new TableValue(ClientAttributes.PHONE.getAttribute(), "newPhone");
+		TableValue emailDetails = new TableValue(ClientAttributes.EMAIL.getAttribute(), "newEmail");
+		try 
+		{
+			clientAction.updateClientDetails(addressDetails, phoneDetails, emailDetails);
+		} catch (MBankException e) 
+		{
+			e.printStackTrace();
+			Assert.fail("Failed to update client details with ClientAction");
+		}
+		Client clientDetails = null;
+		try
+		{
+			clientDetails = clientAction.viewClientDetails();
+		}
+		catch (MBankException e)
+		{
+			Assert.fail(e.getLocalizedMessage());
+		}
+		assertTrue("Failed to update client details using ClientAction object", clientDetails.getAddress().equals(addressDetails.getColumnValue()) && clientDetails.getPhone().equals(phoneDetails.getColumnValue()) && clientDetails.getEmail().equals(emailDetails.getColumnValue()));
+		
+		/* cleanup */
+		clientManager.delete(tempClient.getClient_id());
+	}
+	
+	
 	@Test
 	public void testViewClientDeposits() throws MBankException {
 	

@@ -49,7 +49,7 @@ public class AdminAction extends Action
 	 */
 	
 	//Admins can also update client type
-	protected void updateValues(Client c, TableValue[] details) throws MBankException
+	protected Client updateValues(Client c, TableValue[] details) throws MBankException
 	{
 		for (int i = 0; i < details.length; i++)
 		{
@@ -78,7 +78,8 @@ public class AdminAction extends Action
 			{
 				throw new MBankException("Cannot update client attribute " + details[i].getColumnName());
 			}
-		}		
+		}	
+		return c;
 	}
 
 	private Client getClientFromDBById(long clientId) throws MBankException {
@@ -91,7 +92,7 @@ public class AdminAction extends Action
 
 	public void updateClientDetails(long clientId, TableValue... details) throws MBankException {
 		Client c = getClientFromDBById(clientId);
-		updateValues(c, details);
+		c = updateValues(c, details);
 		if(c.getPassword().equalsIgnoreCase(TMP_STR) || c.getClient_name().equalsIgnoreCase(TMP_STR))
 		{
 			throw new MBankException("Client name and password fields must not be empty");
