@@ -321,7 +321,7 @@ public class ClientActionTest {
 		/* create short term deposit */
 		try 
 		{
-			deposits.add(clientAction.createNewDeposit(DepositType.SHORT, 100000, new Date(System.currentTimeMillis() + 1000*3600*24*2)));
+			deposits.add(clientAction.createNewDeposit(100000, new Date(System.currentTimeMillis() + 1000*3600*24*2)));
 		} 
 		catch (MBankException e) 
 		{
@@ -333,7 +333,7 @@ public class ClientActionTest {
 		/* create long term deposit */ 
 		try 
 		{
-			deposits.add(clientAction.createNewDeposit(DepositType.LONG, 100000, new Date(System.currentTimeMillis() + 1000*3600*24*366)));
+			deposits.add(clientAction.createNewDeposit(100000, new Date(System.currentTimeMillis() + 1000*3600*24*366)));
 		} 
 		catch (MBankException e) 
 		{
@@ -345,7 +345,7 @@ public class ClientActionTest {
 		/* try to create a short term deposit with an invalid closing date*/
 		try 
 		{
-			deposits.add(clientAction.createNewDeposit(DepositType.SHORT, 100000, new Date(System.currentTimeMillis() - 10000)));
+			deposits.add(clientAction.createNewDeposit(100000, new Date(System.currentTimeMillis() - 10000)));
 			Assert.fail("Failed to create new short-term deposit");
 		} 
 		catch (MBankException e) 
@@ -356,7 +356,7 @@ public class ClientActionTest {
 		/* try to create a long term deposit with an invalid closing date*/
 		try 
 		{
-			deposits.add(clientAction.createNewDeposit(DepositType.LONG, 100000, new Date(System.currentTimeMillis() - 10000)));
+			deposits.add(clientAction.createNewDeposit(100000, new Date(System.currentTimeMillis() - 10000)));
 			Assert.fail("Failed to create new short-term deposit");
 		} 
 		catch (MBankException e) 

@@ -686,7 +686,7 @@ public class Main {
 			Deposit newDeposit = null;
 			try
 			{
-				newDeposit = this.clientAction.createNewDeposit(depositType, depositAmount, new Date(System.currentTimeMillis() + depositLengthInDays));	
+				newDeposit = this.clientAction.createNewDeposit(depositAmount, new Date(System.currentTimeMillis() + depositLengthInDays));	
 			}
 			catch (MBankException e)
 			{

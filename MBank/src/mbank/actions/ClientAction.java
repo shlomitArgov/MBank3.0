@@ -140,12 +140,12 @@ public class ClientAction extends Action
 		}				
 	}
 	
-	public Deposit createNewDeposit(DepositType depositType, double depositAmount, java.util.Date closeDate) throws  MBankException
+	public Deposit createNewDeposit(double depositAmount, java.util.Date closeDate) throws  MBankException
 	{
 		Client client = getClientFromDB();
 		long depositDurationInDays = (closeDate.getTime() - System.currentTimeMillis())/(60*60*24*1000);
-		
-		//make sure deposit amount and duration are positive
+
+		// make sure deposit amount and duration are positive
 		if(depositAmount < 0)
 		{
 			throw new MBankException("Deposit amount must be non-negative");
@@ -154,6 +154,18 @@ public class ClientAction extends Action
 		{
 			throw new MBankException("Deposit duration must be non-negative");
 		}
+		
+		// Determine deposit type (SHORT/LONG) based on its duration 
+		DepositType depositType;
+		if(depositDurationInDays <= 365)
+		{
+			depositType = DepositType.SHORT;
+		}
+		else
+		{
+			depositType = DepositType.LONG;
+		}
+		
 		//get interest rate according to clientType
 		ClientType clientType = client.getType();
 		double interestRate;
