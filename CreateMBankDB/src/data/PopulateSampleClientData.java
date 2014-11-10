@@ -1,5 +1,8 @@
 package data;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import mbank.actions.AdminAction;
 import mbank.actions.ClientAction;
 import mbank.exceptions.MBankException;
@@ -15,7 +18,16 @@ public class PopulateSampleClientData
 		AdminAction adminAction = new AdminAction(1);
 		long clientId = adminAction.addNewClient("John Doe", "pwd".toCharArray(), "Diagon Alley", "john@doe.com", "555-555555", 50000);
 		ClientAction clientAction = new ClientAction(clientId);
-		clientAction.createNewDeposit(17000, new java.util.Date(System.currentTimeMillis() + 24*3600*320));
-		clientAction.createNewDeposit(30000, new java.util.Date(System.currentTimeMillis() + 24*3600*120));
+		Date tmpDate = new Date();
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(tmpDate); 
+		c.add(Calendar.DATE, 120);
+		tmpDate = c.getTime();
+		// Create short deposit
+		clientAction.createNewDeposit(17000, tmpDate);
+		// Create long deposit
+		c.add(Calendar.DATE,380);
+		tmpDate = c.getTime();
+		clientAction.createNewDeposit(30000, tmpDate);
 	}
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -329,11 +330,17 @@ public class ClientActionTest {
 			Assert.fail("Failed to create new short-term deposit");
 		}
 		Assert.assertTrue("Failed to create new short-term deposit", deposits.get(deposits.size() - 1) !=  null);
+		assertTrue("Deposit type should be SHORT but it was created as LONG", deposits.get(deposits.size() -1).getType().equals(DepositType.SHORT));
 		
 		/* create long term deposit */ 
 		try 
 		{
-			deposits.add(clientAction.createNewDeposit(100000, new Date(System.currentTimeMillis() + 1000*3600*24*366)));
+			Date tmpDate = new Date(); 
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(tmpDate); 
+			c.add(Calendar.DATE, 366);
+			tmpDate = c.getTime();
+			deposits.add(clientAction.createNewDeposit(100000, tmpDate));
 		} 
 		catch (MBankException e) 
 		{
@@ -341,6 +348,7 @@ public class ClientActionTest {
 			Assert.fail("Failed to create new long-term deposit");
 		}
 		Assert.assertTrue("Failed to create new long-term deposit",  deposits.get(deposits.size() - 1) !=  null);
+		assertTrue("Deposit type should be LONG but it was created as SHORT", deposits.get(deposits.size() -1).getType().equals(DepositType.LONG));
 		
 		/* try to create a short term deposit with an invalid closing date*/
 		try 

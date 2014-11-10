@@ -143,7 +143,7 @@ public class ClientAction extends Action
 	public Deposit createNewDeposit(double depositAmount, java.util.Date closeDate) throws  MBankException
 	{
 		Client client = getClientFromDB();
-		long depositDurationInDays = (closeDate.getTime() - System.currentTimeMillis())/(60*60*24*1000);
+		long depositDurationInDays = (closeDate.getTime() - System.currentTimeMillis())/(60*60*24*1000) + 1;
 
 		// make sure deposit amount and duration are positive
 		if(depositAmount < 0)
