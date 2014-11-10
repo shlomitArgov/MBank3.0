@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import mbank.actions.Action;
 import mbank.actions.ClientAction;
+import mbank.actions.TableValue;
 import mbank.database.beans.Account;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.Property;
+import mbank.database.beans.enums.ClientAttributes;
 import mbank.database.beans.enums.SystemProperties;
 import mbank.exceptions.MBankException;
 
@@ -31,6 +33,7 @@ public class Controller extends HttpServlet
 	private static final String COMMAND_PARAM = "command";
 	private static final String LOGIN_COMMAND_PARAM = "Login";
 	private static final String MY_DETAILS_COMMAND_PARAM = "my_details";
+	private static final String UPDATE_CLIENT_DETAILS_PARAM = "updateClientDetails";
 	private static final String DEPOSITS_COMMAND_PARAM = "my_deposits";
 	private static final String RECENT_ACTIVITIES_COMMAND_PARAM = "my_recent_activities";
 	private static final String ACCOUNT_COMMAND_PARAM = "my_account";
@@ -38,7 +41,10 @@ public class Controller extends HttpServlet
 	private static final String DEPOSIT_COMMAND_PARAM = "deposit";
 	private static final String MBANK_PROPERTIES_COMMAND_PARAM = "mbank_properties";
 	private static final String LOGOUT_COMMAND_PARAM = "logout";
-
+	private static final String UPDATED_CLIENT_ADDRESS_PARAM = "client_address";
+	private static final String UPDATED_CLIENT_EMAIL_PARAM = "client_email";
+	private static final String UPDATED_CLIENT_PHONE_PARAM = "client_phone";
+	
 	private static final String USERNAME_PARAM = "username";
 	private static final String PASSWORD_PARAM = "password";
 
@@ -173,6 +179,18 @@ public class Controller extends HttpServlet
 					}
 					break;
 				}
+				case UPDATE_CLIENT_DETAILS_PARAM:
+				{
+					try
+					{
+						nextPage = gotoUpdateClientDetails(request);
+					} catch (MBankException e)
+					{
+						// TODO remove trace message
+						e.printStackTrace();
+					}
+					break;
+				}
 				case MBANK_PROPERTIES_COMMAND_PARAM:
 				{
 					nextPage = gotoMBankProperties(request);
@@ -192,6 +210,30 @@ public class Controller extends HttpServlet
 		}
 		// forward the request
 		this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
+	}
+
+	private String gotoUpdateClientDetails(HttpServletRequest request) throws MBankException
+	{
+		// TODO Auto-generated method stub
+		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		
+		String updatedAddress = request.getParameter(UPDATED_CLIENT_ADDRESS_PARAM);
+		String updatedEmail = request.getParameter(UPDATED_CLIENT_EMAIL_PARAM);
+		String updatedPhone = request.getParameter(UPDATED_CLIENT_PHONE_PARAM);
+		
+		
+		TableValue addressDetails = new TableValue(ClientAttributes.ADDRESS.getAttribute(), updatedAddress);
+		TableValue emailDetails = new TableValue(ClientAttributes.EMAIL.getAttribute(), updatedEmail);
+		TableValue phoneDetails = new TableValue(ClientAttributes.PHONE.getAttribute(), updatedPhone);
+		
+		clientAction.updateClientDetails(addressDetails, emailDetails, phoneDetails);
+		
+		/* Update client bean in the request */
+		Client client = clientAction.viewClientDetails();
+		System.out.println("Controller.gotoUpdateClientDetails()\nclientAddress: " + client.getAddress());
+		request.setAttribute(CLIENT_ATTR, client);
+		
+		return MY_DETAILS_JSP;
 	}
 
 	private String depositToAccount(HttpServletRequest request) throws MBankException
@@ -365,7 +407,6 @@ public class Controller extends HttpServlet
 	{
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		Client client = clientAction.viewClientDetails();
-//		request.getSession().setAttribute(CLIENT_ATTR, client);
 		request.setAttribute(CLIENT_ATTR, client);
 		return MY_DETAILS_JSP; // next page
 	}

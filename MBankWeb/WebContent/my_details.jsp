@@ -30,7 +30,7 @@
             <th>Type</th>
             <th>Address</th>
             <th>E-mail</th>
-            <th>Phone#</th>
+            <th>Phone #</th>
           </tr>
         </thead>
         
@@ -45,5 +45,32 @@
           </tr>
         </tbody>
 	</table>
+	
+	<br/>
+	
+	<form action="Controller?command=updateClientDetails" method="post">
+ 	<tr>	
+ 		<td>Address</td>
+ 		<td><input type="text" id="client_address" name="client_address"></<input></td>
+ 		<td><span class="error">${address_error}</span></td>
+ 		<td><span class="info">${address_info}</span></td>
+ 	</tr>
+ 	<tr>	
+ 		<td>Email</td>
+ 		<td><input type="text" id="client_email" name="client_email"></<input></td>
+ 		<td><span class="error">${email_error}</span></td>
+ 		<td><span class="info">${error_info}</span></td>
+ 	</tr>
+ 	<tr>	
+ 		<td>Phone #</td>
+ 		<td><input type="text" id="client_phone" name="client_phone"></<input></td>
+ 		<td><span class="error">${phone_error}</span></td>
+ 		<td><span class="info">${phone_info}</span></td>
+ 	</tr>
+ 	<tr>
+ 		<td><input type="submit" value="Update"></<input></td>
+ 	</tr>
+ </form>
+	
 </body>
 </html>
