@@ -21,6 +21,7 @@ import mbank.database.managersImpl.AccountDBManager;
 import mbank.database.managersImpl.ActivityDBManager;
 import mbank.database.managersImpl.ClientDBManager;
 import mbank.database.managersImpl.DepositDBManager;
+import mbank.database.managersInterface.AccountManager;
 import mbank.exceptions.MBankException;
 
 import org.junit.AfterClass;
@@ -318,11 +319,14 @@ public class ClientActionTest {
 		/* Create a client this test */
 		Client tempClient = createAndInsertTempClient("testCreateNewDepositClient", ClientType.REGULAR);
 		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		
+		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
+		
 		ArrayList<Deposit> deposits = new ArrayList<>();
 		/* create short term deposit */
 		try 
 		{
-			deposits.add(clientAction.createNewDeposit(100000, new Date(System.currentTimeMillis() + 1000*3600*24*2)));
+			deposits.add(clientAction.createNewDeposit(10, new Date(System.currentTimeMillis() + 1000*3600*24*2)));
 		} 
 		catch (MBankException e) 
 		{
@@ -333,14 +337,14 @@ public class ClientActionTest {
 		assertTrue("Deposit type should be SHORT but it was created as LONG", deposits.get(deposits.size() -1).getType().equals(DepositType.SHORT));
 		
 		/* create long term deposit */ 
+		Date tmpDate = new Date(); 
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(tmpDate); 
+		c.add(Calendar.DATE, 366);
+		tmpDate = c.getTime();
 		try 
 		{
-			Date tmpDate = new Date(); 
-			Calendar c = Calendar.getInstance(); 
-			c.setTime(tmpDate); 
-			c.add(Calendar.DATE, 366);
-			tmpDate = c.getTime();
-			deposits.add(clientAction.createNewDeposit(100000, tmpDate));
+			deposits.add(clientAction.createNewDeposit(10, tmpDate));
 		} 
 		catch (MBankException e) 
 		{
@@ -350,10 +354,10 @@ public class ClientActionTest {
 		Assert.assertTrue("Failed to create new long-term deposit",  deposits.get(deposits.size() - 1) !=  null);
 		assertTrue("Deposit type should be LONG but it was created as SHORT", deposits.get(deposits.size() -1).getType().equals(DepositType.LONG));
 		
-		/* try to create a short term deposit with an invalid closing date*/
+		/* try to create a deposit with an invalid closing date*/
 		try 
 		{
-			deposits.add(clientAction.createNewDeposit(100000, new Date(System.currentTimeMillis() - 10000)));
+			deposits.add(clientAction.createNewDeposit(10, new Date(System.currentTimeMillis() - 10000)));
 			Assert.fail("Failed to create new short-term deposit");
 		} 
 		catch (MBankException e) 
@@ -361,15 +365,15 @@ public class ClientActionTest {
 			Assert.assertTrue("Failed to create new short-term deposit", e.getLocalizedMessage().equalsIgnoreCase("Deposit duration must be non-negative"));
 		}
 		
-		/* try to create a long term deposit with an invalid closing date*/
+		/* try to create a deposit with an illegal deposit amount (higher than the account balance) */
 		try 
 		{
-			deposits.add(clientAction.createNewDeposit(100000, new Date(System.currentTimeMillis() - 10000)));
-			Assert.fail("Failed to create new short-term deposit");
+			deposits.add(clientAction.createNewDeposit(1000000000, tmpDate));
+			Assert.fail("Failed to create deposit");
 		} 
 		catch (MBankException e) 
 		{
-			Assert.assertTrue("Failed to create new short-term deposit", e.getLocalizedMessage().equalsIgnoreCase("Deposit duration must be non-negative"));
+			Assert.assertTrue("Failed to create new deposit: " + e.getLocalizedMessage(), e.getLocalizedMessage().equalsIgnoreCase("Account balance is too low to create this deposit"));
 		}
 		
 		/* cleanup */
@@ -378,13 +382,14 @@ public class ClientActionTest {
 			depositManager.delete(deposits.get(deposits.size() -1));
 			deposits.remove(deposits.size() -1);
 		}
+		AccountManager accountManager = new AccountDBManager();
+		accountManager.delete(tempAccount);
 	}
 
 	@Test
 	public void testPreOpenDeposit() throws MBankException {
 		/* Create a client and an account for this test and associate the account with the client */
 		Client tempClient = createAndInsertTempClient("testCreateNewDepositClient", ClientType.REGULAR);
-		@SuppressWarnings("unused") // need to add account for the deposit money to be transfered to
 		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
 		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
 		
@@ -400,6 +405,8 @@ public class ClientActionTest {
 		}
 		/* cleanup */
 		clientManager.delete(tempClient.getClient_id());
+		AccountManager accountManager = new AccountDBManager();
+		accountManager.delete(tempAccount);
 	}
 
 	private static Client createAndInsertTempClient(String name, ClientType type)

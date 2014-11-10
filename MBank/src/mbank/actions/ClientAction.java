@@ -185,6 +185,20 @@ public class ClientAction extends Action
 			interestRate = 0.0;
 		}
 		
+		// Make sure the client's account balance is sufficient for creating this deposit
+		AccountManager accountManager = new AccountDBManager();
+		Account account = accountManager.queryAccountByClient(client.getClient_id());
+		if(depositAmount > account.getBalance())
+		{
+			throw new MBankException("Account balance is too low to create this deposit");
+		}
+		else
+		{ 
+			// Update the account balance
+			account.setBalance(account.getBalance() - depositAmount);
+			accountManager.update(account);
+		}
+		
 		Calendar maxCloseCal = Calendar.getInstance();
 		maxCloseCal.add(Calendar.YEAR, 40);
 		java.util.Date maxCloseDate = new java.util.Date(maxCloseCal.getTimeInMillis());		
@@ -206,6 +220,9 @@ public class ClientAction extends Action
 			//update activity table
 			Activity activity = new Activity(client.getClient_id(), depositAmount, new java.util.Date(System.currentTimeMillis()), 0, ActivityType.CREATE_NEW_DEPOSIT, "Create new deposit of type: " + deposit.getType().getTypeStringValue() + " for client[" + client.getClient_id() + "]");
 			activityManager.insert(activity);
+			
+			// Update client balance (withdraw the amount requested from the account balance)
+			
 		}
 		else
 		{
