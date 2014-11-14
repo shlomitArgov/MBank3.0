@@ -50,5 +50,27 @@
 	</c:forEach>
 	</tbody>
 	</table>
+	<br/>
+	
+	<h2>Create a new deposit</h2>
+	<table>
+		<form action="Controller?command=createDeposit" method="post">
+		 	<tr>	
+		 		<td>Deposit amount: </td>
+		 		<td><input type="text" id="initial_deposit_amount" name="initial_deposit_amount"></<input></td>
+		 		<td><span class="error">${deposit_amount_error}</span></td>
+		 	</tr>
+		 	<tr>	
+		 		<td>Deposit end-date (DD-MM-YYYY): </td>
+		 		<td><input type="text" id="deposit_end_date" name="deposit_end_date"></<input></td>
+		 		<td><span class="error">${deposit_end_date_error}</span></td>
+		 	</tr>
+		 	<tr>
+		 		<td><input type="submit" value="Create deposit"></<input></td>
+		 	</tr>
+		 	<tr align="center"><span class="info"><td>${create_deposit_error}</td></span></tr>
+		 	<tr align="center"><span class="info"><td>${create_deposit_info}</td></span></tr>
+		 </form>
+	 </table>
 </body>
 </html>

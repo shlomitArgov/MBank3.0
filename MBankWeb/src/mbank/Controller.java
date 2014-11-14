@@ -1,7 +1,10 @@
 package mbank;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -39,14 +42,18 @@ public class Controller extends HttpServlet
 	private static final String ACCOUNT_COMMAND_PARAM = "my_account";
 	private static final String WITHDRAW_COMMAND_PARAM = "withdraw";
 	private static final String DEPOSIT_COMMAND_PARAM = "deposit";
+	private static final String CREATE_DEPOSIT_COMMAND_PARAM = "createDeposit";
 	private static final String MBANK_PROPERTIES_COMMAND_PARAM = "mbank_properties";
 	private static final String LOGOUT_COMMAND_PARAM = "logout";
 	private static final String UPDATED_CLIENT_ADDRESS_PARAM = "client_address";
 	private static final String UPDATED_CLIENT_EMAIL_PARAM = "client_email";
 	private static final String UPDATED_CLIENT_PHONE_PARAM = "client_phone";
+	private static final String DEPOSIT_INITIAL_AMOUNT_PARAM = "initial_deposit_amount";
+	private static final String DEPOSIT_CLOSING_DATE_PARAM = "deposit_end_date";
 	
 	private static final String USERNAME_PARAM = "username";
-	private static final String PASSWORD_PARAM = "password";
+	private static final String PASSWORD_PARAM = "password";	
+
 
 	private static final String MY_DETAILS_JSP = "/my_details.jsp";
 	private static final String DEPOSITS_JSP = "/my_deposits.jsp";
@@ -72,6 +79,10 @@ public class Controller extends HttpServlet
 	private static final String DEPOSIT_INFO_ATTR = "deposit_info";
 	private static final String DEPOSIT_ERROR_ATTR = "deposit_error";
 	private static final String SYSTEM_PROPERTIES_ATTR = "system_properties";
+	private static final String CREATE_DEPOSIT_ERROR_ATTR = "create_deposit_error";
+	private static final String CREATE_DEPOSIT_INFO_ATTR = "create_deposit_info";
+	private static final String CREATE_DEPOSIT_AMOUNT_ERROR = "deposit_amount_error";
+	private static final String CREATE_DEPOSIT_END_DATE_ERROR = "deposit_end_date_error";
 
 	public void init(ServletConfig config) throws ServletException
 	{
@@ -163,8 +174,12 @@ public class Controller extends HttpServlet
 				}
 				case DEPOSITS_COMMAND_PARAM:
 				{
-					// TODO implement
 					nextPage = gotoMyDeposits(request);
+					break;
+				}
+				case CREATE_DEPOSIT_COMMAND_PARAM:
+				{
+					nextPage = gotoCreateNewDeposit(request);
 					break;
 				}
 				case MY_DETAILS_COMMAND_PARAM:
@@ -212,9 +227,32 @@ public class Controller extends HttpServlet
 		this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
 	}
 
+	private String gotoCreateNewDeposit(HttpServletRequest request)
+	{
+		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		String amount = request.getParameter(DEPOSIT_INITIAL_AMOUNT_PARAM);
+		String closingDate = request.getParameter(DEPOSIT_CLOSING_DATE_PARAM);
+
+		double depositAmount = Double.parseDouble(amount);
+		Date closeDate;
+		try
+		{
+			closeDate = new SimpleDateFormat("DD-MM-YYYY").parse(closingDate);
+			clientAction.createNewDeposit(depositAmount, closeDate);
+			request.setAttribute(CREATE_DEPOSIT_INFO_ATTR, "Deposit created successfuly");
+			gotoMyDeposits(request); //update the deposits display
+		} catch (ParseException | MBankException e)
+		{
+			String createDepositError = e.getLocalizedMessage();
+			request.setAttribute(CREATE_DEPOSIT_ERROR_ATTR, createDepositError);
+			// TODO remove trace
+			e.printStackTrace();
+		}
+		return DEPOSITS_JSP;
+	}
+
 	private String gotoUpdateClientDetails(HttpServletRequest request) throws MBankException
 	{
-		// TODO Auto-generated method stub
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		
 		String updatedAddress = request.getParameter(UPDATED_CLIENT_ADDRESS_PARAM);
