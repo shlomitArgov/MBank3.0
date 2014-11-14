@@ -4,8 +4,7 @@
     
 <%@ include file="clientMenu.jsp" %>
 
-<link rel="stylesheet" href="styles/layout.css" type="text/css" /> 
-    
+<link rel="stylesheet" href="styles/layout.css" type="text/css" />    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
@@ -68,9 +67,26 @@
 		 	<tr>
 		 		<td><input type="submit" value="Create deposit"></<input></td>
 		 	</tr>
-		 	<tr align="center"><span class="info"><td>${create_deposit_error}</td></span></tr>
+		 	<tr align="center"><span class="error"><td>${create_deposit_error}</td></span></tr>
 		 	<tr align="center"><span class="info"><td>${create_deposit_info}</td></span></tr>
 		 </form>
 	 </table>
+	 <br/>
+	 	<h2>Pre-open a long-term deposit</h2>
+	<table>
+		<form action="Controller?command=preOpenDeposit" method="post">
+		 	<tr>	
+		 		<td>Deposit ID#: </td>
+		 		<td><input type="text" id="depositId" name="depositId"></<input></td>
+		 		<td><span class="error">${deposit_id_error}</span></td>
+		 	</tr>
+		 	<tr>
+		 		<td><input type="submit" value="Pre-open deposit"></<input></td>
+		 	</tr>
+		 	<tr align="center"><td><span class="error">${pre_open_deposit_error}</span></td></tr>
+		 	<tr align="center"><td><span class="info">${pre_open_deposit_info}</span></td></tr>
+		 </form>
+	 </table>
+	 
 </body>
 </html>

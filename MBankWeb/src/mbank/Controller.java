@@ -44,12 +44,14 @@ public class Controller extends HttpServlet
 	private static final String DEPOSIT_COMMAND_PARAM = "deposit";
 	private static final String CREATE_DEPOSIT_COMMAND_PARAM = "createDeposit";
 	private static final String MBANK_PROPERTIES_COMMAND_PARAM = "mbank_properties";
+	private static final String PRE_OPEN_DEPOSIT_COMMAND_PARAM = "preOpenDeposit";
 	private static final String LOGOUT_COMMAND_PARAM = "logout";
 	private static final String UPDATED_CLIENT_ADDRESS_PARAM = "client_address";
 	private static final String UPDATED_CLIENT_EMAIL_PARAM = "client_email";
 	private static final String UPDATED_CLIENT_PHONE_PARAM = "client_phone";
 	private static final String DEPOSIT_INITIAL_AMOUNT_PARAM = "initial_deposit_amount";
 	private static final String DEPOSIT_CLOSING_DATE_PARAM = "deposit_end_date";
+	private static final String DEPOSIT_ID_PARAM = "depositId";
 	
 	private static final String USERNAME_PARAM = "username";
 	private static final String PASSWORD_PARAM = "password";	
@@ -83,6 +85,9 @@ public class Controller extends HttpServlet
 	private static final String CREATE_DEPOSIT_INFO_ATTR = "create_deposit_info";
 	private static final String CREATE_DEPOSIT_AMOUNT_ERROR = "deposit_amount_error";
 	private static final String CREATE_DEPOSIT_END_DATE_ERROR = "deposit_end_date_error";
+	private static final String DEPOSIT_ID_ERROR_ATTR = "deposit_id_error";
+	private static final String PRE_OPEN_DEPOSIT_ERROR_ATTR = "pre_open_deposit_error";
+	private static final String PRE_OPEN_DEPOSIT_INFO_ATTR = "pre_open_deposit_info";
 
 	public void init(ServletConfig config) throws ServletException
 	{
@@ -179,7 +184,12 @@ public class Controller extends HttpServlet
 				}
 				case CREATE_DEPOSIT_COMMAND_PARAM:
 				{
-					nextPage = gotoCreateNewDeposit(request);
+					nextPage = createNewDeposit(request);
+					break;
+				}
+				case PRE_OPEN_DEPOSIT_COMMAND_PARAM:
+				{
+					nextPage = preOpenDeposit(request);
 					break;
 				}
 				case MY_DETAILS_COMMAND_PARAM:
@@ -198,7 +208,7 @@ public class Controller extends HttpServlet
 				{
 					try
 					{
-						nextPage = gotoUpdateClientDetails(request);
+						nextPage = updateClientDetails(request);
 					} catch (MBankException e)
 					{
 						// TODO remove trace message
@@ -227,7 +237,36 @@ public class Controller extends HttpServlet
 		this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
 	}
 
-	private String gotoCreateNewDeposit(HttpServletRequest request)
+	private String preOpenDeposit(HttpServletRequest request)
+	{
+		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		String depositIdString = request.getParameter(DEPOSIT_ID_PARAM);
+		long depositId = 0;
+		try
+		{
+			System.out.println("deposit_id_attr: " + depositIdString);
+			depositId = Long.parseLong(depositIdString);			
+		}catch (NumberFormatException e)
+		{
+			request.setAttribute(DEPOSIT_ID_ERROR_ATTR, "Deposit ID must be a whole number");
+			gotoMyDeposits(request);
+		}
+		try
+		{
+			System.out.println("parsed depositID: " + depositId);
+			clientAction.preOpenDeposit(depositId);
+			request.setAttribute(PRE_OPEN_DEPOSIT_INFO_ATTR, "Deposit pre-opened successfully");
+			gotoMyDeposits(request);
+		} catch (MBankException e)
+		{
+			request.setAttribute(PRE_OPEN_DEPOSIT_ERROR_ATTR, e.getLocalizedMessage());
+			e.printStackTrace();
+			gotoMyDeposits(request);
+		}
+		return DEPOSITS_JSP;
+	}
+
+	private String createNewDeposit(HttpServletRequest request)
 	{
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		String amount = request.getParameter(DEPOSIT_INITIAL_AMOUNT_PARAM);
@@ -251,7 +290,7 @@ public class Controller extends HttpServlet
 		return DEPOSITS_JSP;
 	}
 
-	private String gotoUpdateClientDetails(HttpServletRequest request) throws MBankException
+	private String updateClientDetails(HttpServletRequest request) throws MBankException
 	{
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		
