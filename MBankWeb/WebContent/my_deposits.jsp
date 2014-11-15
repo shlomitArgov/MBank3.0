@@ -1,20 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
-    
 <%@ include file="clientMenu.jsp" %>
-
-<link rel="stylesheet" href="styles/style.css" type="text/css" />
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>MBank</title>
-</head>
-<body>
 
 <%-- display all client deposits --%>
   <table summary="Deposits" class="dataTable">
@@ -44,10 +31,10 @@
 	</tbody>
 	</table>
 	<br/>
-	
-	<table>
-	<caption>Create a new deposit</caption>
-		<form action="Controller?command=createDeposit" method="post">
+
+	<form action="Controller?command=createDeposit" method="post">	
+	 <table>
+	   <caption>Create a new deposit</caption>
 		 	<tr>	
 		 		<td>Deposit amount: </td>
 		 		<td><input type="text" id="initial_deposit_amount" name="initial_deposit_amount"></<input></td>
@@ -61,15 +48,16 @@
 		 	<tr>
 		 		<td><input type="submit" value="Create deposit"></<input></td>
 		 	</tr>
-		 	<tr><td><span class="error">${create_deposit_error}</span></td></tr>
-		 	<tr><td><span class="info">${create_deposit_info}</span></td></tr>
-		 </form>
 	 </table>
 	 <br/>
+	 <span class="error">${create_deposit_error}</span>
+	 <span class="info">${create_deposit_info}</span>
+	</form>
+	 <br/>
 
-	<table>
-	<caption>Pre-open a long-term deposit</caption>
-		<form action="Controller?command=preOpenDeposit" method="post">
+	<form action="Controller?command=preOpenDeposit" method="post">
+		<table>
+	     <caption>Pre-open a long-term deposit</caption>
 		 	<tr>	
 		 		<td>Deposit ID#: </td>
 		 		<td><input type="text" id="depositId" name="depositId"></<input></td>
@@ -79,10 +67,13 @@
 		 	<tr>
 		 		<td><input type="submit" value="Pre-open deposit"></<input></td>
 		 	</tr>
-		 	<tr><td><span class="error">${pre_open_deposit_error}</span></td></tr>
-		 	<tr><td><span class="info">${pre_open_deposit_info}</span></td></tr>
-		 </form>
-	 </table>
-	 
+		 </table>
+		 <br/>
+		 <span class="error">${pre_open_deposit_error}</span>
+		 <span class="info">${pre_open_deposit_info}</span>
+	 </form>
+	</div>
+   </div>
+  </div>	 
 </body>
 </html>
