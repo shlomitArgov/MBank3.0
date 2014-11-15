@@ -362,7 +362,7 @@ public class ClientActionTest {
 		} 
 		catch (MBankException e) 
 		{
-			Assert.assertTrue("Failed to create new short-term deposit", e.getLocalizedMessage().equalsIgnoreCase("Deposit duration must be non-negative"));
+			Assert.assertTrue("Failed to create new short-term deposit", e.getLocalizedMessage().equalsIgnoreCase("Invalid end-date: The deposit duration must be at least one day long"));
 		}
 		
 		/* try to create a deposit with an illegal deposit amount (higher than the account balance) */

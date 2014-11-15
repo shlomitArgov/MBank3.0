@@ -68,8 +68,8 @@
 		 	<tr>
 		 		<td><input type="submit" value="Create deposit"></<input></td>
 		 	</tr>
-		 	<tr align="center"><span class="error"><td>${create_deposit_error}</td></span></tr>
-		 	<tr align="center"><span class="info"><td>${create_deposit_info}</td></span></tr>
+		 	<tr align="center"><td><span class="error">${create_deposit_error}</span></td></tr>
+		 	<tr align="center"><td><span class="info">${create_deposit_info}</span></td></tr>
 		 </form>
 	 </table>
 	 <br/>

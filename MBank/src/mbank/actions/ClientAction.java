@@ -152,7 +152,7 @@ public class ClientAction extends Action
 		}
 		else if(depositDurationInDays < 0 || closeDate.getTime() < System.currentTimeMillis())
 		{
-			throw new MBankException("Deposit duration must be non-negative");
+			throw new MBankException("Invalid end-date: The deposit duration must be at least one day long");
 		}
 		
 		// Determine deposit type (SHORT/LONG) based on its duration 
