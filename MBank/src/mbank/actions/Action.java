@@ -52,23 +52,26 @@ public abstract class Action
 	{
 		for (int i = 0; i < details.length; i++)
 		{
-			if(details[i].getColumnName().equals(ClientAttributes.ADDRESS.getAttribute()))
+			if(details[i].getColumnValue() != null)
 			{
-				c.setAddress(details[i].getColumnValue());
-			}
-			else if(details[i].getColumnName().equals(ClientAttributes.EMAIL.getAttribute()))
-			{
-				c.setEmail(details[i].getColumnValue());
-			}
-			else if(details[i].getColumnName().equals(ClientAttributes.PHONE.getAttribute()))	
-			{
-				c.setPhone(details[i].getColumnValue());
-			}
-			else
-			{
-				throw new MBankException("Cannot update client attribute '" + details[i].getColumnName() + "' - Unauthorized action") ;
-			}
-		}		
+				if(details[i].getColumnName().equals(ClientAttributes.ADDRESS.getAttribute()))
+				{
+					c.setAddress(details[i].getColumnValue());	
+				}
+				else if(details[i].getColumnName().equals(ClientAttributes.EMAIL.getAttribute()))
+				{
+					c.setEmail(details[i].getColumnValue());
+				}
+				else if(details[i].getColumnName().equals(ClientAttributes.PHONE.getAttribute()))	
+				{
+					c.setPhone(details[i].getColumnValue());
+				}
+				else
+				{
+					throw new MBankException("Cannot update client attribute '" + details[i].getColumnName() + "' - Unauthorized action") ;
+				}
+			}	
+		}
 		return c;
 	}
 	

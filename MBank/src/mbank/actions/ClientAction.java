@@ -5,6 +5,7 @@ package mbank.actions;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import mbank.database.beans.Account;
@@ -100,7 +101,7 @@ public class ClientAction extends Action
 			account.setBalance(accountBalance - commissionRate - withdrawAmount);
 			accountManager.update(account);
 			ActivityManager activityManager = new ActivityDBManager();
-			Activity activity = new Activity(client.getClient_id(), accountBalance - commissionRate - withdrawAmount, new java.util.Date(System.currentTimeMillis()), commissionRate, ActivityType.WITHDRAW_FROM_ACCOUNT, "Withdrew " + withdrawAmount + "from accout[" + account.getAccount_id() + "]");
+			Activity activity = new Activity(client.getClient_id(), accountBalance - commissionRate - withdrawAmount, new java.util.Date(System.currentTimeMillis()), commissionRate, ActivityType.WITHDRAW_FROM_ACCOUNT, "Withdrew " + withdrawAmount + " from accout[" + account.getAccount_id() + "]");
 			//update activity table
 			activityManager.insert(activity);
 		}
@@ -128,6 +129,9 @@ public class ClientAction extends Action
 		//update the account with the new deposit including action commission charge
 		account.setBalance(account.getBalance() + depositAmount - commissionRate);
 		accountManager.update(account);
+		ActivityManager activityManager = new ActivityDBManager();
+		Activity activity = new Activity(client.getClient_id(), depositAmount, new Date(), commissionRate, ActivityType.DEPOSIT_TO_ACCOUNT, "Deposited " + depositAmount + " to client account");
+		activityManager.insert(activity);
 		
 		/* Check if the client type has changed due to the deposit */
 		ClientType prevType = client.getType();
@@ -218,7 +222,7 @@ public class ClientAction extends Action
 			deposit = new Deposit(client.getClient_id(), depositAmount, depositType, estimatedBalance, new java.util.Date(System.currentTimeMillis()), new java.util.Date(calender.getTimeInMillis()));
 			deposit.setDeposit_id(depositManager.insert(deposit));
 			//update activity table
-			Activity activity = new Activity(client.getClient_id(), depositAmount, new java.util.Date(System.currentTimeMillis()), 0, ActivityType.CREATE_NEW_DEPOSIT, "Create new deposit of type: " + deposit.getType().getTypeStringValue() + " for client[" + client.getClient_id() + "]");
+			Activity activity = new Activity(client.getClient_id(), depositAmount, new java.util.Date(System.currentTimeMillis()), 0, ActivityType.CREATE_NEW_DEPOSIT, "Created new deposit of type: " + deposit.getType().getTypeStringValue() + " for client[" + client.getClient_id() + "]");
 			activityManager.insert(activity);
 			
 			// Update client balance (withdraw the amount requested from the account balance)
