@@ -88,6 +88,7 @@ public class Controller extends HttpServlet
 	private static final String DEPOSIT_ID_ERROR_ATTR = "deposit_id_error";
 	private static final String PRE_OPEN_DEPOSIT_ERROR_ATTR = "pre_open_deposit_error";
 	private static final String PRE_OPEN_DEPOSIT_INFO_ATTR = "pre_open_deposit_info";
+	private static final String UPDATE_CLIENT_DETAILS_ERROR_ATTR = "update_client_details_error";
 
 	public void init(ServletConfig config) throws ServletException
 	{
@@ -317,6 +318,25 @@ public class Controller extends HttpServlet
 		String updatedEmail = request.getParameter(UPDATED_CLIENT_EMAIL_PARAM);
 		String updatedPhone = request.getParameter(UPDATED_CLIENT_PHONE_PARAM);
 		
+		// Set null to empty properties in order for them not to be updated
+		if(updatedAddress.trim().isEmpty())
+		{
+			updatedAddress = null;
+		}
+		if(updatedEmail.trim().isEmpty())
+		{
+			updatedEmail = null;
+		}
+		if(updatedPhone.trim().isEmpty())
+		{
+			updatedPhone = null;
+		}
+		
+		if(updatedAddress == null && updatedEmail == null && updatedPhone == null)
+		{// Nothing to update
+			request.setAttribute(UPDATE_CLIENT_DETAILS_ERROR_ATTR, "At least one detail must be non-empty");
+			return gotoMyDetails(request);
+		}
 		
 		TableValue addressDetails = new TableValue(ClientAttributes.ADDRESS.getAttribute(), updatedAddress);
 		TableValue emailDetails = new TableValue(ClientAttributes.EMAIL.getAttribute(), updatedEmail);
@@ -324,12 +344,12 @@ public class Controller extends HttpServlet
 		
 		clientAction.updateClientDetails(addressDetails, emailDetails, phoneDetails);
 		
-		/* Update client bean in the request */
-		Client client = clientAction.viewClientDetails();
-		System.out.println("Controller.gotoUpdateClientDetails()\nclientAddress: " + client.getAddress());
-		request.setAttribute(CLIENT_ATTR, client);
+//		/* Update client bean in the request */
+//		Client client = clientAction.viewClientDetails();
+//		System.out.println("Controller.gotoUpdateClientDetails()\nclientAddress: " + client.getAddress());
+//		request.setAttribute(CLIENT_ATTR, client);
 		
-		return MY_DETAILS_JSP;
+		return gotoMyDetails(request);
 	}
 
 	private String depositToAccount(HttpServletRequest request) throws MBankException
