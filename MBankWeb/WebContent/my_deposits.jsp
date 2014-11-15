@@ -68,8 +68,8 @@
 		 	<tr>
 		 		<td><input type="submit" value="Create deposit"></<input></td>
 		 	</tr>
-		 	<tr align="center"><td><span class="error">${create_deposit_error}</span></td></tr>
-		 	<tr align="center"><td><span class="info">${create_deposit_info}</span></td></tr>
+		 	<tr><td><span class="error">${create_deposit_error}</span></td></tr>
+		 	<tr><td><span class="info">${create_deposit_info}</span></td></tr>
 		 </form>
 	 </table>
 	 <br/>
@@ -86,8 +86,8 @@
 		 	<tr>
 		 		<td><input type="submit" value="Pre-open deposit"></<input></td>
 		 	</tr>
-		 	<tr align="center"><td><span class="error">${pre_open_deposit_error}</span></td></tr>
-		 	<tr align="center"><td><span class="info">${pre_open_deposit_info}</span></td></tr>
+		 	<tr><td><span class="error">${pre_open_deposit_error}</span></td></tr>
+		 	<tr><td><span class="info">${pre_open_deposit_info}</span></td></tr>
 		 </form>
 	 </table>
 	 
