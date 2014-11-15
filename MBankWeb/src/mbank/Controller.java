@@ -286,7 +286,7 @@ public class Controller extends HttpServlet
 		Date closeDate;
 		try
 		{
-			closeDate = new SimpleDateFormat("DD-MM-YYYY").parse(closingDate);
+			closeDate = new SimpleDateFormat("dd-MM-yyyy").parse(closingDate);
 			clientAction.createNewDeposit(depositAmount, closeDate);
 			request.setAttribute(CREATE_DEPOSIT_INFO_ATTR, "Deposit created successfuly");
 			nextPage = gotoMyDeposits(request); //update the deposits display
