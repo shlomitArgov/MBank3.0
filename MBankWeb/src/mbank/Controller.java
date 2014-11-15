@@ -3,7 +3,6 @@ package mbank;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -108,9 +107,7 @@ public class Controller extends HttpServlet
 		// Handle command
 		String nextPage = null;
 		String command = request.getParameter(COMMAND_PARAM);
-		// TODO remove trace message
-		System.out.println("command = " + command);
-
+		
 		if (command == null)
 		{
 			nextPage = PAGE_NOT_FOUND_HTML; // unknown command -> forward to 404
@@ -128,11 +125,7 @@ public class Controller extends HttpServlet
 						// This case is not possible via intended use of the application.
 						// It can be reached if the GET request is manually edited to pass the login action while a valid session is taking place
 						nextPage = PAGE_NOT_FOUND_HTML;
-						// TODO remove trace message
-						e.printStackTrace();
 					}
-					// TODO remove trace message
-					System.out.println("nextPage after login command is: " + nextPage);
 					break;
 				}
 				case ACCOUNT_COMMAND_PARAM:
@@ -142,34 +135,26 @@ public class Controller extends HttpServlet
 						nextPage = gotoMyAccount(request);
 					} catch (MBankException e)
 					{
-						// TODO remove trace message
-						e.printStackTrace();
 					}
 					break;
 				}
 				case WITHDRAW_COMMAND_PARAM:
 				{
-					// TODO implement
 					try
 					{
 						nextPage = withdrawFromAccount(request);
 					} catch (MBankException e)
 					{
-						// TODO remove trace message
-						e.printStackTrace();
 					}
 					break;
 				}
 				case DEPOSIT_COMMAND_PARAM:
 				{
-					// TODO implement
 					try
 					{
 						nextPage = depositToAccount(request);
 					} catch (MBankException e)
 					{
-						//TODO remove trace message
-						e.printStackTrace();
 					}
 					break;
 				}
@@ -200,8 +185,6 @@ public class Controller extends HttpServlet
 						nextPage = gotoMyDetails(request);
 					} catch (MBankException e)
 					{
-						// TODO remove trace message
-						e.printStackTrace();
 					}
 					break;
 				}
@@ -212,8 +195,6 @@ public class Controller extends HttpServlet
 						nextPage = updateClientDetails(request);
 					} catch (MBankException e)
 					{
-						// TODO remove trace message
-						e.printStackTrace();
 					}
 					break;
 				}
@@ -277,7 +258,6 @@ public class Controller extends HttpServlet
 
 	private String createNewDeposit(HttpServletRequest request)
 	{
-		String nextPage = DEPOSITS_JSP;
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		String amount = request.getParameter(DEPOSIT_INITIAL_AMOUNT_PARAM);
 		String closingDate = request.getParameter(DEPOSIT_CLOSING_DATE_PARAM);
@@ -290,7 +270,6 @@ public class Controller extends HttpServlet
 		{
 			request.setAttribute(CREATE_DEPOSIT_AMOUNT_ERROR_ATTR, e1.getLocalizedMessage());
 			e1.printStackTrace();
-			nextPage = gotoMyDeposits(request);
 		}
 		Date closeDate;
 		try
@@ -302,20 +281,15 @@ public class Controller extends HttpServlet
 			System.out.println("Controller.createNewDeposit()\ncloseDate: " + closeDate);
 			clientAction.createNewDeposit(depositAmount, closeDate);
 			request.setAttribute(CREATE_DEPOSIT_INFO_ATTR, "Deposit created successfuly");
-			nextPage = gotoMyDeposits(request); //update the deposits display
 		} catch (ParseException e)
 		{
 			request.setAttribute(CREATE_DEPOSIT_END_DATE_ERROR_ATTR, "Invalid date: End-date must be in the format: dd-MM-yyyy and be a real date");
-			// TODO remove trace
-			e.printStackTrace();
-			nextPage = gotoMyDeposits(request); //update the deposits display
 		} catch (MBankException e)
 		{
 			request.setAttribute(CREATE_DEPOSIT_ERROR_ATTR, e.getLocalizedMessage());
 			e.printStackTrace();
-			nextPage = gotoMyDeposits(request); //update the deposits display
 		}
-		return nextPage;
+		return gotoMyDeposits(request);
 	}
 
 	private String updateClientDetails(HttpServletRequest request) throws MBankException
@@ -413,8 +387,6 @@ public class Controller extends HttpServlet
 			} catch (MBankException e)
 			{
 				request.setAttribute(WITHDRAW_ERROR_ATTR, e.getLocalizedMessage());
-				// TODO remove trace message
-				e.printStackTrace();
 			}
 		}
 		setCommissionRateInRequest(request, clientAction);
@@ -505,8 +477,6 @@ public class Controller extends HttpServlet
 			System.out.println(commissionRate);
 		} catch (MBankException e1)
 		{
-			// TODO remove trace message
-			e1.printStackTrace();
 		}
 	}
 
@@ -520,8 +490,6 @@ public class Controller extends HttpServlet
 			request.setAttribute(SYSTEM_PROPERTIES_ATTR, system_properties);
 		} catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return MBANK_PROPERTIES_JSP; // next page
 
@@ -542,13 +510,9 @@ public class Controller extends HttpServlet
 		try
 		{
 			deposits = clientAction.viewClientDeposits();
-			// TODO remove trace message
-			System.out.println(Arrays.toString(deposits.toArray()));
 			request.setAttribute(DEPOSITS_LIST_ATTR, deposits);
 		} catch (Exception e)
 		{
-			// TODO remove trace message
-			e.printStackTrace();
 		}
 		return DEPOSITS_JSP; // next page
 	}
@@ -561,8 +525,6 @@ public class Controller extends HttpServlet
 			request.setAttribute(CLIENT_ACTIVITIES_ATTR, clientAction.viewClientActivities());
 		} catch (MBankException e)
 		{
-			// TODO remove trace message
-			e.printStackTrace();
 		}
 		return MY_RECENT_ACTIVITIES_JSP; // next page
 	}
