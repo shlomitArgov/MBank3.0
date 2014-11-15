@@ -9,58 +9,24 @@
 <title>MBank Client Dashboard</title>
 </head>
 <body id="top">
-
-<div class="wrapper col1">
-  <div id="header">
-    <div class="fl_left">
       <h1><a href="#">MBank Corp.</a></h1>
       <p>Welcome back, ${client_name}</p>
-    </div>
-    <div class="fl_right"><a href="Controller?command=logout">Logout</div>
-    <br class="clear" />
-  </div>
+
+
+
+
+<div id="container">
+	<div id="navcontainer">
+	   	<ul class="nav">
+		    <li><a href="Controller?command=my_account"><span>Account</span></a></li>
+		    <li><a href="Controller?command=my_recent_activities"><span>Recent Activities</span></a></li>
+		    <li><a href="Controller?command=my_deposits"><span>Deposits</span></a></li>
+		    <li><a href="Controller?command=my_details"><span>My Details</span></a></li>
+		    <li><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
+		    <li><a href="Controller?command=logout"><span>Logout</span></a></li>
+  		</ul>
+	</div>
 </div>
-
-
-
-
-<%-- <div id="tabs">
-  <ul>
-    <li><a href="Controller?command=my_account"><span>Account</span></a></li>
-    <li><a href="Controller?command=my_recent_activities"><span>Recent Activities</span></a></li>
-    <li><a href="Controller?command=my_deposits"><span>Deposits</span></a></li>
-    <li><a href="Controller?command=my_details"><span>My Details</span></a></li>
-    <li><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
-    <li><a href="Controller?command=logout"><span>Logout</span></a></li>
-  </ul>
-</div>
---%>
-<!--<table>
-	<tr>
-		<td>
-			<a href="Controller?command=account">Account</a>
-		</td>
-		<td>
-			<a href="Controller?command=recent_activities">Recent Activities</a>
-		</td>
-		<td>
-			<a href="Controller?command=deposits">Deposits</a>
-		</td>
-		<td>
-			<a href="Controller?command=myDetails">My Details</a>
-		</td>
-		<td>
-			<a href="Controller?command=mbank_properties">MBank Properties</a>
-		</td>
-		<td>
-			<a href="Controller?command=logout">Logout</a>
-		</td>
-	</tr>
-</table> 
-
-<br/>
-<hr>
--->
 
 </body>
 </html>

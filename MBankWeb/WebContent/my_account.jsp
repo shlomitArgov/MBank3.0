@@ -3,7 +3,8 @@
 
 <jsp:useBean id="account" class="mbank.database.beans.Account" scope="request"></jsp:useBean>
 
-<link rel="stylesheet" href="styles/layout.css" type="text/css" />
+<!-- <link rel="stylesheet" href="styles/layout.css" type="text/css" /> -->
+<link rel="stylesheet" href="styles/style.css" type="text/css" />
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -11,16 +12,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>MBank</title>
 </head>
-      <ul>
-        <li class="active"><a href="Controller?command=my_account">Account</a></li>
-        <li><a href="Controller?command=my_deposits"><span>Deposits</span></a></li>
-        <li><a href="Controller?command=my_recent_activities">Recent Activities</a></li>
-  		<li><a href="Controller?command=my_details"><span>My Details</span></a></li>
-    	<li><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
-      </ul>
-      
-  <br/>
-      
   <table summary="Account Details" class="dataTable">
   <caption>Account Details</caption>
         <thead>

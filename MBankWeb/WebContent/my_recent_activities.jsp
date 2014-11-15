@@ -3,7 +3,8 @@
 <%@ include file="clientMenu.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 
-<link rel="stylesheet" href="styles/layout.css" type="text/css" /> 
+<!-- <link rel="stylesheet" href="styles/layout.css" type="text/css" /> -->
+<link rel="stylesheet" href="styles/style.css" type="text/css" />
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -12,15 +13,6 @@
 <title>MBank</title>
 </head>
 <body>
-      <ul>
-        <li><a href="Controller?command=my_account">Account</a></li>
-        <li><a href="Controller?command=my_deposits"><span>Deposits</span></a></li>
-        <li  class="active"><a href="Controller?command=my_recent_activities">Recent Activities</a></li>
-  		<li><a href="Controller?command=my_details"><span>My Details</span></a></li>
-    	<li><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
-      </ul>
-    <br/>
-
   <table summary="Client Activities" class="dataTable">
 	<caption>Recent Activities</caption>
 	<thead>
