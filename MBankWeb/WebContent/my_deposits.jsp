@@ -44,8 +44,8 @@
 		<td class="tdclass">${deposit.balance}</td>
 		<td class="tdclass">${deposit.type.typeStringValue}</td>
 		<td class="tdclass">${deposit.estimated_balance}</td>
-		<td class="tdclass">${deposit.opening_date}</td>
-		<td class="tdclass">${deposit.closing_date}</td>
+		<td class="tdclass">${deposit.opening_date_simple_format}</td>
+		<td class="tdclass">${deposit.closing_date_simple_format}</td>
 		</tr>	
 	</c:forEach>
 	</tbody>

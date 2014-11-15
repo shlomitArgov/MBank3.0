@@ -42,7 +42,7 @@
 			<td class="tdclass">${activity.activityType}</td>
 			<td class="tdclass">${activity.commission}</td>
 			<td class="tdclass">${activity.description}</td>
-			<td class="tdclass">${activity.activity_date}</td>
+			<td class="tdclass">${activity.activity_date_simple_format}</td>
 			</tr>	
 		</c:forEach>
 	</tbody>
