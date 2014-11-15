@@ -11,10 +11,14 @@
 <title>MBank Client Dashboard</title>
 </head>
 <body>
+ <div id="header">
+            <h1><div id="logo"><a href="http://localhost:8080/MBankWeb" title="MBank Client Dashboard">MBank Client Dashboard</a></div></h1>
+ </div>
+
 <div id="container">
 	<div id="navcontainer">
 	   	<ul class="nav">
-	   	<h1><p>Welcome back, ${client_name}</p></h1>
+	   	<h2><p>Welcome back, ${client_name}</p></h2>
 		    <li><a href="Controller?command=my_account"><span>Account</span></a></li>
 		    <li><a href="Controller?command=my_recent_activities"><span>Recent Activities</span></a></li>
 		    <li><a href="Controller?command=my_deposits"><span>Deposits</span></a></li>
