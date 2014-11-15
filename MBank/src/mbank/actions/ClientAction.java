@@ -235,9 +235,9 @@ public class ClientAction extends Action
 	{
 		DepositManager depositManager = new DepositDBManager();
 		Deposit deposit = depositManager.query(depositId);
-		if(deposit == null)
+		if(deposit == null || deposit.getClient_id() != clientId)
 		{
-			throw new MBankException("Deposit with ID#: " + depositId + " does not exist");
+			throw new MBankException("Deposit with ID#: " + depositId + " does not exist for user with ID[" + clientId + "]");
 		}
 		
 		if(deposit.getType().equals(DepositType.LONG)) //short deposits cannot be pre-opened
