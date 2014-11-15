@@ -60,7 +60,7 @@
 		 		<td><span class="error">${deposit_amount_error}</span></td>
 		 	</tr>
 		 	<tr>	
-		 		<td>Deposit end-date (DD-MM-YYYY): </td>
+		 		<td>Deposit end-date in the format DD-MM-YYYY (e.g. 13-01-2014): </td>
 		 		<td><input type="text" id="deposit_end_date" name="deposit_end_date"></<input></td>
 		 		<td><span class="error">${deposit_end_date_error}</span></td>
 		 	</tr>

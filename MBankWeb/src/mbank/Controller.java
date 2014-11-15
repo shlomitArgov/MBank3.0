@@ -83,8 +83,8 @@ public class Controller extends HttpServlet
 	private static final String SYSTEM_PROPERTIES_ATTR = "system_properties";
 	private static final String CREATE_DEPOSIT_ERROR_ATTR = "create_deposit_error";
 	private static final String CREATE_DEPOSIT_INFO_ATTR = "create_deposit_info";
-	private static final String CREATE_DEPOSIT_AMOUNT_ERROR = "deposit_amount_error";
-	private static final String CREATE_DEPOSIT_END_DATE_ERROR = "deposit_end_date_error";
+	private static final String CREATE_DEPOSIT_AMOUNT_ERROR_ATTR = "deposit_amount_error";
+	private static final String CREATE_DEPOSIT_END_DATE_ERROR_ATTR = "deposit_end_date_error";
 	private static final String DEPOSIT_ID_ERROR_ATTR = "deposit_id_error";
 	private static final String PRE_OPEN_DEPOSIT_ERROR_ATTR = "pre_open_deposit_error";
 	private static final String PRE_OPEN_DEPOSIT_INFO_ATTR = "pre_open_deposit_info";
@@ -268,26 +268,41 @@ public class Controller extends HttpServlet
 
 	private String createNewDeposit(HttpServletRequest request)
 	{
+		String nextPage = DEPOSITS_JSP;
 		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		String amount = request.getParameter(DEPOSIT_INITIAL_AMOUNT_PARAM);
 		String closingDate = request.getParameter(DEPOSIT_CLOSING_DATE_PARAM);
 
-		double depositAmount = Double.parseDouble(amount);
+		double depositAmount = 0;
+		try
+		{
+			depositAmount = validatePositiveDouble(amount);
+		} catch (MBankException e1)
+		{
+			request.setAttribute(CREATE_DEPOSIT_AMOUNT_ERROR_ATTR, e1.getLocalizedMessage());
+			e1.printStackTrace();
+			nextPage = gotoMyDeposits(request);
+		}
 		Date closeDate;
 		try
 		{
 			closeDate = new SimpleDateFormat("DD-MM-YYYY").parse(closingDate);
 			clientAction.createNewDeposit(depositAmount, closeDate);
 			request.setAttribute(CREATE_DEPOSIT_INFO_ATTR, "Deposit created successfuly");
-			gotoMyDeposits(request); //update the deposits display
-		} catch (ParseException | MBankException e)
+			nextPage = gotoMyDeposits(request); //update the deposits display
+		} catch (ParseException e)
 		{
-			String createDepositError = e.getLocalizedMessage();
-			request.setAttribute(CREATE_DEPOSIT_ERROR_ATTR, createDepositError);
+			request.setAttribute(CREATE_DEPOSIT_END_DATE_ERROR_ATTR, "End-date must be in the format: DD-MM-YYYY");
 			// TODO remove trace
 			e.printStackTrace();
+			nextPage = gotoMyDeposits(request); //update the deposits display
+		} catch (MBankException e)
+		{
+			request.setAttribute(CREATE_DEPOSIT_ERROR_ATTR, e.getLocalizedMessage());
+			e.printStackTrace();
+			nextPage = gotoMyDeposits(request); //update the deposits display
 		}
-		return DEPOSITS_JSP;
+		return nextPage;
 	}
 
 	private String updateClientDetails(HttpServletRequest request) throws MBankException
@@ -388,7 +403,7 @@ public class Controller extends HttpServlet
 			amountValue = Double.parseDouble(amount);
 		} catch (NumberFormatException e)
 		{
-			throw new MBankException("Amount must be a number.\n");
+			throw new MBankException("Amount must be a number\n");
 		}
 		if (amountValue < 0)
 		{
