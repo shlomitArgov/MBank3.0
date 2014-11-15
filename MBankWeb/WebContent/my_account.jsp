@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ include file="clientMenu.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="account" class="mbank.database.beans.Account" scope="request"></jsp:useBean>
 
 		 <table summary="Account Details" class="dataTable">
@@ -15,9 +16,9 @@
 		        
 		 		<tbody>
 		          <tr>
-		            <td class="tdclass">${account.client_id}</td>
+		            <td class="tdclass">${account.client_id}</td> 
 		            <td class="tdclass">${account.account_id}</td>
-		            <td class="tdclass">${account.balance}</td>
+		            <td class="tdclass"><fmt:formatNumber type="number" maxFractionDigits="2" value="${account.balance}"/></td>
 		            <td class="tdclass">${account.credit_limit}</td>
 		          </tr>
 		        </tbody>

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
 <%@ include file="clientMenu.jsp" %>
 
 <%-- display all client deposits --%>
@@ -21,9 +22,9 @@
 		<jsp:useBean id="deposit" class="mbank.database.beans.Deposit" scope="request"></jsp:useBean>
 		<tr>
 		<td class="tdclass">${deposit.deposit_id}</td>
-		<td class="tdclass">${deposit.balance}</td>
+		<td class="tdclass"><fmt:formatNumber type="number" maxFractionDigits="2" value="${deposit.balance}"/></td>
 		<td class="tdclass">${deposit.type.typeStringValue}</td>
-		<td class="tdclass">${deposit.estimated_balance}</td>
+		<td class="tdclass"><fmt:formatNumber type="number" maxFractionDigits="2" value="${deposit.estimated_balance}"/></td>
 		<td class="tdclass">${deposit.opening_date_simple_format}</td>
 		<td class="tdclass">${deposit.closing_date_simple_format}</td>
 		</tr>	
