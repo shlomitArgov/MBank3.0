@@ -135,7 +135,7 @@ public class ActivityDBManager implements ActivityManager
 				Activity a = null;
 				if(rs.next()) //next() returns false if there are no more rows in the RS
 				{	
-					a = new Activity(rs.getLong(1), rs.getInt(2), rs.getDouble(3), new java.util.Date(rs.getDate(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
+					a = new Activity(rs.getLong(1), rs.getInt(2), rs.getDouble(3), new java.util.Date(rs.getTimestamp(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
 					
 				}
 				MBank.getInstance().returnConnection(con);
@@ -170,7 +170,7 @@ public class ActivityDBManager implements ActivityManager
 				long  id = rs.getLong(1);
 				long client_id = rs.getLong(2);
 				double amount = rs.getDouble(3);
-				java.util.Date activity_date = new java.util.Date((rs.getDate(4)).getTime());
+				java.util.Date activity_date = new java.util.Date((rs.getTimestamp(4)).getTime());
 				double commission = rs.getDouble(5);
 				ActivityType activityType = ActivityType.intToType(rs.getInt(6));
 				String description = rs.getString(7);
@@ -202,7 +202,7 @@ public class ActivityDBManager implements ActivityManager
 			{	
 				while(rs.next()) //next() returns false if there are no more rows in the RS
 				{	
-					Activity a = new Activity(rs.getLong(1), rs.getLong(2), rs.getDouble(3), new java.util.Date(rs.getDate(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
+					Activity a = new Activity(rs.getLong(1), rs.getLong(2), rs.getDouble(3), new java.util.Date(rs.getTimestamp(4).getTime()), rs.getDouble(5), ActivityType.intToType(rs.getInt(6)), rs.getString(7));
 					clientActivities.add(a);
 				}
 				MBank.getInstance().returnConnection(con);
