@@ -286,13 +286,17 @@ public class Controller extends HttpServlet
 		Date closeDate;
 		try
 		{
-			closeDate = new SimpleDateFormat("dd-MM-yyyy").parse(closingDate);
+			System.out.println("Controller.createNewDeposit() - closingDate string: " + closingDate);
+			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+			df.setLenient(false);
+			closeDate = df.parse(closingDate);
+			System.out.println("Controller.createNewDeposit()\ncloseDate: " + closeDate);
 			clientAction.createNewDeposit(depositAmount, closeDate);
 			request.setAttribute(CREATE_DEPOSIT_INFO_ATTR, "Deposit created successfuly");
 			nextPage = gotoMyDeposits(request); //update the deposits display
 		} catch (ParseException e)
 		{
-			request.setAttribute(CREATE_DEPOSIT_END_DATE_ERROR_ATTR, "End-date must be in the format: DD-MM-YYYY");
+			request.setAttribute(CREATE_DEPOSIT_END_DATE_ERROR_ATTR, "Invalid date: End-date must be in the format: dd-MM-yyyy and be a real date");
 			// TODO remove trace
 			e.printStackTrace();
 			nextPage = gotoMyDeposits(request); //update the deposits display
