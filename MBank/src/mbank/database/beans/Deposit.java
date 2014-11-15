@@ -3,6 +3,7 @@
  */
 package mbank.database.beans;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import mbank.database.beans.enums.DepositType;
@@ -39,6 +40,19 @@ public class Deposit
 	private double estimated_balance;
 	private Date opening_date;
 	private Date closing_date;
+	private String opening_date_simple_format;
+	private String closing_date_simple_format;
+	
+	public String getOpening_date_simple_format()
+	{
+		return opening_date_simple_format;
+	}
+
+	public void setOpening_date_simple_format(String opening_date_simple_format)
+	{
+		this.opening_date_simple_format = opening_date_simple_format;
+	}
+
 
 	public Deposit(long deposit_id, long client_id, double balance,
 			DepositType type, double estimated_balance, Date opening_date,
@@ -51,8 +65,26 @@ public class Deposit
 		this.estimated_balance = estimated_balance;
 		this.opening_date = opening_date;
 		this.closing_date = closing_date;
+		updateSimpleDateAttributes(opening_date, closing_date);
+	}
+
+	private void updateSimpleDateAttributes(Date opening_date, Date closing_date)
+	{
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		opening_date_simple_format = df.format(opening_date);
+		closing_date_simple_format = df.format(closing_date);
 	}
 	
+	public String getClosing_date_simple_format()
+	{
+		return closing_date_simple_format;
+	}
+
+	public void setClosing_date_simple_format(String closing_date_simple_format)
+	{
+		this.closing_date_simple_format = closing_date_simple_format;
+	}
+
 	public Deposit(long client_id, double balance,
 			DepositType type, double estimated_balance, Date opening_date,
 			Date closing_date)
@@ -64,6 +96,7 @@ public class Deposit
 		this.estimated_balance = estimated_balance;
 		this.opening_date = opening_date;
 		this.closing_date = closing_date;
+		updateSimpleDateAttributes(opening_date, closing_date);
 	}
 
 	public long getClient_id()
