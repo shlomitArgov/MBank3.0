@@ -3,6 +3,7 @@
  */
 package mbank.database.beans;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import mbank.database.beans.enums.ActivityType;
@@ -33,17 +34,10 @@ public class Activity
 	private long client_id;
 	private double amount;
 	private Date activity_date;
+	private String activity_date_simple_format;
 	private double commission;
 	private ActivityType activityType;
 	private String description;
-
-	public ActivityType getActivityType() {
-		return activityType;
-	}
-
-	public void setActivityType(ActivityType activityType) {
-		this.activityType = activityType;
-	}
 
 	/**
 	 * @param id - Activity unique id 
@@ -64,6 +58,7 @@ public class Activity
 		this.commission = commission;
 		this.description = description;
 		this.activityType = activityType;
+		updateActivityTypeSimpleFormat();
 	}
 	
 	public Activity(long client_id, double amount, Date activity_date,
@@ -77,6 +72,7 @@ public class Activity
 		this.commission = commission;
 		this.description = description;
 		this.activityType = activityType;
+		updateActivityTypeSimpleFormat();
 	}
 
 	public long getClient_id()
@@ -138,6 +134,29 @@ public class Activity
 		this.id = id;
 	}
 
+	public String getActivity_date_simple_format()
+	{
+		return activity_date_simple_format;
+	}
+
+	public void setActivity_date_simple_format(String activity_date_simple_format)
+	{
+		this.activity_date_simple_format = activity_date_simple_format;
+	}
+	
+	public void updateActivityTypeSimpleFormat()
+	{
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		activity_date_simple_format = df.format(activity_date);
+	}
+	
+	public ActivityType getActivityType() {
+		return activityType;
+	}
+
+	public void setActivityType(ActivityType activityType) {
+		this.activityType = activityType;
+	}
 	@Override
 	public boolean equals(Object obj)
 	{

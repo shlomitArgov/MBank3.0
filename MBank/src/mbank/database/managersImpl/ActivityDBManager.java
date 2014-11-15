@@ -40,7 +40,7 @@ public class ActivityDBManager implements ActivityManager
 			PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, activity.getClient_id());
 			ps.setDouble(2, activity.getAmount());
-			ps.setDate(3, new java.sql.Date(activity.getActivity_date().getTime()));
+			ps.setTimestamp(3, new java.sql.Timestamp(activity.getActivity_date().getTime()));
 			ps.setDouble(4, activity.getCommission());
 			ps.setInt(5, activity.getActivityType().getVal());
 			ps.setString(6, activity.getDescription());
