@@ -3,7 +3,6 @@
 
 <jsp:useBean id="account" class="mbank.database.beans.Account" scope="request"></jsp:useBean>
 
-<!-- <link rel="stylesheet" href="styles/layout.css" type="text/css" /> -->
 <link rel="stylesheet" href="styles/style.css" type="text/css" />
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

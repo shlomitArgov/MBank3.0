@@ -3,7 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 <%@ include file="clientMenu.jsp" %>
 
-<!-- <link rel="stylesheet" href="styles/layout.css" type="text/css" /> -->
 <link rel="stylesheet" href="styles/style.css" type="text/css" />
 
 
