@@ -21,27 +21,28 @@
       </ul>
     <br/>
 
-  <table summary="Client Activities">
+  <table summary="Client Activities" class="dataTable">
+	<caption>Recent Activities</caption>
 	<thead>
 	  <tr>
-		<th>Activity ID</th>
-		<th>Amount</th>
-		<th>Activity Type</th>
-		<th>Commission</th>
-		<th>Description</th>
-		<th>Date</th>
+		<th class="thclass">Activity ID</th>
+		<th class="thclass">Amount</th>
+		<th class="thclass">Activity Type</th>
+		<th class="thclass">Commission</th>
+		<th class="thclass">Description</th>
+		<th class="thclass">Date</th>
 	  </tr>
 	</thead>
 	<tbody>
 		<c:forEach items="${client_activities}" var="activity">
 			<jsp:useBean id="activity" class="mbank.database.beans.Account" scope="request"></jsp:useBean>
 			<tr class="light">
-			<td>${activity.id}</td>
-			<td>${activity.amount}</td>
-			<td>${activity.activityType}</td>
-			<td>${activity.commission}</td>
-			<td>${activity.description}</td>
-			<td>${activity.activity_date}</td>
+			<td class="tdclass">${activity.id}</td>
+			<td class="tdclass">${activity.amount}</td>
+			<td class="tdclass">${activity.activityType}</td>
+			<td class="tdclass">${activity.commission}</td>
+			<td class="tdclass">${activity.description}</td>
+			<td class="tdclass">${activity.activity_date}</td>
 			</tr>	
 		</c:forEach>
 	</tbody>

@@ -18,22 +18,26 @@
   		<li><a href="Controller?command=my_details"><span>My Details</span></a></li>
     	<li><a href="Controller?command=mbank_properties"><span>MBank Properties</span></a></li>
       </ul>
-  <table summary="Account Details">
+      
+  <br/>
+      
+  <table summary="Account Details" class="dataTable">
+  <caption>Account Details</caption>
         <thead>
           <tr>
-            <th>Client ID</th>
-            <th>Account ID</th>
-            <th>Current Balance</th>
-            <th>Credit Limit</th>
+            <th class="thclass">Client ID</th>
+            <th class="thclass">Account ID</th>
+            <th class="thclass">Current Balance</th>
+            <th class="thclass">Credit Limit</th>
           </tr>
         </thead>
         
  		<tbody>
           <tr>
-            <td>${account.client_id}</td>
-            <td>${account.account_id}</td>
-            <td>${account.balance}</td>
-            <td>${account.credit_limit}</td>
+            <td class="tdclass">${account.client_id}</td>
+            <td class="tdclass">${account.account_id}</td>
+            <td class="tdclass">${account.balance}</td>
+            <td class="tdclass">${account.credit_limit}</td>
           </tr>
         </tbody>
 	 </table>
@@ -41,34 +45,37 @@
  <br/>
    
   <table>
-
- <form action="Controller?command=withdraw" method="post">
- 	<tr>	
- 		<td>(*)Withdrawal amount: </td>
- 		<td><input type="text" id="withdraw_amount" name="withdraw_amount"></<input></td>
- 		<td><span class="error">${withdraw_error}</span></td>
- 		<td><span class="info">${withdraw_info}</span></td>
- 	</tr>
- 	<tr>
- 		<td><input type="submit" value="Withdraw"></<input></td>
- 	</tr>
- </form>
-
- <form action="Controller?command=deposit" method="post">
-	<tr>	
- 			<td>(*)Deposit amount: </td> 				
- 			<td><input type="text" id="deposit_amount" name="deposit_amount"></input></td>
- 			<td><span class="error">${deposit_error}</span></td>
- 			 <td><span class="info">${deposit_info}</span></td>	
- 	</tr>
- 	<tr>
- 		<td><input type="submit" value="Deposit"></<input></td>
- 	</tr>
- 	<tr>
- 		<td class="tip">*Commission rate is ${commission}&#36;</td>
- 	</tr>
-    </form>
+	<form action="Controller?command=withdraw" method="post">
+	 	<tr>	
+	 		<td>(*)Withdrawal amount: </td>
+	 		<td><input type="text" id="withdraw_amount" name="withdraw_amount"></<input></td>
+	 		<td><span class="error">${withdraw_error}</span></td>
+	 		<td><span class="info">${withdraw_info}</span></td>
+	 	</tr>
+	 	<tr>
+	 		<td><input type="submit" value="Withdraw"></<input></td>
+	 	</tr>
+ 	</form>
+  </table>
+  
+  <br/>
+  
+  <table>
+	 <form action="Controller?command=deposit" method="post">
+		<tr>	
+	 			<td>(*)Deposit amount: </td> 				
+	 			<td><input type="text" id="deposit_amount" name="deposit_amount"></input></td>
+	 			<td><span class="error">${deposit_error}</span></td>
+	 			<td><span class="info">${deposit_info}</span></td>	
+	 	</tr>
+	 	<tr>
+	 		<td><input type="submit" value="Deposit"></<input></td>
+	 	</tr>
+	  </form>
  </table>
+ 
+ <br/>
+*Commission rate is ${commission}&#36;
 
 </body>
 </html>

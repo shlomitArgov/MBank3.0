@@ -25,8 +25,8 @@
 				<td><input type="password" name="password" id="password"></td>
 				<td></td>
 			</tr>
+			<tr></tr>
 			<tr>
-				<td></td>
 				<td><input type="submit" name="command" id="command" value="Login"></td>
 				<td></td>
 			</tr>

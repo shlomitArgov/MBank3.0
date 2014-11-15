@@ -23,19 +23,20 @@
     <br />
 
 <%-- display all system properties --%>
-  <table summary="System properties">
+  <table summary="System properties" class="dataTable">
+   <caption>System Properties</caption>
 	<thead>
 	  <tr>
-		<th>Name</th>
-		<th>Value</th>
+		<th class="thclass">Name</th>
+		<th class="thclass">Value</th>
 	  </tr>
 	</thead>
 	<tbody>
 	<c:forEach items="${system_properties}" var="property">
 		<jsp:useBean id="property" class="mbank.database.beans.Property" scope="request"></jsp:useBean>
-		<tr class="light">
-		<td>${property.prop_key}</td>
-		<td>${property.prop_value}</td>
+		<tr>
+		<td class="tdclass">${property.prop_key}</td>
+		<td class="tdclass">${property.prop_value}</td>
 		</tr>	
 	</c:forEach>
 	</tbody>

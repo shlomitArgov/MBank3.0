@@ -1,5 +1,14 @@
 @CHARSET "ISO-8859-1";
 
+caption
+{
+ 	text-align: left;
+    margin-bottom: 3px;
+    font-size: 120%;
+    padding: 3px;
+    font-weight: bold;
+}
+
 .error
 {
 	color:red;
@@ -10,14 +19,14 @@
 	color:blue;
 }
 
-table
+.dataTable
 {
 	border:1px solid black;
 	cellpadding:0px;
 	cellspacing:0px;	
 }
 
-td, th{
+.tdclass, .thclass{
 	border:1px solid black;
     text-align: center;
     padding: 10px;

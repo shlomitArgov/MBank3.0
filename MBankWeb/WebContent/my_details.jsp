@@ -22,26 +22,27 @@
     </ul>
 	<br />
     
- 	<table summary="Client Details">
+ 	<table summary="Client Details" class="dataTable">
+ 	 <caption>My Details</caption>
         <thead>
           <tr>
-            <th>Client ID</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Address</th>
-            <th>E-mail</th>
-            <th>Phone #</th>
+            <th class="thclass">Client ID</th>
+            <th class="thclass">Name</th>
+            <th class="thclass">Type</th>
+            <th class="thclass">Address</th>
+            <th class="thclass">E-mail</th>
+            <th class="thclass">Phone #</th>
           </tr>
         </thead>
         
  		<tbody>
-          <tr class="detailsTable">
-            <td>${client.client_id}</td>
-            <td>${client.client_name}</td>
-            <td>${client.type}</td>
-            <td>${client.address}</td>
-            <td>${client.email}</td>
-            <td>${client.phone}</td>
+          <tr>
+            <td class="tdclass">${client.client_id}</td>
+            <td class="tdclass">${client.client_name}</td>
+            <td class="tdclass">${client.type}</td>
+            <td class="tdclass">${client.address}</td>
+            <td class="tdclass">${client.email}</td>
+            <td class="tdclass">${client.phone}</td>
           </tr>
         </tbody>
 	</table>

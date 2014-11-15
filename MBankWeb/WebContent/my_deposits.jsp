@@ -24,35 +24,36 @@
     <br class="clear" />
 
 <%-- display all client deposits --%>
-  <table summary="Deposits">
+  <table summary="Deposits" class="dataTable">
+  <caption>Deposits</caption>
 	<thead>
 	  <tr>
-		<th>Deposit ID</th>
-		<th>Balance</th>
-		<th>Type</th>
-		<th>Estimated Balance</th>
-		<th>Opening Date</th>
-		<th>Closing Date</th>
+		<th class="thclass">Deposit ID</th>
+		<th class="thclass">Balance</th>
+		<th class="thclass">Type</th>
+		<th class="thclass">Estimated Balance</th>
+		<th class="thclass">Opening Date</th>
+		<th class="thclass">Closing Date</th>
 	  </tr>
 	</thead>
 	<tbody>
 	<c:forEach items="${client_deposits}" var="deposit">
 		<jsp:useBean id="deposit" class="mbank.database.beans.Deposit" scope="request"></jsp:useBean>
 		<tr>
-		<td>${deposit.deposit_id}</td>
-		<td>${deposit.balance}</td>
-		<td>${deposit.type.typeStringValue}</td>
-		<td>${deposit.estimated_balance}</td>
-		<td>${deposit.opening_date}</td>
-		<td>${deposit.closing_date}</td>
+		<td class="tdclass">${deposit.deposit_id}</td>
+		<td class="tdclass">${deposit.balance}</td>
+		<td class="tdclass">${deposit.type.typeStringValue}</td>
+		<td class="tdclass">${deposit.estimated_balance}</td>
+		<td class="tdclass">${deposit.opening_date}</td>
+		<td class="tdclass">${deposit.closing_date}</td>
 		</tr>	
 	</c:forEach>
 	</tbody>
 	</table>
 	<br/>
 	
-	<h2>Create a new deposit</h2>
 	<table>
+	<caption>Create a new deposit</caption>
 		<form action="Controller?command=createDeposit" method="post">
 		 	<tr>	
 		 		<td>Deposit amount: </td>
@@ -72,14 +73,16 @@
 		 </form>
 	 </table>
 	 <br/>
-	 	<h2>Pre-open a long-term deposit</h2>
+
 	<table>
+	<caption>Pre-open a long-term deposit</caption>
 		<form action="Controller?command=preOpenDeposit" method="post">
 		 	<tr>	
 		 		<td>Deposit ID#: </td>
 		 		<td><input type="text" id="depositId" name="depositId"></<input></td>
 		 		<td><span class="error">${deposit_id_error}</span></td>
 		 	</tr>
+		 	<tr></tr>
 		 	<tr>
 		 		<td><input type="submit" value="Pre-open deposit"></<input></td>
 		 	</tr>
