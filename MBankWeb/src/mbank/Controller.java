@@ -245,26 +245,34 @@ public class Controller extends HttpServlet
 		long depositId = 0;
 		try
 		{
-			System.out.println("deposit_id_attr: " + depositIdString);
+			if(depositIdString.trim().isEmpty())
+			{
+				throw new MBankException("Deposit ID cannot be empty");
+			}
 			depositId = Long.parseLong(depositIdString);			
 		}catch (NumberFormatException e)
 		{
 			request.setAttribute(DEPOSIT_ID_ERROR_ATTR, "Deposit ID must be a whole number");
-			gotoMyDeposits(request);
+			return gotoMyDeposits(request);
+		}
+		catch (MBankException e) 
+		{
+			request.setAttribute(DEPOSIT_ID_ERROR_ATTR, e.getLocalizedMessage());
+			return gotoMyDeposits(request);		
 		}
 		try
 		{
 			System.out.println("parsed depositID: " + depositId);
 			clientAction.preOpenDeposit(depositId);
 			request.setAttribute(PRE_OPEN_DEPOSIT_INFO_ATTR, "Deposit pre-opened successfully");
-			gotoMyDeposits(request);
+			return gotoMyDeposits(request);
 		} catch (MBankException e)
 		{
 			request.setAttribute(PRE_OPEN_DEPOSIT_ERROR_ATTR, e.getLocalizedMessage());
 			e.printStackTrace();
 			gotoMyDeposits(request);
 		}
-		return DEPOSITS_JSP;
+		return gotoMyDeposits(request);
 	}
 
 	private String createNewDeposit(HttpServletRequest request)
