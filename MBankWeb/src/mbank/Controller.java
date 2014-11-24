@@ -453,8 +453,11 @@ public class Controller extends HttpServlet
 
 		if (clientAction != null)
 		{
+			// Create a ClientActionProxy object and set it in the session
+			ClientActionProxy clientActionProxy = new ClientActionProxy(clientAction, clientAction.getClientID());
 			// save the ClientAction object in the session
-			request.getSession().setAttribute(CLIENT_ACTION_ATTR, clientAction);
+//			request.getSession().setAttribute(CLIENT_ACTION_ATTR, clientAction);
+			request.getSession().setAttribute(CLIENT_ACTION_ATTR, clientActionProxy);
 			request.getSession().setAttribute(USERNAME_ATTR, username);
 			System.out.println("Controller.login()");
 			System.out.println("going to: " + ACCOUNT_JSP);

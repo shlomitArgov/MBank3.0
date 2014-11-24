@@ -39,12 +39,14 @@ public class ClientActionProxy implements ClientActionInterface
 	@Override
 	public void withdraw(double amount) throws MBankException
 	{
+		System.out.println("ClientActionProxy.withdraw()");
 		this.clientAction.withdraw(amount);
 	}
 
 	@Override
 	public void deposit(double amount) throws MBankException
 	{
+		System.out.println("ClientActionProxy.deposit()");
 		this.clientAction.deposit(amount);
 		
 	}
