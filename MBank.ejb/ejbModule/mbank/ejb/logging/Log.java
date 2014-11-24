@@ -1,18 +1,21 @@
 /**
  * 
  */
-package mbank.ejb;
+package mbank.ejb.logging;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import javax.ejb.Local;
 import javax.persistence.Entity;
 
 /**
  * @author Shlomit Argov
  *
  */
-@Entity
-public class Log
+//@Entity
+//@Local
+public class Log implements Serializable
 {
 	private Long id;
 	private Long clientId;
