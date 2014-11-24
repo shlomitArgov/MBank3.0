@@ -144,6 +144,7 @@ public class ClientAction extends Action implements ClientActionInterface
 		}				
 	}
 	
+	@Override
 	public Deposit createNewDeposit(double depositAmount, java.util.Date closeDate) throws  MBankException
 	{
 		Client client = getClientFromDB();
@@ -235,6 +236,7 @@ public class ClientAction extends Action implements ClientActionInterface
 		return deposit;
 	}
 	
+	@Override
 	public void preOpenDeposit(long depositId) throws MBankException
 	{
 		DepositManager depositManager = new DepositDBManager();
@@ -304,6 +306,7 @@ public class ClientAction extends Action implements ClientActionInterface
 	 * @return true upon success, false otherwise
 	 * @throws MBankException 
 	 */
+	@Override
 	public void updateClientDetails(TableValue... details) throws MBankException 
 	{
 		Client c = getClientFromDB();
@@ -318,6 +321,7 @@ public class ClientAction extends Action implements ClientActionInterface
 		clientManager.update(c);
 	}
 
+	@Override
 	public ArrayList<Property> viewSystemProperties() throws MBankException
 	{
 		PropertyManager propertyManager = new PropertyDBManager();
@@ -338,5 +342,11 @@ public class ClientAction extends Action implements ClientActionInterface
 	{
 		return this.clientId;
 	}
-
+	
+	@Override
+	public String viewSystemProperty(String propertyName) throws MBankException
+	{
+		return super.viewSystemProperty(propertyName);
+	}
+	
 }
