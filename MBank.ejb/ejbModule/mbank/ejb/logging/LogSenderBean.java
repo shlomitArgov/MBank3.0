@@ -27,6 +27,6 @@ public class LogSenderBean implements LogSender
 	@Override
 	public void sendLog(Log log)
 	{
-		
+		System.out.println("LogSenderBean.sendLog()\n" + log.getOperation());
 	}
 }

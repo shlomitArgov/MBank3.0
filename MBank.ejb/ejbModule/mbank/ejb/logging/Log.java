@@ -13,10 +13,14 @@ import javax.persistence.Entity;
  * @author Shlomit Argov
  *
  */
-//@Entity
+@Entity
 //@Local
 public class Log implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private Long clientId;
 	private String operation;
@@ -40,5 +44,10 @@ public class Log implements Serializable
 	public Long getClientId()
 	{
 		return clientId;
+	}
+	
+	public String getOperation()
+	{
+		return operation;
 	}
 }
