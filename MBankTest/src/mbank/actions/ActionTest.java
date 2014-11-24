@@ -87,7 +87,7 @@ public class ActionTest
 		
 		/* test that update succeeds */
 		TableValue[] details = new TableValue[]{new TableValue(ClientAttributes.ADDRESS.getAttribute(), "updated address"),new TableValue(ClientAttributes.PHONE.getAttribute(),"updated phone"),new TableValue(ClientAttributes.EMAIL.getAttribute(), "updated email")};
-		ClientAction clientAction = new ClientAction(client.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(client.getClient_id());
 		
 		try
 		{
@@ -120,7 +120,7 @@ public class ActionTest
 		Client tempClient = createAndInsertTempClient("testViewClientDetailsWithClientAction", ClientType.REGULAR);
 		
 		/* Create a clientAction for testing the viewClientDetails method */
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 		Client clientDetails = null;
 		try
 		{
@@ -149,7 +149,7 @@ public class ActionTest
 		Account tempAccount = createAndInsertTempAccount("testing viewAccountDetails", tempClient, 5000);
 				
 		/* Create a clientAction for testing the viewAccountDetails method */
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 		Account accountDetails = null;
 		
 		try
@@ -195,7 +195,7 @@ public class ActionTest
 		}
 		
 		/* Create a clientAction for testing the viewAccountDetails method */
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 		
 		ArrayList<Deposit> deposits = (ArrayList<Deposit>) clientAction.viewClientDeposits();
 		
@@ -220,7 +220,7 @@ public class ActionTest
 		Client tempClient = createAndInsertTempClient("tempClientForTestingViewClientActivities", ClientType.REGULAR);
 		
 		/* Create a clientAction for testing the viewAccountDetails method */
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 		
 		Activity tempActivity1 = new Activity(tempClient.getClient_id(), 500, new Date(), 200, ActivityType.UPDATE_CLIENT_DETAILS, "TestingViewClientActivities");
 		Activity tempActivity2 = new Activity(tempClient.getClient_id(), 500, new Date(), 200, ActivityType.UPDATE_CLIENT_DETAILS, "TestingViewClientActivities");

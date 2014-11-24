@@ -57,7 +57,7 @@ public class ClientActionTest {
 	public void testViewClientDetails() throws MBankException 
 	{
 		Client tempClient = createAndInsertTempClient("testViewClientDetails", ClientType.REGULAR);
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 		
 		try 
 		{
@@ -88,7 +88,7 @@ public class ClientActionTest {
 		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
 		Account tempAccount = createAndInsertTempAccount("testViewAccountDetailsAccount", tempClient, 1000);
 		
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 
 		try 
 		{
@@ -119,7 +119,7 @@ public class ClientActionTest {
 	{
 		Client tempClient = createAndInsertTempClient("testViewAccountDetailsClient", ClientType.REGULAR);
 		
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 
 		TableValue addressDetails = new TableValue(ClientAttributes.ADDRESS.getAttribute(), "newAddress");
 		TableValue phoneDetails = new TableValue(ClientAttributes.PHONE.getAttribute(), "newPhone");
@@ -156,7 +156,7 @@ public class ClientActionTest {
 		List<Deposit> tempDeposits =  CreateTempDeposits(tempClient.getClient_id(), "testViewClientDeposits", DepositType.SHORT);
 
 		List<Deposit> deposits = null;
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 		try
 		{
 			deposits = clientAction.viewClientDeposits();
@@ -193,7 +193,7 @@ public class ClientActionTest {
 		/* Populate the Activity table with several activities */
 		List<Activity> tempActivities =  CreateTempActivities(tempClient.getClient_id(), "testViewClientActivities");
 
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 
 		List<Activity> activities = null;
 		try
@@ -231,11 +231,11 @@ public class ClientActionTest {
 		/* Create a client and an account for this test and associate the account with the client */
 		Client tempClient = createAndInsertTempClient("testWithdrowFromAccountClient", ClientType.REGULAR);
 		Account tempAccount = createAndInsertTempAccount("testWithdrowFromAccount", tempClient, 50000);
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 
 		try
 		{
-			clientAction.withdrawFromAccount(500);	
+			clientAction.withdraw(500);	
 		}
 		catch (MBankException e)
 		{
@@ -246,7 +246,7 @@ public class ClientActionTest {
 		/* try to overdraw the account */
 		try
 		{
-			clientAction.withdrawFromAccount(999999999);	
+			clientAction.withdraw(999999999);	
 		}
 		catch (MBankException e)
 		{
@@ -256,7 +256,7 @@ public class ClientActionTest {
 		/* try to withdraw negative amount */
 		try
 		{
-			clientAction.withdrawFromAccount(-3);	
+			clientAction.withdraw(-3);	
 		}
 		catch (MBankException e)
 		{
@@ -273,12 +273,12 @@ public class ClientActionTest {
 		/* Create a client and an account for this test and associate the account with the client */
 		Client tempClient = createAndInsertTempClient("testDepositToAccountClient", ClientType.REGULAR);
 		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 		
 		/* deposit amount that will not change the client type */
 		try 
 		{
-			clientAction.depositToAccount(550);
+			clientAction.deposit(550);
 		} 
 		catch (MBankException e) 
 		{
@@ -289,7 +289,7 @@ public class ClientActionTest {
 		/* deposit amount that will change the client type */
 		try 
 		{
-			clientAction.depositToAccount(100000);
+			clientAction.deposit(100000);
 		} 
 		catch (MBankException e) 
 		{
@@ -300,7 +300,7 @@ public class ClientActionTest {
 
 		try 
 		{
-			clientAction.depositToAccount(-3);
+			clientAction.deposit(-3);
 			Assert.fail("Error - managed to deposit negative amount into client account");
 		} 
 		catch (MBankException e) 
@@ -318,7 +318,7 @@ public class ClientActionTest {
 	{
 		/* Create a client this test */
 		Client tempClient = createAndInsertTempClient("testCreateNewDepositClient", ClientType.REGULAR);
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 		
 		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
 		
@@ -391,7 +391,7 @@ public class ClientActionTest {
 		/* Create a client and an account for this test and associate the account with the client */
 		Client tempClient = createAndInsertTempClient("testCreateNewDepositClient", ClientType.REGULAR);
 		Account tempAccount = createAndInsertTempAccount("testDepositToAccount", tempClient, 10000);
-		ClientAction clientAction = new ClientAction(tempClient.getClient_id());
+		ClientActionInterface clientAction = new ClientAction(tempClient.getClient_id());
 		
 		Deposit tempDeposit = new Deposit(tempClient.getClient_id(), 10000, DepositType.LONG, 11000, new Date(), new Date(System.currentTimeMillis() + 1000*3600*24*380));
 		tempDeposit.setDeposit_id(depositManager.insert(tempDeposit));

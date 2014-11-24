@@ -5,6 +5,7 @@ import java.util.Date;
 
 import mbank.actions.AdminAction;
 import mbank.actions.ClientAction;
+import mbank.actions.ClientActionInterface;
 import mbank.exceptions.MBankException;
 
 import org.junit.Test;
@@ -17,7 +18,7 @@ public class PopulateSampleClientData
 	{
 		AdminAction adminAction = new AdminAction(1);
 		long clientId = adminAction.addNewClient("John Doe", "pwd".toCharArray(), "Diagon Alley", "john@doe.com", "555-555555", 50000);
-		ClientAction clientAction = new ClientAction(clientId);
+		ClientActionInterface clientAction = new ClientAction(clientId);
 		Date tmpDate = new Date();
 		Calendar c = Calendar.getInstance(); 
 		c.setTime(tmpDate); 
