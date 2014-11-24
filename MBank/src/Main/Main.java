@@ -447,7 +447,7 @@ public class Main {
 			withdrawAmount = getValidDoubleInput("\nEnter the amount to withdraw: \n");
 			try 
 			{
-				this.clientAction.withdrawFromAccount(withdrawAmount);
+				this.clientAction.withdraw(withdrawAmount);
 			} catch (MBankException e) 
 			{
 				System.out.println(AN_ERROR_OCCURED + e.getLocalizedMessage());
@@ -664,7 +664,7 @@ public class Main {
 		double depositAmount = getValidDoubleInput("Enter amount to deposit: ");
 		try 
 		{
-			this.clientAction.depositToAccount(depositAmount);
+			this.clientAction.deposit(depositAmount);
 			System.out.println("\n---Deposit executed successfuly---\n");
 		} catch (MBankException e) 
 		{

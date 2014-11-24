@@ -34,7 +34,7 @@ import mbank.exceptions.MBankException;
  * @author Shlomit Argov
  *
  */
-public class ClientAction extends Action
+public class ClientAction extends Action implements ClientActionsInterface
 {
 
 	public ClientAction(long clientId)
@@ -67,7 +67,7 @@ public class ClientAction extends Action
 	 * @return true: if withdrawal executed successfully, false if withdrawal failed
 	 * @throws MBankException
 	 */
-	public void withdrawFromAccount(double withdrawAmount) throws MBankException
+	public void withdraw(double withdrawAmount) throws MBankException
 	{
 		Client client = getClientFromDB();
 		//make sure withdrawal amount is positive
@@ -112,7 +112,7 @@ public class ClientAction extends Action
 		}
 	}
 
-	public void depositToAccount(double depositAmount) throws MBankException
+	public void deposit(double depositAmount) throws MBankException
 	{
 		Client client = getClientFromDB(); 
 		//make sure withdrawal amount is positive
@@ -331,6 +331,12 @@ public class ClientAction extends Action
 			}
 		}
 		return (ArrayList<Property>) clientSystemProperties; 
+	}
+
+	@Override
+	public long getClientID()
+	{
+		return this.clientId;
 	}
 
 }
