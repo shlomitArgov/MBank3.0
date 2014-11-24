@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import mbank.actions.Action;
 import mbank.actions.ClientActionInterface;
 import mbank.actions.TableValue;
 import mbank.database.beans.Account;
@@ -20,13 +21,14 @@ import mbank.exceptions.MBankException;
  * @author Shlomit Argov
  *
  */
-public class ClientActionProxy implements ClientActionInterface
+public class ClientActionProxy extends Action implements ClientActionInterface
 {
 	private ClientActionInterface clientAction;
 	private long clientId;
 	
 	public ClientActionProxy(ClientActionInterface clientAction, long clientId)
 	{
+		super(clientId);
 		this.clientAction = clientAction;
 		this.clientId = clientId;
 	}
@@ -115,6 +117,6 @@ public class ClientActionProxy implements ClientActionInterface
 	@Override
 	public String viewSystemProperty(String propertyName) throws MBankException
 	{
-		return this.viewSystemProperty(propertyName);
+		return this.clientAction.viewSystemProperty(propertyName);
 	}
 }
