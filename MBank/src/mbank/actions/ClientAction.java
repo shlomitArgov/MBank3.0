@@ -34,7 +34,7 @@ import mbank.exceptions.MBankException;
  * @author Shlomit Argov
  *
  */
-public class ClientAction extends Action implements ClientActionsInterface
+public class ClientAction extends Action implements ClientActionInterface
 {
 
 	public ClientAction(long clientId)

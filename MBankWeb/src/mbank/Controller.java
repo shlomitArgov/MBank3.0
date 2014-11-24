@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import mbank.actions.Action;
 import mbank.actions.ClientAction;
+import mbank.actions.ClientActionInterface;
 import mbank.actions.TableValue;
 import mbank.database.beans.Account;
 import mbank.database.beans.Client;
@@ -221,7 +222,7 @@ public class Controller extends HttpServlet
 
 	private String preOpenDeposit(HttpServletRequest request)
 	{
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		String depositIdString = request.getParameter(DEPOSIT_ID_PARAM);
 		long depositId = 0;
 		try
@@ -244,7 +245,7 @@ public class Controller extends HttpServlet
 		try
 		{
 			System.out.println("parsed depositID: " + depositId);
-			clientAction.preOpenDeposit(depositId);
+			((ClientAction)clientAction).preOpenDeposit(depositId);
 			request.setAttribute(PRE_OPEN_DEPOSIT_INFO_ATTR, "Deposit pre-opened successfully");
 			return gotoMyDeposits(request);
 		} catch (MBankException e)
@@ -258,7 +259,7 @@ public class Controller extends HttpServlet
 
 	private String createNewDeposit(HttpServletRequest request)
 	{
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		String amount = request.getParameter(DEPOSIT_INITIAL_AMOUNT_PARAM);
 		String closingDate = request.getParameter(DEPOSIT_CLOSING_DATE_PARAM);
 
@@ -279,7 +280,7 @@ public class Controller extends HttpServlet
 			df.setLenient(false);
 			closeDate = df.parse(closingDate);
 			System.out.println("Controller.createNewDeposit()\ncloseDate: " + closeDate);
-			clientAction.createNewDeposit(depositAmount, closeDate);
+			((ClientAction)clientAction).createNewDeposit(depositAmount, closeDate);
 			request.setAttribute(CREATE_DEPOSIT_INFO_ATTR, "Deposit created successfuly");
 		} catch (ParseException e)
 		{
@@ -294,7 +295,7 @@ public class Controller extends HttpServlet
 
 	private String updateClientDetails(HttpServletRequest request) throws MBankException
 	{
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		
 		String updatedAddress = request.getParameter(UPDATED_CLIENT_ADDRESS_PARAM);
 		String updatedEmail = request.getParameter(UPDATED_CLIENT_EMAIL_PARAM);
@@ -324,7 +325,7 @@ public class Controller extends HttpServlet
 		TableValue emailDetails = new TableValue(ClientAttributes.EMAIL.getAttribute(), updatedEmail);
 		TableValue phoneDetails = new TableValue(ClientAttributes.PHONE.getAttribute(), updatedPhone);
 		
-		clientAction.updateClientDetails(addressDetails, emailDetails, phoneDetails);
+		((ClientAction)clientAction).updateClientDetails(addressDetails, emailDetails, phoneDetails);
 		
 //		/* Update client bean in the request */
 //		Client client = clientAction.viewClientDetails();
@@ -336,7 +337,7 @@ public class Controller extends HttpServlet
 
 	private String depositToAccount(HttpServletRequest request) throws MBankException
 	{
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		String inputAmount = request.getParameter(DEPOSIT_AMOUNT_PARAM);
 		double depositAmount = 0;
 		try
@@ -351,7 +352,7 @@ public class Controller extends HttpServlet
 		{
 			try
 			{
-				clientAction.depositToAccount(depositAmount);
+				clientAction.deposit(depositAmount);
 				request.setAttribute(DEPOSIT_INFO_ATTR, "Deposit executed successfuly");
 			} catch (MBankException e)
 			{
@@ -367,7 +368,7 @@ public class Controller extends HttpServlet
 
 	private String withdrawFromAccount(HttpServletRequest request) throws MBankException
 	{
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		String inputAmount = request.getParameter(WITHDROW_AMMOUNT_PARAM);
 		double withdrawAmount = 0;
 		try
@@ -382,7 +383,7 @@ public class Controller extends HttpServlet
 		{
 			try
 			{
-				clientAction.withdrawFromAccount(withdrawAmount);
+				clientAction.withdraw(withdrawAmount);
 				request.setAttribute(WITHDRAW_INFO_ATTR, "Withdrawal executed successfuly");
 			} catch (MBankException e)
 			{
@@ -431,7 +432,7 @@ public class Controller extends HttpServlet
 		// Create a new session
 		request.getSession(true);
 
-		Action clientAction = null;
+		ClientActionInterface clientAction = null;
 		String username = request.getParameter(USERNAME_PARAM);
 		String password = request.getParameter(PASSWORD_PARAM);
 		String error = null;
@@ -441,7 +442,7 @@ public class Controller extends HttpServlet
 		try
 		{
 			MBank mbank = (MBank) this.getServletContext().getAttribute(MBABK_INSTANCE_ATTR);
-			clientAction = mbank.login(username, password);
+			clientAction = (ClientActionInterface) mbank.login(username, password);
 		} catch (MBankException e)
 		{
 			// login failed
@@ -468,11 +469,11 @@ public class Controller extends HttpServlet
 		return INDEX_JSP;
 	}
 
-	public void setCommissionRateInRequest(HttpServletRequest request, Action clientAction)
+	public void setCommissionRateInRequest(HttpServletRequest request, ClientActionInterface clientAction)
 	{
 		try
 		{
-			String commissionRate = clientAction.viewSystemProperty(SystemProperties.COMMISSION_RATE.getPropertyName());
+			String commissionRate = ((ClientAction)clientAction).viewSystemProperty(SystemProperties.COMMISSION_RATE.getPropertyName());
 			request.setAttribute(WITHDRAWAL_COMMISSION_ATTR, commissionRate);
 			System.out.println(commissionRate);
 		} catch (MBankException e1)
@@ -482,11 +483,11 @@ public class Controller extends HttpServlet
 
 	private String gotoMBankProperties(HttpServletRequest request)
 	{
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		List<Property> system_properties = null;
 		try
 		{
-			system_properties = clientAction.viewSystemProperties();
+			system_properties = ((ClientAction)clientAction).viewSystemProperties();
 			request.setAttribute(SYSTEM_PROPERTIES_ATTR, system_properties);
 		} catch (Exception e)
 		{
@@ -497,19 +498,19 @@ public class Controller extends HttpServlet
 
 	private String gotoMyDetails(HttpServletRequest request) throws MBankException
 	{
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
-		Client client = clientAction.viewClientDetails();
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		Client client = ((ClientAction)clientAction).viewClientDetails();
 		request.setAttribute(CLIENT_ATTR, client);
 		return MY_DETAILS_JSP; // next page
 	}
 
 	private String gotoMyDeposits(HttpServletRequest request)
 	{
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		List<Deposit> deposits = null;
 		try
 		{
-			deposits = clientAction.viewClientDeposits();
+			deposits = ((ClientAction) clientAction).viewClientDeposits();
 			request.setAttribute(DEPOSITS_LIST_ATTR, deposits);
 		} catch (Exception e)
 		{
@@ -519,10 +520,10 @@ public class Controller extends HttpServlet
 
 	private String gotoMyRecentActivities(HttpServletRequest request)
 	{
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
 		try
 		{
-			request.setAttribute(CLIENT_ACTIVITIES_ATTR, clientAction.viewClientActivities());
+			request.setAttribute(CLIENT_ACTIVITIES_ATTR, ((ClientAction) clientAction).viewClientActivities());
 		} catch (MBankException e)
 		{
 		}
@@ -533,11 +534,11 @@ public class Controller extends HttpServlet
 	{
 		System.out.println("Controller.gotoAccount()");
 		// Get ClientAction object from the session
-		ClientAction clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
-		Account account = clientAction.viewAccountDetails();
+		ClientActionInterface clientAction = (ClientAction) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
+		Account account = ((Action) clientAction).viewAccountDetails();
 		System.out.println("account_id = " + account.getAccount_id());
 		request.setAttribute(ACCOUNT_ATTR, account); 
-		setCommissionRateInRequest(request, clientAction);
+		setCommissionRateInRequest(request, (ClientAction)clientAction);
 		return ACCOUNT_JSP; // next page
 	}
 }
