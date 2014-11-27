@@ -441,7 +441,7 @@ public class Controller extends HttpServlet
 		try
 		{
 			MBank mbank = (MBank) this.getServletContext().getAttribute(MBABK_INSTANCE_ATTR);
-			clientAction = (ClientActionInterface) mbank.login(username, password);
+			clientAction = (ClientActionInterface) mbank.clientLogin(username, password);
 		} catch (MBankException e)
 		{
 			// login failed
@@ -537,7 +537,7 @@ public class Controller extends HttpServlet
 		System.out.println("Controller.gotoAccount()");
 		// Get ClientAction object from the session
 		ClientActionInterface clientAction = (ClientActionInterface) request.getSession().getAttribute(CLIENT_ACTION_ATTR);
-		Account account = ((Action) clientAction).viewAccountDetails();
+		Account account = clientAction.viewAccountDetails();
 		System.out.println("account_id = " + account.getAccount_id());
 		request.setAttribute(ACCOUNT_ATTR, account); 
 		setCommissionRateInRequest(request, (ClientActionInterface)clientAction);
