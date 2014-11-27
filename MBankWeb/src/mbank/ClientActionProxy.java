@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import mbank.actions.Action;
 import mbank.actions.ClientActionInterface;
@@ -25,7 +27,7 @@ import mbank.exceptions.MBankException;
  * @author Shlomit Argov
  *
  */
-public class ClientActionProxy extends Action implements ClientActionInterface
+public class ClientActionProxy implements ClientActionInterface
 {
 	private ClientActionInterface clientAction;
 	private long clientId;
@@ -34,9 +36,18 @@ public class ClientActionProxy extends Action implements ClientActionInterface
 	
 	public ClientActionProxy(ClientActionInterface clientAction, long clientId)
 	{
-		super(clientId);
 		this.clientAction = clientAction;
 		this.clientId = clientId;
+		
+		//get LogSender bean
+		try
+		{
+			InitialContext context = new InitialContext();
+			logSender = (LogSender) context.lookup("java:global/MBank.app/MBank.ejb/LogSenderBean!mbank.ejb.logging.LogSender");
+		} catch (NamingException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public long getClientId()
@@ -54,6 +65,7 @@ public class ClientActionProxy extends Action implements ClientActionInterface
 		{
 			this.clientAction.withdraw(amount);
 			// log action
+			System.out.println("ClientActionProxy.withdraw() - logSender: " + logSender);
 			logSender.sendLog(new Log(clientId, "Widthdrew " + amount + " from client[" + clientId + "] account"));
 		}
 		catch (MBankException e)
