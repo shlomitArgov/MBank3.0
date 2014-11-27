@@ -117,4 +117,9 @@ public class MBank
 			throw new MBankException("Unknown username-password combination");
 		}
 	}
+	
+	public ClientAction clientLogin(String username, String password) throws MBankException
+	{
+		return (ClientAction) (this.login(username, password));
+	}
 }
