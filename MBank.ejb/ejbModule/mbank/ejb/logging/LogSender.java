@@ -1,8 +1,13 @@
 package mbank.ejb.logging;
 
+import javax.ejb.Local;
 import javax.ejb.Remote;
 
-@Remote
-public interface LogSender {
+import mbank.ejb.logging.persistence.Log;
+
+//@Remote
+@Local
+public interface LogSender 
+{
 	public void sendLog(Log log);
 }

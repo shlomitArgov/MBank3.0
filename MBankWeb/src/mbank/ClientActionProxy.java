@@ -19,8 +19,8 @@ import mbank.database.beans.Activity;
 import mbank.database.beans.Client;
 import mbank.database.beans.Deposit;
 import mbank.database.beans.Property;
-import mbank.ejb.logging.Log;
 import mbank.ejb.logging.LogSender;
+import mbank.ejb.logging.persistence.Log;
 import mbank.exceptions.MBankException;
 
 /**

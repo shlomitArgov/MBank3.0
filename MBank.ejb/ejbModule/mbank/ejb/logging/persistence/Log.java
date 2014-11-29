@@ -9,12 +9,24 @@ import java.util.Date;
 import javax.ejb.Local;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * @author Shlomit Argov
  *
  */
 @Entity
+@NamedQueries({
+	  @NamedQuery(
+	    name="getAllLogs",
+	    query="SELECT l FROM Ship Log AS l ORDER BY l.timestamp DESC"
+	  ),
+	  @NamedQuery(
+	    name="getLogById",
+	    query="SELECT l FROM Ship Log AS l WHERE l.id = :id ORDER BY l.timestamp DESC"
+	  )
+	})
 public class Log implements Serializable
 {
 	@Override
