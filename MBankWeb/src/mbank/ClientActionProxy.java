@@ -11,7 +11,6 @@ import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import mbank.actions.Action;
 import mbank.actions.ClientActionInterface;
 import mbank.actions.TableValue;
 import mbank.database.beans.Account;
@@ -60,13 +59,12 @@ public class ClientActionProxy implements ClientActionInterface
 	{
 		System.out.println("ClientActionProxy.withdraw()"); 
 		
-		// Perform
 		try
 		{
 			this.clientAction.withdraw(amount);
 			// log action
 			System.out.println("ClientActionProxy.withdraw() - logSender: " + logSender);
-			logSender.sendLog(new Log(clientId, "Widthdrew " + amount + " from client[" + clientId + "] account"));
+			logSender.sendLog(new Log(clientId, "Widthdrew " + amount + " from client[ id = " + clientId + "]'s account"));
 		}
 		catch (MBankException e)
 		{
@@ -81,7 +79,7 @@ public class ClientActionProxy implements ClientActionInterface
 		try
 		{
 			this.clientAction.deposit(amount);
-			logSender.sendLog(new Log(clientId, "Deposited " + amount + " to client[" + clientId + "] account"));
+			logSender.sendLog(new Log(clientId, "Deposited " + amount + "$ to client[id = " + clientId + "]'s account"));
 		} catch (MBankException e)
 		{
 			throw e;
