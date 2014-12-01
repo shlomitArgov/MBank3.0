@@ -6,28 +6,32 @@ package mbank.ejb.logging.persistence;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.ejb.Local;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Shlomit Argov
  *
  */
-@Entity
+
+@Entity(name = "Logs")
 @NamedQueries({
 	  @NamedQuery(
-	    name="getAllLogs",
-	    query="SELECT l FROM Ship Log AS l ORDER BY l.timestamp DESC"
+	    name="LogGetAll",
+	    query="SELECT l FROM Log AS l ORDER BY l.timestamp DESC"
 	  ),
 	  @NamedQuery(
-	    name="getLogById",
-	    query="SELECT l FROM Ship Log AS l WHERE l.id = :id ORDER BY l.timestamp DESC"
+	    name="LogGetByClientId",
+	    query="SELECT l FROM Log AS l WHERE l.clientId = :clientId ORDER BY l.timestamp DESC"
 	  )
 	})
-public class Log implements Serializable
+@XmlRootElement(name = "Logs")
+public class Log implements Serializable //serializable in order to support sending objects from remote EJB container
 {
 	@Override
 	public String toString()
@@ -53,22 +57,45 @@ public class Log implements Serializable
 		this.operation = operation;
 		this.timestamp = new Date();
 	}
-	
+
 	public Long getId()
 	{
 		return id;
 	}
+
 	public void setId(Long id)
 	{
 		this.id = id;
 	}
+
 	public Long getClientId()
 	{
 		return clientId;
 	}
-	
+
+	public void setClientId(Long clientId)
+	{
+		this.clientId = clientId;
+	}
+
 	public String getOperation()
 	{
 		return operation;
+	}
+
+	public void setOperation(String operation)
+	{
+		this.operation = operation;
+	}
+	
+	@Temporal(value = TemporalType.TIMESTAMP)
+	public Date getTimestamp()
+	{
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp)
+	{
+		this.timestamp = timestamp;
 	}
 }
