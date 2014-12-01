@@ -2,8 +2,9 @@ package mbank.ejb.logging.persistence;
 
 import java.util.List;
 
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * Session Bean implementation class LogDAO
@@ -11,31 +12,27 @@ import javax.ejb.Stateless;
 @Stateless
 public class LogDAOBean implements LogDAO {
 
-    /**
-     * Default constructor. 
-     */
-    public LogDAOBean() {
-        // TODO Auto-generated constructor stub
-    }
+	@PersistenceContext(unitName = "LogDB")
+	private EntityManager entityManager;
+	
+    public LogDAOBean() {}
 
 	@Override
 	public Log create(Log log)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		entityManager.persist(log);
+		return log;
 	}
 
 	@Override
 	public List<Log> getAllLog()
-	{
-		// TODO Auto-generated method stub
-		return null;
+	{	
+		return entityManager.createNamedQuery("LogGetAll", Log.class).getResultList();
 	}
 
 	@Override
 	public List<Log> getLogsByClientId(Long clientId)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return entityManager.createNamedQuery("LogGetByClientId", Log.class).setParameter("clientId", clientId).getResultList();
 	}
 }
