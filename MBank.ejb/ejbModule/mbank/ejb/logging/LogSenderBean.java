@@ -88,7 +88,8 @@ public class LogSenderBean implements LogSender
 		{
 			message.setObject(log);
 			sender.send(message);
-		} catch (JMSException e)
+		} 
+		catch (JMSException e)
 		{
 			e.printStackTrace();
 		}

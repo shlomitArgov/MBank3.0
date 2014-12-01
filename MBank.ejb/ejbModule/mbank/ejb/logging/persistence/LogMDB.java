@@ -5,6 +5,7 @@ import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 
 /**
  * Message-Driven Bean implementation class for: LogMDB
@@ -23,14 +24,15 @@ public class LogMDB implements MessageListener {
 	/**
      * @see MessageListener#onMessage(Message)
      */
-    public void onMessage(Message message) {
-        if (message instanceof Log)
-        {
-        	logDAOStub.create((Log) message);
-        }
-        else
-        {
-        	System.out.println("LogMDB.onMessage()\nUnknown message type + " + message.getClass().getName());
-        }
+    public void onMessage(Message message) 
+    {
+		if (message instanceof ObjectMessage)
+		{
+			logDAOStub.create((Log) message);
+		}
+		else
+		{
+			System.out.println("LogMDB.onMessage()\nUnknown message type + " + message.getClass().getName());
+		}
     }
 }
