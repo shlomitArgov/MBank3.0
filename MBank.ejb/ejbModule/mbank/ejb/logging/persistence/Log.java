@@ -8,6 +8,7 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -46,6 +47,7 @@ public class Log implements Serializable //serializable in order to support send
 	 */
 	private static final long serialVersionUID = 1L;
 	@GeneratedValue
+	@Id
 	private Long id;
 	private Long clientId;
 	private String operation;
@@ -90,7 +92,7 @@ public class Log implements Serializable //serializable in order to support send
 		this.operation = operation;
 	}
 	
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getTimestamp()
 	{
 		return timestamp;
