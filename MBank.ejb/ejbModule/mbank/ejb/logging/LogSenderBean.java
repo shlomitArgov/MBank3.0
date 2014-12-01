@@ -82,15 +82,15 @@ public class LogSenderBean implements LogSender
 	@Override
 	public void sendLog(Log log)
 	{
-		System.out.println("LogSenderBean.sendLog()\n" + log.getOperation());
-		//TODO implement 
-		/*try
+		System.out.println("LogSenderBean.sendLog()\nSending log to queue: " + log.getOperation());
+		
+		try
 		{
+			message.setObject(log);
 			sender.send(message);
 		} catch (JMSException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 	}
 }
