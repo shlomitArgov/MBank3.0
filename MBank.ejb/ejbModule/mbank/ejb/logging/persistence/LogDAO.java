@@ -1,20 +1,12 @@
 package mbank.ejb.logging.persistence;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import java.util.List;
+import javax.ejb.Local;
 
-/**
- * Session Bean implementation class LogDAO
- */
-@Stateless
-@LocalBean
-public class LogDAO {
-
-    /**
-     * Default constructor. 
-     */
-    public LogDAO() {
-        // TODO Auto-generated constructor stub
-    }
-
+@Local
+public interface LogDAO
+{
+  Log create(Log log);
+  List<Log> getAllLog();
+  List<Log> getLogsByClientId(Long clientId);
 }
