@@ -5,14 +5,14 @@ MBank project for John Bryce College - 2014 Java Server Course
 
 Included files:
 ---------------
-1. MBank project
-2. MBankTest project
-3. MBankAdminConsole project
-4. CreateDB project
-5. CreateMBankDB project
-6. MBankDB folder (database dump)
-7. db-derby-10.10.2.0-bin (Apache Derby Database server application)
-
+1.	MBank project 
+2.	MBankTest project
+3.	MBankAdminConsole project 
+4.	CreateDB project
+5.	CreateMBankDB project
+6.	MBankWeb project
+7.	MBankDBDump.rar (database dump)
+8.	db-derby-10.10.2.0-bin (Apache Derby Database server application)
 
 Before being able to run the projects you must perform the following steps:
 ---------------------------------------------------------------------------
@@ -26,7 +26,7 @@ This will start the DB server and assign it the appropriate port.
 How to run the projects:
 ------------------------
 Mbank core (Mbank project)
-**************************
+************************************
 Run the project as a java application.
 The project contains a Main class with a main method that provides a command line interface (CLI).
 The CLI provides access to AdminAction and ClientAction methods so that they can be tested.
@@ -38,6 +38,17 @@ The project contains a MainFrame class with a main that launches the stand-alone
 Use the following credentials in order to login:
 Username: system
 Password: admin
+
+Web UI (MBankWeb project)
+************************************
+Use Apache JBoss WildFly 8.x server as the web application server (other web application servers were not tested).
+Run the project on the server (right click->Run As-> Run on Server).
+Use Firefox (other browsers were not tested) and browse to:
+http://localhost:8080/MBankWeb/
+Use the following credentials in order to login: 	
+Username: John Doe
+Password: pwd
+
 
 Detailed specification of projects:
 -----------------------------------
@@ -54,3 +65,6 @@ Phase 2: Building Administration Desktop Application
 ###Mbank Admin Management Application###
   MBankAdminConsole project – phase 2 implementation, using Java Swing framework
   
+Phase 3:  Building Client Web Application
+###Mbank Client Dashboard Web Application###
+  MBankWeb project – phase 3 implementation, using JSP and JSTL and implemented using MVC model
