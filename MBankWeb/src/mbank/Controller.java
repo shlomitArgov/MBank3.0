@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mbank.actions.Action;
 import mbank.actions.ClientActionInterface;
 import mbank.actions.TableValue;
 import mbank.database.beans.Account;
