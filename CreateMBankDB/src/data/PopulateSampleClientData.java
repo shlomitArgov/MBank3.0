@@ -12,12 +12,18 @@ import org.junit.Test;
 
 public class PopulateSampleClientData
 {
-
+	private AdminAction adminAction = new AdminAction(1);
+	
 	@Test
 	public void test() throws MBankException
 	{
-		AdminAction adminAction = new AdminAction(1);
-		long clientId = adminAction.addNewClient("John Doe", "pwd".toCharArray(), "Diagon Alley", "john@doe.com", "555-555555", 50000);
+		insertMockClientData("testClient1", "pwd".toCharArray(), "Diagon Alley", "client1@test.com", "111-555555", 20000.0);
+		insertMockClientData("testClient2", "pwd".toCharArray(), "The outer regions", "client2@test.com", "222-555555", 30000.0);
+	}
+
+	private void insertMockClientData(String clientName, char[] clientPwd, String clientAddress, String clientEmail, String clientPhoneNumber, Double depositAmount) throws MBankException
+	{	
+		long clientId = adminAction.addNewClient(clientName, clientPwd, clientAddress, clientEmail, clientPhoneNumber, depositAmount);
 		ClientActionInterface clientAction = new ClientAction(clientId);
 		Date tmpDate = new Date();
 		Calendar c = Calendar.getInstance(); 
@@ -25,10 +31,10 @@ public class PopulateSampleClientData
 		c.add(Calendar.DATE, 120);
 		tmpDate = c.getTime();
 		// Create short deposit
-		clientAction.createNewDeposit(17000, tmpDate);
+		clientAction.createNewDeposit(7000, tmpDate);
 		// Create long deposit
 		c.add(Calendar.DATE,380);
 		tmpDate = c.getTime();
-		clientAction.createNewDeposit(30000, tmpDate);
+		clientAction.createNewDeposit(3000, tmpDate);
 	}
 }
