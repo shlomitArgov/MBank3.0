@@ -16,7 +16,7 @@ public class LogMDB implements MessageListener
 
 	private static final String UNKNOWN_MESSAGE_TYPE = "LogMDB.onMessage()\nUnknown message type + ";
 	@EJB
-	private LogDAO logDAOStub;
+	private LogDAOLocal logDAOStub;
 
 	public LogMDB()
 	{
